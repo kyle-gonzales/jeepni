@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "297839644385",
+    "project_id": "jeepni",
+    "storage_bucket": "jeepni.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297839644385:android:2a1813da6e66f3da5c71a0",
+        "android_client_info": {
+          "package_name": "com.example.jeepni"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297839644385-rjt14rrndnesoulv8tji9ffsa7917h3c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jeepni",
+            "certificate_hash": "a4a2650fea6b2c06ba34f58af49d00f04cd8a181"
+          }
+        },
+        {
+          "client_id": "297839644385-gop114tjjkgapi38q0ajga5ds67uhmjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaGH9oW3AtzqiBl6diAZka2U7ENIgBw1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297839644385-gop114tjjkgapi38q0ajga5ds67uhmjd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
