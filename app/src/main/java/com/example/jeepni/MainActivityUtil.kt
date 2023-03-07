@@ -22,8 +22,7 @@ fun convertMillisToTime(timeInMillis: Long) : String {
 fun convertDistanceToString(distance: Double): String {
     val res = if (distance >= 1000) {
         val km = (distance / 1000).toInt()
-        val m : Int = distance.toInt() % 1000
-        "$km km $m m"
+        "$km km  "
     } else {
         "${(distance.toInt() % 1000)} m"
     }

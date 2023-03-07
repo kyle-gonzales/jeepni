@@ -31,12 +31,14 @@ fun MainActivityLayout() {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var drivingMode by remember { mutableStateOf(false) }
-    var isDialogOpen by remember {mutableStateOf(false) }
+    var isLogDailyAnalyticsDialogOpen by remember {mutableStateOf(false) }
 
     var salary by rememberSaveable { mutableStateOf("") }
     var fuelCost by rememberSaveable { mutableStateOf("")}
     var isValidSalary by remember { mutableStateOf(isValidDecimal(salary))}
     var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
+
+    var loginId by remember {mutableStateOf("test@email.com")}
 
     JeepNiTheme {
         // A surface container using the 'background' color from the theme
@@ -48,11 +50,11 @@ fun MainActivityLayout() {
                 coroutineScope = coroutineScope,
                 toggleDrivingMode = { drivingMode = it })
             },
-            drawerContent = {Menu()},
+            drawerContent = {Menu(loginId)},
             drawerGesturesEnabled = true,
             floatingActionButton = {
                 FloatingActionButton(onClick = {
-                    isDialogOpen = true
+                    isLogDailyAnalyticsDialogOpen = true
                 }) {
                     Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
                 }
@@ -68,9 +70,9 @@ fun MainActivityLayout() {
         )
 
     }
-    if (isDialogOpen) {
+    if (isLogDailyAnalyticsDialogOpen) {
         LogDailyStatDialog(salary, fuelCost, isValidSalary, isValidFuelCost,
-            onDialogChange = { isDialogOpen = it },
+            onDialogChange = { isLogDailyAnalyticsDialogOpen = it },
             onSalaryTextChange = {
                 salary = it
                 isValidSalary = isValidDecimal(it)
@@ -275,9 +277,28 @@ fun TopActionBar(drivingMode : Boolean, scaffoldState: ScaffoldState, coroutineS
     }
 }
 @Composable
-fun Menu() {
-    Column() {
-        Text("ALGOFIRST Menu")
+fun Menu(
+    email : String,
+) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column (
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(email)
+        }
+        Button(onClick = { /*TODO : logout of email */ Toast.makeText(context, "logged out!", Toast.LENGTH_SHORT).show() },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Log Out")
+        }
     }
 }
 
