@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">JeepNi</string>
+    <string name="log_in">Log in</string>
+    <string name="log_in_google">Log in with Google</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_up_google">Sign up</string>
+    <string name="welcome1">Chat with JeepNi drivers, log your day, lorem ipsum</string>
+    <string name="sign_up_welcome2">Be a part of the JeepNi Community!</string>
+    <string name="reset">Reset password</string>
+    <string name="login_welcome2">Welcome back to JeepNi</string>
+    <string name="forgot">Forgot password?</string>
+    <string name="no_account">Not on JeepNi yet?</string>
+    <string name="number">Phone number</string>
+    <string name="password">Password</string>
+    <string name="reenter">Re-enter password</string>
+    <string name="agree">I agree with the</string>
+    <string name="create">Create account</string>
+    <string name="create_google">Create account with Google</string>
+    <string name="has_account">Already on JeepNi?</string>
+    
 </resources>
