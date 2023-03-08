@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -72,13 +75,14 @@ fun Logo(){
 fun SolidButton(
     bgcolor: Color = White,
     textcolor: Color = Black,
+    width: Float = 1f,
     content: @Composable () () -> Unit
 ){
     Button(
         onClick ={},
         modifier = Modifier
             .height(75.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(width)
             .padding(vertical = 10.dp),
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(bgcolor, textcolor)
@@ -156,7 +160,9 @@ fun CustomTextField(){
             .background(color = White)
             .height(50.dp)
             .width(50.dp)
-    ){}
+    ){
+        Text("text field ni")
+    }
 }
 
 @Composable
@@ -166,7 +172,9 @@ fun IconButton(){
             .background(color = White)
             .height(50.dp)
             .width(50.dp)
-    ){}
+    ){
+        Text("icon button ni")
+    }
 }
 @Composable
 fun LogIn(){
@@ -187,10 +195,10 @@ fun LogIn(){
         }
         Column{
             SolidButton() {
-                Text(stringResource(R.string.sign_up))
+                Text(stringResource(R.string.log_in))
             }
             SolidButton(Black, White) {
-                Text(stringResource(R.string.log_in))
+                Text(stringResource(R.string.log_in_google))
             }
         }
         Row{
@@ -249,6 +257,42 @@ fun SignUp(){
     }
 }
 
+val JeepNiIcons = Icons.Filled
+@Composable
+fun TermsAndConditions(){
+    Container(height = 0.9f) {
+        IconButton()
+        Text(
+            stringResource(R.string.terms),
+            Modifier.fillMaxWidth(0.6f)
+        )
+        Text(
+            text = stringResource(R.string.terms1),
+            modifier = Modifier
+                .fillMaxHeight(0.6f)
+                .verticalScroll(
+                    rememberScrollState()
+                )
+        )
+        Row(
+           horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ){
+            SolidButton(width = 0.45f) {
+                Row{
+                    JeepNiIcons.Close
+                    Text(stringResource(R.string.decline))
+                }
+            }
+            SolidButton(width = 0.82f) {
+               Row{
+                   JeepNiIcons.Check
+                   Text(stringResource(R.string.accept))
+               }
+           } 
+        }
+    }
+}
+/*
 @Preview(showSystemUi = true)
 @Composable
 fun WelcomePreview() {
@@ -277,5 +321,14 @@ fun LogInPreview() {
 fun SignUpPreview() {
     JeepNiTheme{
         SignUp()
+    }
+}
+
+ */
+@Preview(showSystemUi = true)
+@Composable
+fun TermsAndConditionsPreview() {
+    JeepNiTheme{
+        TermsAndConditions()
     }
 }
