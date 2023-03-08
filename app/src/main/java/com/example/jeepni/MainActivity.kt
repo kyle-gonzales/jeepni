@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -141,8 +142,9 @@ fun LoginOrSignup(){
     Container(0.6f){
         Logo()
         Text(
-            stringResource(R.string.welcome1),
+            stringResource(R.string.welcome1, R.color.white),
             Modifier.fillMaxWidth(0.6f)
+
         )
         Column{
             SolidButton() {
@@ -167,33 +169,64 @@ fun CustomTextField(){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IconButton(){
-    Box(
-        Modifier
-            .background(color = White)
-            .height(50.dp)
-            .width(50.dp)
-    ){
-        Text("icon button ni")
+fun Numbertextfield(){
+    Column(modifier = Modifier.padding(16.dp)) {
+        var name by remember { mutableStateOf("") }
+        TextField(modifier = Modifier,
+            shape = RoundedCornerShape(10.dp),
+            value = name,
+            label = { Text(stringResource(R.string.enter_number)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            onValueChange = {
+                name = it
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Passwordtextfield(){
+    Column(modifier = Modifier.padding(16.dp)) {
+        var name by remember { mutableStateOf("") }
+        TextField(modifier = Modifier,
+            shape = RoundedCornerShape(10.dp),
+            value = name,
+            label = { Text(stringResource(R.string.enter_password)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            onValueChange = {
+                name = it
+            }
+        )
+    }
+}
+
+@Composable
+fun BackIconButton(){
+    IconButton(onClick = { /*TODO*/ })
+    {
+        Icon(Icons.Filled.ArrowBack, contentDescription = null )
     }
 }
 @Composable
 fun LogIn(){
     Container(0.9f){
-        IconButton()
+        BackIconButton()
         Text(
-            stringResource(R.string.welcome1),
+            stringResource(R.string.welcome_back),
             Modifier.fillMaxWidth(0.6f)
         )
         Column{
-            CustomTextField()
-            CustomTextField()
+            Numbertextfield()
+            Passwordtextfield()
         }
         TextButton(
             onClick = {}
         ){
-            Text(text = stringResource(R.string.forgot))
+            Text(text = stringResource(R.string.forgot),
+                color = Color.White)
         }
         Column{
             SolidButton() {
@@ -218,15 +251,15 @@ fun LogIn(){
 fun SignUp(){
     val agreeToTerms = remember { mutableStateOf(true) }
     Container(0.9f){
-        IconButton()
+        BackIconButton()
         Text(
             stringResource(R.string.sign_up_welcome2),
             Modifier.fillMaxWidth(0.6f)
         )
         Column{
-            CustomTextField()
-            CustomTextField()
-            CustomTextField()
+            Numbertextfield()
+            Passwordtextfield()
+            Passwordtextfield()
         }
         Row {
             Checkbox(
@@ -263,7 +296,7 @@ val JeepNiIcons = Icons.Filled
 @Composable
 fun TermsAndConditions(){
     Container(height = 0.9f) {
-        IconButton()
+        IconButton(onClick = {}) {}
         Text(
             stringResource(R.string.terms),
             Modifier.fillMaxWidth(0.6f)
@@ -295,26 +328,6 @@ fun TermsAndConditions(){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Textfield(){
-    Column(modifier = Modifier.padding(16.dp)) {
-        var name by remember { mutableStateOf("") }
-        Text(
-            text = "Hello! $name",
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        TextField(
-            value = name,
-            label = { Text(text = "Phone Number") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                name = it
-            }
-        )
-    }
-}
-
 /*
 @Preview(showSystemUi = true)
 @Composable
@@ -334,24 +347,26 @@ fun LoginOrSignupPreview() {
 
 @Preview(showSystemUi = true)
 @Composable
-fun LogInPreview() {
-    JeepNiTheme{
-        LogIn()
-    }
-}
-@Preview(showSystemUi = true)
-@Composable
 fun SignUpPreview() {
     JeepNiTheme{
         SignUp()
     }
 }
 
- */
 @Preview(showSystemUi = true)
 @Composable
 fun TermsAndConditionsPreview() {
     JeepNiTheme{
         TermsAndConditions()
+    }
+}
+
+ */
+
+@Preview(showSystemUi = true)
+@Composable
+fun LogInPreview() {
+    JeepNiTheme{
+        LogIn()
     }
 }
