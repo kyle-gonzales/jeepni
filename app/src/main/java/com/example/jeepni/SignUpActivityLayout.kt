@@ -15,32 +15,35 @@ import com.example.jeepni.ui.theme.Black
 import com.example.jeepni.ui.theme.White
 
 @Composable
-fun SignUp(){
+fun SignUpActivityLayout(){
+
+}
+
+@Composable
+fun SignUp() {
     val agreeToTerms = remember { mutableStateOf(true) }
-    Container(0.9f){
+    Container(0.9f) {
         BackIconButton()
         Text(
             stringResource(R.string.sign_up_welcome2),
             Modifier.fillMaxWidth(0.6f)
         )
-        Column{
-            Numbertextfield()
-            Passwordtextfield()
-            Passwordtextfield()
+        Column {
+            CustomTextField()
         }
         Row {
             Checkbox(
                 checked = agreeToTerms.value,
-                onCheckedChange = { agreeToTerms.value = it}
+                onCheckedChange = { agreeToTerms.value = it }
             )
             Text(stringResource(R.string.agree))
             TextButton(
                 onClick = {}
-            ){
+            ) {
                 Text(stringResource(R.string.sign_up))
             }
         }
-        Column{
+        Column {
             SolidButton() {
                 Text(stringResource(R.string.create))
             }
@@ -48,11 +51,11 @@ fun SignUp(){
                 Text(stringResource(R.string.create_google))
             }
         }
-        Row{
+        Row {
             Text(stringResource(R.string.has_account))
             TextButton(
                 onClick = {}
-            ){
+            ) {
                 Text(stringResource(R.string.log_in))
             }
         }

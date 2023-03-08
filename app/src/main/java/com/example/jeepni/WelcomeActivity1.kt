@@ -4,12 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 
-class SignUpActivity : ComponentActivity() {
+class WelcomeActivity1 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SignUpActivityLayout()
+            WelcomeActivityLayout1()
         }
     }
 }
-
