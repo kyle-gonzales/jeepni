@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,6 +30,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainActivityLayout() {
+    val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var drivingMode by remember { mutableStateOf(false) }
@@ -41,7 +44,6 @@ fun MainActivityLayout() {
     var loginId by remember {mutableStateOf("test@email.com")}
 
     JeepNiTheme {
-        // A surface container using the 'background' color from the theme
         Scaffold (
             scaffoldState = scaffoldState,
             topBar = { TopActionBar(
@@ -61,14 +63,34 @@ fun MainActivityLayout() {
             },
             floatingActionButtonPosition = FabPosition.End,
             content = {
-                if (drivingMode) {
-                    DrivingModeOnContent(paddingValues = it)
-                } else {
-                    DrivingModeOffContent(paddingValues = it)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    if (drivingMode) {
+                        DrivingModeOnContent(paddingValues = it)
+                    } else {
+                        DrivingModeOffContent(paddingValues = it)
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Bottom
+                    ) {
+                        FloatingActionButton(
+                            onClick = {
+                                /*TODO: Delete the current daily log*/
+                                  Toast.makeText(context, "deleted the daily log", Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Icon(Icons.Filled.Delete, null)
+                        }
+                    }
                 }
             }
         )
-
     }
     if (isLogDailyAnalyticsDialogOpen) {
         LogDailyStatDialog(salary, fuelCost, isValidSalary, isValidFuelCost,
@@ -107,7 +129,7 @@ fun LogDailyStatDialog(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        /*save to database*/
+                        /*TODO: add / edit to database*/
                         Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
                         onDialogChange(false)
                     },
@@ -188,8 +210,8 @@ fun LogDailyStatDialog(
 fun DrivingModeOnContent(paddingValues : PaddingValues) {
     Column (
         modifier = Modifier
-            .padding(paddingValues),
-
+            .padding(paddingValues)
+            .fillMaxSize(),
         ) {
         Text(
             modifier = Modifier
@@ -217,8 +239,7 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
     Column (
         modifier = Modifier
             .padding(paddingValues)
-            .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
