@@ -1,5 +1,6 @@
 package com.example.jeepni
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import com.example.jeepni.ui.theme.Black
 import com.example.jeepni.ui.theme.White
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -34,6 +36,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 @Preview
 @Composable
 fun LogInActivityLayout(){
+    val logInContext = LocalContext.current
 
     var phoneNumber by rememberSaveable{
         mutableStateOf("")
@@ -59,8 +62,7 @@ fun LogInActivityLayout(){
                 onValueChange = {phoneNumber = it},
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
-
-            )
+                )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = {Text("Password")},
@@ -77,7 +79,7 @@ fun LogInActivityLayout(){
                 //TODO : implement forgot password
             }
         ){
-            Text(text = stringResource(R.string.forgot),
+            Text("Forgot Password",
                 color = Color.White)
         }
         Column{
@@ -86,13 +88,13 @@ fun LogInActivityLayout(){
                     //TODO: implement login with phone number
                 }
             ) {
-                Text(stringResource(R.string.log_in))
+                Text("Log In")
             }
             SolidButton(Black, White,
             onClick = {
                 //TODO: implement login with GOOGLE ACCOUNT
             }) {
-                Text(stringResource(R.string.log_in_google))
+                Text("Log In with Google")
             }
         }
         Row (
@@ -101,7 +103,7 @@ fun LogInActivityLayout(){
             Text(stringResource(R.string.no_account))
             TextButton(
                 onClick = {
-                    //TODO: intent to sign up page
+                    logInContext.startActivity(Intent(logInContext, SignUpActivity::class.java))
                 }
             ){
                 Text(stringResource(R.string.sign_up))
