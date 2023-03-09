@@ -99,8 +99,6 @@ fun TermsAndConditionsPreview() {
     }
 }
 
- */
-
 @Preview(showSystemUi = true)
 @Composable
 fun LogInPreview() {
@@ -108,3 +106,5 @@ fun LogInPreview() {
         LogIn()
     }
 }
+ */
+

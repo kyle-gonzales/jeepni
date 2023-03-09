@@ -5,20 +5,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import com.example.jeepni.ui.theme.Black
-import com.example.jeepni.ui.theme.White
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun LogInActivityLayout(){
+    var isClicked by remember { mutableStateOf(false) }
 
-}
-
-@Composable
-fun LogIn(){
     Container(0.9f){
         BackIconButton()
         Text(
@@ -26,8 +22,16 @@ fun LogIn(){
             Modifier.fillMaxWidth(0.6f)
         )
         Column{
-            CustomTextField()
-            CustomTextField()
+            CustomTextField(
+                label = {
+                    Text(stringResource(R.string.enter_number))},
+                kbType = KeyboardType.Text
+            )
+            CustomTextField(
+                label = {
+                    Text(stringResource(R.string.enter_password))},
+                kbType = KeyboardType.Text
+            )
         }
         TextButton(
             onClick = {}
@@ -36,13 +40,22 @@ fun LogIn(){
                 color = Color.White)
         }
         Column{
-            SolidButton() {
-                Text(stringResource(R.string.log_in))
-            }
-            SolidButton(Black, White) {
+            SolidButton(
+                isClicked = isClicked,
+                onButtonChange = { isClicked = !isClicked },
+                content = {
+                    Text(stringResource(R.string.log_in))
+                }
+            )
+
+            SolidButton(
+                isClicked = isClicked,
+                onButtonChange = { isClicked = !isClicked },
+                content = {
                 Text(stringResource(R.string.log_in_google))
             }
-        }
+        )}
+
         Row{
             Text(stringResource(R.string.no_account))
             TextButton(
@@ -53,3 +66,4 @@ fun LogIn(){
         }
     }
 }
+
