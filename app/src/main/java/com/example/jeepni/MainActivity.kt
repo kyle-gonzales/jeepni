@@ -50,13 +50,15 @@ fun TermsAndConditions(){
         Row(
            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ){
-            SolidButton(width = 0.45f) {
+            SolidButton(width = 0.45f,
+            onClick = {}) {
                 Row{
                     JeepNiIcons.Close
                     Text(stringResource(R.string.decline))
                 }
             }
-            SolidButton(width = 0.82f) {
+            SolidButton(width = 0.82f,
+            onClick = {}) {
                Row{
                    JeepNiIcons.Check
                    Text(stringResource(R.string.accept))
@@ -100,11 +102,3 @@ fun TermsAndConditionsPreview() {
 }
 
  */
-
-@Preview(showSystemUi = true)
-@Composable
-fun LogInPreview() {
-    JeepNiTheme{
-        LogIn()
-    }
-}

@@ -9,16 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.jeepni.ui.theme.Black
 import com.example.jeepni.ui.theme.White
 
+@Preview
 @Composable
 fun LogInActivityLayout(){
-
-}
-
-@Composable
-fun LogIn(){
     Container(0.9f){
         BackIconButton()
         Text(
@@ -36,10 +33,15 @@ fun LogIn(){
                 color = Color.White)
         }
         Column{
-            SolidButton() {
+            SolidButton(
+                onClick = {}
+            ) {
                 Text(stringResource(R.string.log_in))
             }
-            SolidButton(Black, White) {
+            SolidButton(Black, White,
+            onClick = {
+
+            }) {
                 Text(stringResource(R.string.log_in_google))
             }
         }
