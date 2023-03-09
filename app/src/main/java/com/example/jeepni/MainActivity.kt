@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+/*
 val JeepNiIcons = Icons.Filled
 @Composable
 fun TermsAndConditions(){
@@ -50,22 +50,24 @@ fun TermsAndConditions(){
         Row(
            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ){
-            SolidButton(width = 0.45f) {
+            SolidButton(width = 0.45f,
+            onClick = {}) {
                 Row{
                     JeepNiIcons.Close
                     Text(stringResource(R.string.decline))
                 }
             }
-            SolidButton(width = 0.82f) {
+            SolidButton(width = 0.82f,
+            onClick = {}) {
                Row{
                    JeepNiIcons.Check
                    Text(stringResource(R.string.accept))
                }
-           } 
+           }
         }
     }
 }
-
+*/
 /*
 @Preview(showSystemUi = true)
 @Composable
@@ -98,13 +100,6 @@ fun TermsAndConditionsPreview() {
         TermsAndConditions()
     }
 }
+*/
 
-@Preview(showSystemUi = true)
-@Composable
-fun LogInPreview() {
-    JeepNiTheme{
-        LogIn()
-    }
-}
  */
-

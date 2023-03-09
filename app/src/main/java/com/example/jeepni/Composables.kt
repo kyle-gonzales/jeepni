@@ -23,7 +23,7 @@ import com.example.jeepni.ui.theme.*
 @Composable
 fun Gradient(
     modifier: Modifier = Modifier,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ){
     Box(
         modifier = modifier
@@ -42,7 +42,7 @@ fun Gradient(
 fun Container(
     // provides structure for login, signup, terms & conditions
     height:Float,
-    content: @Composable () () -> Unit
+    content: @Composable () -> Unit
 ) {
     Gradient{
         Box(
@@ -86,12 +86,13 @@ fun SolidButton(
     bgColor: Color = White,
     contentColor: Color = Black,
     width: Float = 1f,
-    isClicked: Boolean = false,
-    onButtonChange: (Boolean) -> Unit,
+//    isClicked: Boolean = false,
+//    onButtonChange: (Boolean) -> Unit,
+    onClick : () -> Unit,
     content: @Composable () () -> Unit
 ){
     Button(
-        onClick = {onButtonChange},
+        onClick = {onClick()},
         modifier = Modifier
             .height(75.dp)
             .fillMaxWidth(width)
@@ -105,12 +106,13 @@ fun SolidButton(
 
 @Composable
 fun GradientButton(
-    isClicked: Boolean,
-    onButtonChange: (Boolean) -> Unit,
-    content: @Composable () () -> Unit
+//    isClicked: Boolean,
+//    onButtonChange: (Boolean) -> Unit,
+    onClick : () -> Unit,
+    content: @Composable () -> Unit
 ){
     Button(
-        onClick ={onButtonChange},
+        onClick ={onClick()},
         modifier = Modifier
             .height(75.dp)
             .fillMaxWidth()
@@ -122,37 +124,30 @@ fun GradientButton(
     }
 }
 
-/*
-@Composable
-fun CustomTextField(){
-    Box(
-        Modifier
-            .background(color = White)
-            .height(50.dp)
-            .width(50.dp)
-    ){
-        Text("text field ni")
-    }
-}
-*/
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
+    input: String,
+    onValueChange: (String) -> Unit,
+    isValid: Boolean,
     label: @Composable() (() -> Unit),
-    kbType: KeyboardType
 ){
-    Column(modifier = Modifier.padding(16.dp)) {
-        var input by remember { mutableStateOf("") }
-        TextField(modifier = Modifier,
-            shape = RoundedCornerShape(10.dp),
+    Column(modifier = Modifier
+        .padding(16.dp)
+        .fillMaxWidth()
+    ) {
+        OutlinedTextField(
             value = input,
+            onValueChange = onValueChange,
             label = label,
-            keyboardOptions = KeyboardOptions(keyboardType = kbType),
-            onValueChange = {
-                input = it
-            }
+            isError = !isValid,
         )
+        if (!isValid) {
+            Text(
+                text = "Invalid email",
+                color = Color.Red
+            )
+        }
     }
 }
 
