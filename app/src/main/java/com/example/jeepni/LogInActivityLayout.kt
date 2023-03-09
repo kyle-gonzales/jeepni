@@ -1,11 +1,11 @@
 package com.example.jeepni
 
+import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -24,8 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.core.content.ContextCompat.startActivity
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,6 +85,7 @@ fun LogInActivityLayout(){
             SolidButton(
                 onClick = {
                     //TODO: implement login with phone number
+                    loginUser(logInContext, phoneNumber, password)
                 }
             ) {
                 Text("Log In")
@@ -109,4 +110,22 @@ fun LogInActivityLayout(){
             }
         }
     }
+}
+
+private fun loginUser(baseContext: Context, email: String, password: String) {
+    val auth = Firebase.auth
+
+
+    auth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener {
+            if (it.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Toast.makeText(baseContext, "Signed in successfully", Toast.LENGTH_SHORT).show()
+                baseContext.startActivity(Intent(baseContext, MainActivity::class.java))
+            } else {
+                // If sign in fails, display a message to the user.
+                Toast.makeText(baseContext, "Error signing in", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 }
