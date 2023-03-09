@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/samplelogo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.JeepNi"
@@ -22,10 +22,17 @@
             android:label="@string/title_activity_log_in"
             android:theme="@style/Theme.JeepNi" />
         <activity
-            android:name=".LogInActivitiy"
-            android:exported="false"
-            android:label="@string/title_activity_log_in_activitiy"
-            android:theme="@style/Theme.JeepNi" />
+            android:name=".WelcomeActivity2"
+            android:exported="true"
+            android:label="@string/welcome_activity_2"
+            android:theme="@style/Theme.JeepNi">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".SignUpActivity"
             android:exported="false"
@@ -36,11 +43,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.JeepNi">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
