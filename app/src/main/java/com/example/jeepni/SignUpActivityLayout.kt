@@ -23,7 +23,12 @@ import com.example.jeepni.ui.theme.White
 fun SignUpActivityLayout() {
     val context = LocalContext.current
     var agreeToTerms by remember { mutableStateOf(false) }
-
+    var isValidNumber by remember { mutableStateOf(false) }
+    var isValidPassword by remember { mutableStateOf(false) }
+    var isValidPassword1 by remember { mutableStateOf(false) }
+    var number by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var password1 by remember { mutableStateOf("") }
 
     Container(0.9f) {
         BackIconButton()
@@ -32,7 +37,33 @@ fun SignUpActivityLayout() {
             Modifier.fillMaxWidth(0.6f)
         )
         Column {
-            CustomTextField()
+            CustomTextField(
+                input = number,
+                onValueChange = {
+                    number = it
+                    isValidNumber = number.isEmpty()
+                },
+                isValid = isValidNumber,
+                label = {Text(stringResource(R.string.number))}
+            )
+            CustomTextField(
+                input = password,
+                onValueChange = {
+                    password = it
+                    isValidPassword = password.isEmpty()
+                },
+                isValid = isValidPassword,
+                label = {Text(stringResource(R.string.password))}
+            )
+            CustomTextField(
+                input = password1,
+                onValueChange = {
+                    password1 = it
+                    isValidPassword1 = password1.isEmpty()
+                },
+                isValid = isValidPassword1,
+                label = {Text(stringResource(R.string.reenter))}
+            )
         }
         Row (modifier = Modifier,
             verticalAlignment = Alignment.CenterVertically,

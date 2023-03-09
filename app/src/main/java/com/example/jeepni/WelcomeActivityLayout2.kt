@@ -26,17 +26,10 @@ fun LoginOrSignup(){
 
         )
         Column{
-            SolidButton(
-                onClick = {
-
-                }
-            ) {
+            SolidButton() {
                 Text(stringResource(R.string.sign_up))
             }
-            SolidButton(Black, White,
-            onClick = {
-
-            }) {
+            SolidButton(Black, White) {
                 Text(stringResource(R.string.log_in))
             }
         }

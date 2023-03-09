@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+/*
 val JeepNiIcons = Icons.Filled
 @Composable
 fun TermsAndConditions(){
@@ -63,11 +63,11 @@ fun TermsAndConditions(){
                    JeepNiIcons.Check
                    Text(stringResource(R.string.accept))
                }
-           } 
+           }
         }
     }
 }
-
+*/
 /*
 @Preview(showSystemUi = true)
 @Composable
@@ -100,5 +100,6 @@ fun TermsAndConditionsPreview() {
         TermsAndConditions()
     }
 }
+*/
 
  */
