@@ -1,5 +1,6 @@
 package com.example.jeepni
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,8 +25,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jeepni.ui.theme.JeepNiTheme
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +88,8 @@ fun MainActivityLayout() {
                         FloatingActionButton(
                             onClick = {
                                 /*TODO: Delete the current daily log*/
-                                  Toast.makeText(context, "deleted the daily log", Toast.LENGTH_SHORT).show()
+                                logDailyStatDelete(context)
+
                             },
                             modifier = Modifier.padding(16.dp)
                         ) {
@@ -130,7 +138,8 @@ fun LogDailyStatDialog(
                 TextButton(
                     onClick = {
                         /*TODO: add / edit to database*/
-                        Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+                        logDailyStatUpdate(context, salary, fuelCost)
+
                         onDialogChange(false)
                     },
                     modifier = Modifier
