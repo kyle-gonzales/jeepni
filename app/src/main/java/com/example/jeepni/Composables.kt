@@ -133,7 +133,6 @@ fun CustomTextField(
     label: @Composable() (() -> Unit),
 ){
     Column(modifier = Modifier
-        .padding(16.dp)
         .fillMaxWidth()
     ) {
         OutlinedTextField(
@@ -144,7 +143,7 @@ fun CustomTextField(
         )
         if (!isValid) {
             Text(
-                text = "Invalid email",
+                text = "Invalid Phone Number",
                 color = Color.Red
             )
         }
