@@ -151,8 +151,10 @@ fun CustomTextField(
 }
 
 @Composable
-fun BackIconButton(){
-    IconButton(onClick = { /*TODO*/ })
+fun BackIconButton(
+    onClick : () -> Unit
+){
+    IconButton(onClick = { onClick() })
     {
         Icon(Icons.Filled.ArrowBack, contentDescription = null )
     }

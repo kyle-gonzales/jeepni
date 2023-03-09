@@ -1,5 +1,6 @@
 package com.example.jeepni
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -40,7 +41,10 @@ fun SignUpActivityLayout() {
     var password1 by remember { mutableStateOf("") }
 
     Container(0.9f) {
-        BackIconButton()
+        BackIconButton {
+            val intent = Intent(context, WelcomeActivity2::class.java)
+            context.startActivity(intent)
+        }
         Text(
             stringResource(R.string.sign_up_welcome2),
             Modifier.fillMaxWidth(0.6f)
@@ -113,7 +117,10 @@ fun SignUpActivityLayout() {
             TextButton(
                 modifier = Modifier
                     .padding(0.dp),
-                onClick = {}
+                onClick = {
+                    val intent = Intent(context, LogInActivity::class.java)
+                    context.startActivity(intent)
+                }
             ) {
                 Text(stringResource(R.string.log_in))
             }

@@ -25,12 +25,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.core.content.ContextCompat.startActivity
 
-
-//@Composable
-//fun SignUpLogInTextFieldColors () : TextFieldColors {
-//
-//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -45,7 +41,10 @@ fun LogInActivityLayout(){
         mutableStateOf("")
     }
     Container(0.9f){
-        BackIconButton()
+        BackIconButton {
+            val intent = Intent(logInContext, WelcomeActivity2::class.java)
+            logInContext.startActivity(intent)
+        }
         Text(
             stringResource(R.string.welcome_back),
             Modifier.fillMaxWidth(0.6f)
