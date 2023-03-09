@@ -2,8 +2,6 @@
     <string name="app_name">JeepNi</string>
     <string name="welcome_back">Welcome Back to JeepNi!</string>
     <string name="log_in">Log in</string>
-    <string name="enter_number">Enter Phone Number</string>
-    <string name="enter_password">Enter Password</string>
     <string name="log_in_google">Log in with Google</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_up_google">Sign up</string>

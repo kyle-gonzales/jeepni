@@ -124,36 +124,30 @@ fun GradientButton(
     }
 }
 
-@Composable
-fun CustomTextField(){
-    Box(
-        Modifier
-            .background(color = White)
-            .height(50.dp)
-            .width(50.dp)
-    ){
-        Text("text field ni")
-    }
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
+    input: String,
+    onValueChange: (String) -> Unit,
+    isValid: Boolean,
     label: @Composable() (() -> Unit),
-    kbType: KeyboardType
 ){
-    Column(modifier = Modifier.padding(16.dp)) {
-        var input by remember { mutableStateOf("") }
-        TextField(modifier = Modifier,
-            shape = RoundedCornerShape(10.dp),
+    Column(modifier = Modifier
+        .padding(16.dp)
+        .fillMaxWidth()
+    ) {
+        OutlinedTextField(
             value = input,
+            onValueChange = onValueChange,
             label = label,
-            keyboardOptions = KeyboardOptions(keyboardType = kbType),
-            onValueChange = {
-                input = it
-            }
+            isError = !isValid,
         )
+        if (!isValid) {
+            Text(
+                text = "Invalid email",
+                color = Color.Red
+            )
+        }
     }
 }
 
