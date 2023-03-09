@@ -313,9 +313,9 @@ fun Menu(
         Column (
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(email)
+            Text(email) /*TODO: update info based on login info */
         }
-        Button(onClick = { /*TODO : logout of email */ Toast.makeText(context, "logged out!", Toast.LENGTH_SHORT).show() },
+        Button(onClick = { /*TODO : logout of jeepNi account */ Toast.makeText(context, "logged out!", Toast.LENGTH_SHORT).show() },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("Log Out")
