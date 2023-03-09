@@ -1,11 +1,14 @@
 package com.example.jeepni
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -77,6 +80,44 @@ fun SignUpActivityLayout() {
                 onClick = {}
             ) {
                 Text(stringResource(R.string.log_in))
+            }
+        }
+    }
+}
+
+val JeepNiIcons = Icons.Filled
+@Composable
+fun TermsAndConditions(){
+    Container(height = 0.9f) {
+        IconButton(onClick = {}) {}
+        Text(
+            stringResource(R.string.terms),
+            Modifier.fillMaxWidth(0.6f)
+        )
+        Text(
+            text = stringResource(R.string.terms1),
+            modifier = Modifier
+                .fillMaxHeight(0.6f)
+                .verticalScroll(
+                    rememberScrollState()
+                )
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ){
+            SolidButton(width = 0.45f,
+                onClick = {}) {
+                Row{
+                    JeepNiIcons.Close
+                    Text(stringResource(R.string.decline))
+                }
+            }
+            SolidButton(width = 0.82f,
+                onClick = {}) {
+                Row{
+                    JeepNiIcons.Check
+                    Text(stringResource(R.string.accept))
+                }
             }
         }
     }
