@@ -41,7 +41,7 @@ fun isValidDecimal(text: String) : Boolean {
 fun getCurrentDateString() : String {
     val c = Calendar.getInstance()
     val year = c.get(Calendar.YEAR)
-    val month = ((c.get(Calendar.MONTH).toInt())+1).toString()
+    val month = ((c.get(Calendar.MONTH))+1).toString()
     val day = c.get(Calendar.DAY_OF_MONTH)
 
     return "$month-$day-$year"
