@@ -21,6 +21,8 @@ class MainActivityViewModel
     private val repository: DailyAnalyticsRepository)
 : ViewModel() {
 
+    // think about
+
 
     // create a sharedFlow for one-time events: events that you don't want to rerun on configuration changes
 
@@ -51,14 +53,14 @@ class MainActivityViewModel
             is MainActivityEvent.OnOpenAddDailyStatDialog -> {
                 isAddDailyStatDialogOpen = event.value
             }
-            is MainActivityEvent.SaveDailyStat -> {
+            is MainActivityEvent.OnSaveDailyAnalyticClick -> {
                 viewModelScope.launch {
                     repository.updateDailyStat(
                         DailyAnalyticsModel(salary.toDouble(), fuelCost.toDouble())
                     )
                 }
             }
-            is MainActivityEvent.DeleteDailyStat -> {
+            is MainActivityEvent.OnDeleteDailyStatClick -> {
                 viewModelScope.launch {
                     deletedStat = event.dailyStat
                     repository.deleteDailyStat(event.dailyStat)
@@ -71,7 +73,8 @@ class MainActivityViewModel
             is MainActivityEvent.OnUndoDeleteClick -> {
                 deletedStat?.let {
                     viewModelScope.launch {
-                        repository.updateDailyStat(deletedStat!!)
+                        repository.updateDailyStat(deletedStat ?: return@launch)
+                        deletedStat = null
                     }
                 }
             }
@@ -89,7 +92,7 @@ class MainActivityViewModel
             is MainActivityEvent.OnTimeChange -> {
 
             }
-            is MainActivityEvent.OnLogOut -> {
+            is MainActivityEvent.OnLogOutClick -> {
                 //TODO : logout
             }
             else -> {}

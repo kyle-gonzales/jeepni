@@ -1,5 +1,6 @@
 package com.example.jeepni.di
 
+import android.app.Application
 import com.example.jeepni.data.DailyAnalyticsRepository
 import com.example.jeepni.data.DailyAnalyticsRepositoryImpl
 import com.google.firebase.firestore.CollectionReference
@@ -22,6 +23,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDailyAnalyticsRepository(
-        usersRef : CollectionReference
-    ) : DailyAnalyticsRepository = DailyAnalyticsRepositoryImpl(usersRef)
+        usersRef : CollectionReference,
+        app: Application
+    ) : DailyAnalyticsRepository = DailyAnalyticsRepositoryImpl(usersRef, app)
 }
