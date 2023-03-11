@@ -33,7 +33,7 @@ class DailyAnalyticsRepositoryImpl (private val usersRef: CollectionReference, a
             .collection("analytics")
             .document(getCurrentDateString())
             .delete()
-            .addOnSuccessListener {}
+            .addOnSuccessListener {Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show()}
             .addOnFailureListener {}
 
     }

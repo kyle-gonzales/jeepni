@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
 
 /*
@@ -66,7 +67,7 @@ fun logDailyStatUpdate(context: Context, salary : String, fuelCost : String) {
             Toast.makeText(context, "Error making changes", Toast.LENGTH_SHORT).show()
         }
 }
-fun logDailyStatDelete(context: Context){
+fun logDailyStatDelete(){
     val db = Firebase.firestore
 
     db.collection("users")
@@ -75,10 +76,8 @@ fun logDailyStatDelete(context: Context){
         .document(getCurrentDateString())
         .delete()
         .addOnSuccessListener {
-            Toast.makeText(context, "deleted the daily log", Toast.LENGTH_SHORT).show()
         }
         .addOnFailureListener {
-            Toast.makeText(context, "Could not delete the daily log", Toast.LENGTH_SHORT).show()
         }
 
 }

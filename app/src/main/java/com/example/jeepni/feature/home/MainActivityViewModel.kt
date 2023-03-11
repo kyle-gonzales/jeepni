@@ -1,19 +1,25 @@
 package com.example.jeepni.feature.home
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jeepni.JeepNiApp
 import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.isValidDecimal
+import com.example.jeepni.logDailyStatDelete
 import com.example.jeepni.util.UiEvent
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class MainActivityViewModel
@@ -32,9 +38,9 @@ class MainActivityViewModel
 
     private var deletedStat : DailyAnalytics? = null // user can undo deleted stat
 
-    var salary by mutableStateOf("")
+    var salary by mutableStateOf("100")
         private set
-    var fuelCost by mutableStateOf("")
+    var fuelCost by mutableStateOf("100")
         private set
     var drivingMode by mutableStateOf(false)
         private set
@@ -51,6 +57,7 @@ class MainActivityViewModel
                 isAddDailyStatDialogOpen = event.value
             }
             is MainActivityEvent.OnSaveDailyAnalyticClick -> {
+                //TODO: perform network call to update state on relaunch
                 viewModelScope.launch {
                     repository.updateDailyStat(
                         DailyAnalytics(event.salary, event.fuelCost)
@@ -58,8 +65,9 @@ class MainActivityViewModel
                 }
             }
             is MainActivityEvent.OnDeleteDailyStatClick -> {
+                //TODO: perform network call to update state on relaunch
                 viewModelScope.launch {
-                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
+//                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
                     repository.deleteDailyStat()
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
@@ -67,7 +75,7 @@ class MainActivityViewModel
             is MainActivityEvent.OnToggleDrivingMode -> {
                 drivingMode = event.isDrivingMode
             }
-            is MainActivityEvent.OnUndoDeleteClick -> {
+            is MainActivityEvent.OnUndoDeleteClick -> { //TODO: Broken
                 deletedStat?.let {
                     viewModelScope.launch {
                         repository.updateDailyStat(deletedStat ?: return@launch)

@@ -29,7 +29,6 @@ import com.example.jeepni.core.ui.Container
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.White
-import com.example.jeepni.feature.authentication.LogInActivity
 
 
 @Preview
