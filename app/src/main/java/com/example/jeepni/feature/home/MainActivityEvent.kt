@@ -6,10 +6,10 @@ sealed class MainActivityEvent {
 
     // think about every single UI action that the user can do in the main activity
     data class OnOpenAddDailyStatDialog(val value: Boolean): MainActivityEvent()
-    data class OnDeleteDailyStatClick(val dailyStat: DailyAnalytics) : MainActivityEvent()
+    object OnDeleteDailyStatClick : MainActivityEvent()
     object OnLogOutClick : MainActivityEvent()
     data class OnToggleDrivingMode(val isDrivingMode : Boolean) : MainActivityEvent()
-    data class OnSaveDailyAnalyticClick(val dailyStat: DailyAnalytics) : MainActivityEvent()
+    data class OnSaveDailyAnalyticClick(val salary: Double,val fuelCost: Double) : MainActivityEvent()
     object OnUndoDeleteClick : MainActivityEvent()
     data class OnSalaryChange(val salary: String) : MainActivityEvent()
     data class OnFuelCostChange(val fuelCost: String) : MainActivityEvent()

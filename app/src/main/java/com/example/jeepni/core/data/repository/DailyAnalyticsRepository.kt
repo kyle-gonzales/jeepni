@@ -9,7 +9,7 @@ interface DailyAnalyticsRepository {
 
     suspend fun updateDailyStat(dailyStat: DailyAnalytics)
 
-    suspend fun deleteDailyStat(dailyStat : DailyAnalytics)
+    suspend fun deleteDailyStat()
 
     fun getDailyStats() : Flow<List<DailyAnalytics>>?
 

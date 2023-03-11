@@ -57,7 +57,7 @@ fun MainScreen(
                 drivingMode = viewModel.drivingMode ,
                 scaffoldState = scaffoldState,
                 coroutineScope = coroutineScope,
-                toggleDrivingMode ={ viewModel.onEvent(MainActivityEvent.OnToggleDrivingMode(true)) })
+                toggleDrivingMode ={ viewModel.onEvent(MainActivityEvent.OnToggleDrivingMode(it)) })
             },
             drawerContent = {Menu("")},
             drawerGesturesEnabled = true,
@@ -88,7 +88,7 @@ fun MainScreen(
                         FloatingActionButton(
                             onClick = {
                                 /*TODO: Delete the current daily log*/
-                                viewModel.onEvent(MainActivityEvent.OnDeleteDailyStatClick(DailyAnalytics(viewModel.salary.toDouble(), viewModel.fuelCost.toDouble())))
+                                viewModel.onEvent(MainActivityEvent.OnDeleteDailyStatClick)
                             },
                             modifier = Modifier.padding(16.dp)
                         ) {
@@ -102,13 +102,15 @@ fun MainScreen(
     if (viewModel.isAddDailyStatDialogOpen) {
         LogDailyStatDialog(
             salary = viewModel.salary,
-            onSalaryChange = {viewModel.onEvent(MainActivityEvent.OnSalaryChange(viewModel.salary))},
+            onSalaryChange = {viewModel.onEvent(MainActivityEvent.OnSalaryChange(it))},
             fuelCost = viewModel.fuelCost,
-            onFuelCostChange = {viewModel.onEvent(MainActivityEvent.OnFuelCostChange(viewModel.fuelCost))},
+            onFuelCostChange = {viewModel.onEvent(MainActivityEvent.OnFuelCostChange(it))},
             isValidSalary = viewModel.isValidSalary,
             isValidFuelCost = viewModel.isValidFuelCost,
             isDialogOpen = viewModel.isAddDailyStatDialogOpen,
-            onDialogOpenChange = {viewModel.onEvent(MainActivityEvent.OnOpenAddDailyStatDialog(viewModel.isAddDailyStatDialogOpen))}
+            onDialogOpenChange = {viewModel.onEvent(MainActivityEvent.OnOpenAddDailyStatDialog(it))},
+            onSave = { salary, fuelCost ->
+                viewModel.onEvent(MainActivityEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
         )
 
     }
@@ -124,6 +126,7 @@ fun LogDailyStatDialog(
     isValidFuelCost : Boolean,
     isDialogOpen: Boolean = true,
     onDialogOpenChange : (Boolean) -> Unit,
+    onSave : (String, String) -> Unit
  ) {
 
     val context = LocalContext.current
@@ -138,7 +141,7 @@ fun LogDailyStatDialog(
                 TextButton(
                     onClick = {
                         /*TODO: add / edit to database*/
-                        logDailyStatUpdate(context, salary, fuelCost)
+                        onSave(salary, fuelCost)
                         onDialogOpenChange(false)
                     },
                     modifier = Modifier
@@ -176,6 +179,7 @@ fun LogDailyStatDialog(
                     )
                     OutlinedTextField(
                         value = salary,
+                        placeholder = {Text(salary)},
                         onValueChange = { onSalaryChange(it) },
                         label = {Text("Salary")},
                         singleLine = true,
@@ -200,6 +204,7 @@ fun LogDailyStatDialog(
                     )
                     OutlinedTextField(
                         value = fuelCost,
+                        placeholder = {Text(fuelCost)},
                         onValueChange = {onFuelCostChange(it)},
                         label = {Text("Fuel Cost")},
                         singleLine = true,

@@ -22,9 +22,6 @@ class MainActivityViewModel
 )
 : ViewModel() {
 
-    // think about
-
-
     // create a sharedFlow for one-time events: events that you don't want to rerun on configuration changes
 
     private val _uiEvent = Channel<UiEvent>()
@@ -34,7 +31,6 @@ class MainActivityViewModel
     // event class -> events from the screen to the ViewModel when there is a user interaction
 
     private var deletedStat : DailyAnalytics? = null // user can undo deleted stat
-
 
     var salary by mutableStateOf("")
         private set
@@ -57,14 +53,14 @@ class MainActivityViewModel
             is MainActivityEvent.OnSaveDailyAnalyticClick -> {
                 viewModelScope.launch {
                     repository.updateDailyStat(
-                        DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
+                        DailyAnalytics(event.salary, event.fuelCost)
                     )
                 }
             }
             is MainActivityEvent.OnDeleteDailyStatClick -> {
                 viewModelScope.launch {
-                    deletedStat = event.dailyStat
-                    repository.deleteDailyStat(event.dailyStat)
+                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
+                    repository.deleteDailyStat()
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }

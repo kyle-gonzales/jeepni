@@ -28,7 +28,7 @@ class DailyAnalyticsRepositoryImpl (private val usersRef: CollectionReference, a
         logDailyStat(dailyStat)
     }
 
-    override suspend fun deleteDailyStat(dailyStat: DailyAnalytics) {
+    override suspend fun deleteDailyStat() {
         usersRef.document("0")
             .collection("analytics")
             .document(getCurrentDateString())
