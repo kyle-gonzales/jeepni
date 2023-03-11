@@ -24,8 +24,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.jeepni.ui.theme.Black
-import com.example.jeepni.ui.theme.White
+import com.example.jeepni.core.ui.BackIconButton
+import com.example.jeepni.core.ui.Container
+import com.example.jeepni.core.ui.SolidButton
+import com.example.jeepni.core.ui.theme.Black
+import com.example.jeepni.core.ui.theme.White
+import com.example.jeepni.feature.authentication.LogInActivity
 
 
 @Preview
@@ -101,7 +105,8 @@ fun SignUpActivityLayout() {
             ) {
                 Text(stringResource(R.string.create))
             }
-            SolidButton(Black, White,
+            SolidButton(
+                Black, White,
             onClick = {
                 /*TODO: sign up with GOOGLE ACCOUNT */
                 Toast.makeText(context, "creating account with google...", Toast.LENGTH_SHORT).show()

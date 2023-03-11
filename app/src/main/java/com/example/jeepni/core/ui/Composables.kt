@@ -1,10 +1,9 @@
-package com.example.jeepni
+package com.example.jeepni.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -14,11 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.jeepni.ui.theme.*
+import com.example.jeepni.R
+import com.example.jeepni.core.ui.theme.Black
+import com.example.jeepni.core.ui.theme.White
+import com.example.jeepni.core.ui.theme.gradientColors
 
 @Composable
 fun Gradient(

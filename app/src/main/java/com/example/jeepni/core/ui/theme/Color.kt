@@ -1,4 +1,4 @@
-package com.example.jeepni.ui.theme
+package com.example.jeepni.core.ui.theme
 
 import android.hardware.lights.Light
 import androidx.compose.material3.MaterialTheme

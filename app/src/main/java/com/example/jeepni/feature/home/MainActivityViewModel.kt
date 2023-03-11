@@ -1,12 +1,12 @@
-package com.example.jeepni.ui.main_activity
+package com.example.jeepni.feature.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jeepni.data.DailyAnalyticsModel
-import com.example.jeepni.data.DailyAnalyticsRepository
+import com.example.jeepni.core.data.model.DailyAnalytics
+import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.isValidDecimal
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel
 @Inject constructor(
-    private val repository: DailyAnalyticsRepository)
+    private val repository: DailyAnalyticsRepository
+)
 : ViewModel() {
 
     // think about
@@ -32,7 +33,7 @@ class MainActivityViewModel
     //think about the user interactions that may happen in the main activity
     // event class -> events from the screen to the ViewModel when there is a user interaction
 
-    private var deletedStat : DailyAnalyticsModel? = null // user can undo deleted stat
+    private var deletedStat : DailyAnalytics? = null // user can undo deleted stat
 
 
     var salary by mutableStateOf("")
@@ -56,7 +57,7 @@ class MainActivityViewModel
             is MainActivityEvent.OnSaveDailyAnalyticClick -> {
                 viewModelScope.launch {
                     repository.updateDailyStat(
-                        DailyAnalyticsModel(salary.toDouble(), fuelCost.toDouble())
+                        DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
                     )
                 }
             }

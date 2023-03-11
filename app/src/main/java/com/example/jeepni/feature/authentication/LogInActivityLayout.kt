@@ -16,14 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.jeepni.ui.theme.Black
-import com.example.jeepni.ui.theme.White
+import com.example.jeepni.core.ui.theme.Black
+import com.example.jeepni.core.ui.theme.White
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.example.jeepni.core.ui.BackIconButton
+import com.example.jeepni.core.ui.Container
+import com.example.jeepni.core.ui.SolidButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -90,7 +93,8 @@ fun LogInActivityLayout(){
             ) {
                 Text("Log In")
             }
-            SolidButton(Black, White,
+            SolidButton(
+                Black, White,
             onClick = {
                 //TODO: implement login with GOOGLE ACCOUNT
             }) {

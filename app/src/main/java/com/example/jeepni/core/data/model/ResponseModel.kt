@@ -1,4 +1,4 @@
-package com.example.jeepni.data
+package com.example.jeepni.core.data.model
 
 sealed class Response<out T> {
     object Loading: Response<Nothing>()

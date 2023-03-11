@@ -1,6 +1,5 @@
 package com.example.jeepni
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,11 +11,9 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -24,46 +21,49 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.jeepni.ui.theme.JeepNiTheme
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jeepni.core.data.model.DailyAnalytics
+import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.feature.home.MainActivityEvent
+import com.example.jeepni.feature.home.MainActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainActivityLayout() {
-    val context = LocalContext.current
+fun MainScreen(
+//    onNavigate : (UiEvent.Navigate) -> Unit,
+    viewModel : MainActivityViewModel = hiltViewModel(),
+) {
+//    val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
-    var drivingMode by remember { mutableStateOf(false) }
-    var isLogDailyAnalyticsDialogOpen by remember {mutableStateOf(false) }
+//    var drivingMode by remember { mutableStateOf(false) }
+//    var isLogDailyAnalyticsDialogOpen by remember {mutableStateOf(false) }
+//
+//    var salary by rememberSaveable { mutableStateOf("") }
+//    var fuelCost by rememberSaveable { mutableStateOf("")}
+//    var isValidSalary by remember { mutableStateOf(isValidDecimal(salary))}
+//    var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
+//
+//    var loginId by remember {mutableStateOf("test@email.com")}
 
-    var salary by rememberSaveable { mutableStateOf("") }
-    var fuelCost by rememberSaveable { mutableStateOf("")}
-    var isValidSalary by remember { mutableStateOf(isValidDecimal(salary))}
-    var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
-
-    var loginId by remember {mutableStateOf("test@email.com")}
 
     JeepNiTheme {
         Scaffold (
             scaffoldState = scaffoldState,
             topBar = { TopActionBar(
-                drivingMode = drivingMode ,
+                drivingMode = viewModel.drivingMode ,
                 scaffoldState = scaffoldState,
                 coroutineScope = coroutineScope,
-                toggleDrivingMode = { drivingMode = it })
+                toggleDrivingMode ={ viewModel.onEvent(MainActivityEvent.OnToggleDrivingMode(true)) })
             },
-            drawerContent = {Menu(loginId)},
+            drawerContent = {Menu("")},
             drawerGesturesEnabled = true,
             floatingActionButton = {
                 FloatingActionButton(onClick = {
-                    isLogDailyAnalyticsDialogOpen = true
+                    viewModel.onEvent(MainActivityEvent.OnOpenAddDailyStatDialog(true))
                 }) {
                     Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
                 }
@@ -74,7 +74,7 @@ fun MainActivityLayout() {
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    if (drivingMode) {
+                    if (viewModel.drivingMode) {
                         DrivingModeOnContent(paddingValues = it)
                     } else {
                         DrivingModeOffContent(paddingValues = it)
@@ -88,8 +88,7 @@ fun MainActivityLayout() {
                         FloatingActionButton(
                             onClick = {
                                 /*TODO: Delete the current daily log*/
-                                logDailyStatDelete(context)
-
+                                viewModel.onEvent(MainActivityEvent.OnDeleteDailyStatClick(DailyAnalytics(viewModel.salary.toDouble(), viewModel.fuelCost.toDouble())))
                             },
                             modifier = Modifier.padding(16.dp)
                         ) {
@@ -100,31 +99,32 @@ fun MainActivityLayout() {
             }
         )
     }
-    if (isLogDailyAnalyticsDialogOpen) {
-        LogDailyStatDialog(salary, fuelCost, isValidSalary, isValidFuelCost,
-            onDialogChange = { isLogDailyAnalyticsDialogOpen = it },
-            onSalaryTextChange = {
-                salary = it
-                isValidSalary = isValidDecimal(it)
-                },
-            onFuelCostTextChange = {
-                fuelCost = it
-                isValidFuelCost = isValidDecimal(it)
-            }
+    if (viewModel.isAddDailyStatDialogOpen) {
+        LogDailyStatDialog(
+            salary = viewModel.salary,
+            onSalaryChange = {viewModel.onEvent(MainActivityEvent.OnSalaryChange(viewModel.salary))},
+            fuelCost = viewModel.fuelCost,
+            onFuelCostChange = {viewModel.onEvent(MainActivityEvent.OnFuelCostChange(viewModel.fuelCost))},
+            isValidSalary = viewModel.isValidSalary,
+            isValidFuelCost = viewModel.isValidFuelCost,
+            isDialogOpen = viewModel.isAddDailyStatDialogOpen,
+            onDialogOpenChange = {viewModel.onEvent(MainActivityEvent.OnOpenAddDailyStatDialog(viewModel.isAddDailyStatDialogOpen))}
         )
+
     }
 }
 
 @Composable
 fun LogDailyStatDialog(
     salary: String,
+    onSalaryChange : (String) -> Unit,
     fuelCost : String,
+    onFuelCostChange : (String) -> Unit,
     isValidSalary : Boolean,
     isValidFuelCost : Boolean,
     isDialogOpen: Boolean = true,
-    onDialogChange: (Boolean) -> Unit,
-    onSalaryTextChange: (String) -> Unit,
-    onFuelCostTextChange: (String) -> Unit) {
+    onDialogOpenChange : (Boolean) -> Unit,
+ ) {
 
     val context = LocalContext.current
 
@@ -132,15 +132,14 @@ fun LogDailyStatDialog(
         AlertDialog(
             modifier = Modifier,
             onDismissRequest = {
-                onDialogChange(false)
+                onDialogOpenChange(false)
             },
             confirmButton = {
                 TextButton(
                     onClick = {
                         /*TODO: add / edit to database*/
                         logDailyStatUpdate(context, salary, fuelCost)
-
-                        onDialogChange(false)
+                        onDialogOpenChange(false)
                     },
                     modifier = Modifier
                         .padding(8.dp),
@@ -152,7 +151,7 @@ fun LogDailyStatDialog(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onDialogChange(false)
+                        onDialogOpenChange(false)
                     },
                     modifier = Modifier
                         .padding(8.dp),
@@ -177,7 +176,7 @@ fun LogDailyStatDialog(
                     )
                     OutlinedTextField(
                         value = salary,
-                        onValueChange = { onSalaryTextChange(it) },
+                        onValueChange = { onSalaryChange(it) },
                         label = {Text("Salary")},
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
@@ -201,7 +200,7 @@ fun LogDailyStatDialog(
                     )
                     OutlinedTextField(
                         value = fuelCost,
-                        onValueChange = {onFuelCostTextChange(it)},
+                        onValueChange = {onFuelCostChange(it)},
                         label = {Text("Fuel Cost")},
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
@@ -335,5 +334,5 @@ fun Menu(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    MainActivityLayout()
+    MainScreen()
 }

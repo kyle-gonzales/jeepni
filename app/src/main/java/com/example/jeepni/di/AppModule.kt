@@ -1,8 +1,8 @@
 package com.example.jeepni.di
 
 import android.app.Application
-import com.example.jeepni.data.DailyAnalyticsRepository
-import com.example.jeepni.data.DailyAnalyticsRepositoryImpl
+import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
+import com.example.jeepni.core.data.repository.DailyAnalyticsRepositoryImpl
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

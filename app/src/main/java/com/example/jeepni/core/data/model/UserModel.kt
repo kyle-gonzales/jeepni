@@ -1,4 +1,4 @@
-package com.example.jeepni.data
+package com.example.jeepni.core.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
