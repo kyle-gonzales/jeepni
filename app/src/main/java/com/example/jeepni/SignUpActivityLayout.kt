@@ -1,6 +1,8 @@
 package com.example.jeepni
 
+import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jeepni.ui.theme.Black
 import com.example.jeepni.ui.theme.White
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.*
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import java.util.concurrent.TimeUnit
 
 
 @Preview
@@ -97,6 +105,9 @@ fun SignUpActivityLayout() {
                 onClick = {
                     /*TODO: sign up*/
                     Toast.makeText(context, "creating account...", Toast.LENGTH_SHORT).show()
+                    //createAccountEmail(context, number, password, password1)
+                    createAccountEmail(context, number, password, password1)
+
                 }
             ) {
                 Text(stringResource(R.string.create))
@@ -164,4 +175,108 @@ fun TermsAndConditions(){
             }
         }
     }
+}
+
+
+// IDK HOW TO MAKE A SEPARATE FILE IN KOTLIN
+
+private fun createAccountEmail(baseContext: Context, email: String, password: String, confirmation: String){
+
+    //  Check if form is valid
+    //    if(!validateForm(email, password, confirmation)){
+    //        return
+    //    }
+    if (password != confirmation){
+        return
+    }
+
+    val auth = Firebase.auth
+    auth.createUserWithEmailAndPassword(email.trim(), password.trim())
+        .addOnCompleteListener {
+            if (it.isSuccessful) {
+                //Log.d(TAG, "createUserWithEmail:success")
+                val user = auth.currentUser
+                Toast.makeText(baseContext, "Registered user successfully", Toast.LENGTH_SHORT).show()
+                updateUI(baseContext, user)
+
+            } else {
+                //val errorCode = (it.exception as FirebaseAuthException).errorCode
+                //val errorMessage = authErrors[errorCode] ?: R.string.error_login_default_error
+                //Log.w(TAG, "createUserWithEmail:failure", it.exception)
+                Toast.makeText(baseContext, "Registration unsuccessful", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+}
+
+private fun createAccountNumber(baseContext: Context, phoneNumber: String, password: String, confirmation: String){
+    // TODO: finish this function
+    // -> https://firebase.google.com/docs/auth/android/phone-auth?authuser=1&hl=en <-
+
+
+    //  Check if form is valid
+    //    if(!validateForm(email, password, confirmation)){
+    //        return
+    //    }
+    if (password != confirmation){
+        return
+    }
+
+    val auth = Firebase.auth
+    auth.setLanguageCode("en")
+    val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+            // This callback will be invoked in two situations:
+            // 1 - Instant verification. In some cases the phone number can be instantly
+            //     verified without needing to send or enter a verification code.
+            // 2 - Auto-retrieval. On some devices Google Play services can automatically
+            //     detect the incoming verification SMS and perform verification without
+            //     user action.
+            updateUI(baseContext, credential)
+        }
+
+        override fun onVerificationFailed(e: FirebaseException) {
+            // This callback is invoked in an invalid request for verification is made,
+            // for instance if the the phone number format is not valid.
+            //Log.w(TAG, "onVerificationFailed", e)
+
+            if (e is FirebaseAuthInvalidCredentialsException) {
+                // Invalid request
+            } else if (e is FirebaseTooManyRequestsException) {
+                // The SMS quota for the project has been exceeded
+            }
+
+            // Show a message and update the UI
+        }
+
+        override fun onCodeSent(
+            verificationId: String,
+            token: PhoneAuthProvider.ForceResendingToken
+        ) {
+            // The SMS verification code has been sent to the provided phone number, we
+            // now need to ask the user to enter the code and then construct a credential
+            // by combining the code with a verification ID.
+            //Log.d(TAG, "onCodeSent:$verificationId")
+
+            // Save verification ID and resending token so we can use them later
+            //storedVerificationId = verificationId
+            //resendToken = token
+        }
+    }
+//    val options = PhoneAuthOptions.newBuilder(auth)
+//        .setPhoneNumber(phoneNumber)       // Phone number to verify
+//        .setTimeout(120L, TimeUnit.SECONDS) // Timeout and unit
+//        .setActivity(Context)                 // Activity (for callback binding)
+//        .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+//        .build()
+//    PhoneAuthProvider.verifyPhoneNumber(options)
+}
+private fun updateUI(baseContext: Context, user: FirebaseUser?){
+    baseContext.startActivity(Intent(baseContext, LogInActivity::class.java))
+
+}
+private fun updateUI(baseContext: Context, user: PhoneAuthCredential?){
+    baseContext.startActivity(Intent(baseContext, LogInActivity::class.java))
+
 }
