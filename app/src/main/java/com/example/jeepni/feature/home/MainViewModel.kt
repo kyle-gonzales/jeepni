@@ -1,32 +1,39 @@
 package com.example.jeepni.feature.home
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jeepni.JeepNiApp
+import com.example.jeepni.*
 import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
-import com.example.jeepni.isValidDecimal
-import com.example.jeepni.logDailyStatDelete
 import com.example.jeepni.util.UiEvent
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
-class MainActivityViewModel
+class MainViewModel
 @Inject constructor(
-    private val repository: DailyAnalyticsRepository
+    private val repository: DailyAnalyticsRepository,
+    savedStateHandle: SavedStateHandle //contains navigation arguments
 )
 : ViewModel() {
+
+    var user by mutableStateOf("")
+    init {
+        user = savedStateHandle.get<String>("email") ?: ""
+//        if (userLogIn.isNotEmpty()) {
+//            viewModelScope.launch {
+//                repository.get
+//            }
+//
+//        }
+    }
 
     // create a sharedFlow for one-time events: events that you don't want to rerun on configuration changes
 
@@ -50,13 +57,22 @@ class MainActivityViewModel
         private set
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
+    private var distance by mutableStateOf(12382.9)
 
-    fun onEvent(event: MainActivityEvent) {
+    private var time by mutableStateOf(3999999L)
+
+    var distanceState by mutableStateOf(convertDistanceToString(distance))
+        private set
+    var timeState by mutableStateOf(convertMillisToTime(time))
+        private set
+
+
+    fun onEvent(event: MainEvent) {
         when(event) {
-            is MainActivityEvent.OnOpenAddDailyStatDialog -> {
+            is MainEvent.OnOpenAddDailyStatDialog -> {
                 isAddDailyStatDialogOpen = event.value
             }
-            is MainActivityEvent.OnSaveDailyAnalyticClick -> {
+            is MainEvent.OnSaveDailyAnalyticClick -> {
                 //TODO: perform network call to update state on relaunch
                 viewModelScope.launch {
                     repository.updateDailyStat(
@@ -64,7 +80,7 @@ class MainActivityViewModel
                     )
                 }
             }
-            is MainActivityEvent.OnDeleteDailyStatClick -> {
+            is MainEvent.OnDeleteDailyStatClick -> {
                 //TODO: perform network call to update state on relaunch
                 viewModelScope.launch {
 //                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
@@ -72,35 +88,40 @@ class MainActivityViewModel
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
-            is MainActivityEvent.OnToggleDrivingMode -> {
+            is MainEvent.OnToggleDrivingMode -> {
                 drivingMode = event.isDrivingMode
             }
-            is MainActivityEvent.OnUndoDeleteClick -> { //TODO: Broken
+            is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
                 deletedStat?.let {
                     viewModelScope.launch {
                         repository.updateDailyStat(deletedStat ?: return@launch)
                         deletedStat = null
+                        sendUiEvent(UiEvent.ShowSnackBar(
+                            message = "Daily Analytics Deleted",
+                            action = "Undo"
+                        ))
                     }
                 }
             }
-            is MainActivityEvent.OnSalaryChange -> {
+            is MainEvent.OnSalaryChange -> {
                 salary = event.salary
                 isValidSalary = isValidDecimal(salary)
             }
-            is MainActivityEvent.OnFuelCostChange -> {
+            is MainEvent.OnFuelCostChange -> {
                 fuelCost= event.fuelCost
                 isValidFuelCost = isValidDecimal(fuelCost)
             }
-            is MainActivityEvent.OnDistanceChange -> {
+            is MainEvent.OnDistanceChange -> {
+                distanceState = convertDistanceToString(distance)
 
             }
-            is MainActivityEvent.OnTimeChange -> {
+            is MainEvent.OnTimeChange -> {
+                timeState = convertMillisToTime(time)
 
             }
-            is MainActivityEvent.OnLogOutClick -> {
+            is MainEvent.OnLogOutClick -> {
                 //TODO : logout
             }
-            else -> {}
         }
     }
 

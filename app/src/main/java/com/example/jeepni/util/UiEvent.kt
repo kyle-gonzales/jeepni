@@ -6,4 +6,6 @@ sealed class UiEvent {
         val message : String,
         val action : String? = null
     ) : UiEvent()
+
+    data class Navigate(val route : String) : UiEvent()
 }
