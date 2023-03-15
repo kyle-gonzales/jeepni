@@ -46,15 +46,10 @@ fun SignUpScreen(
             when (event) {
                 is UiEvent.Navigate -> onNavigate(event)
                 is UiEvent.PopBackStack -> onPopBackStack()
-                is UiEvent.ShowSnackBar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action
-                    )
-                }
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+                else -> {}
             }
         }
     }
@@ -106,6 +101,7 @@ fun SignUpScreen(
             TextButton(
                 onClick = {
                     //TODO : open terms and conditions dialog
+                    viewModel.onEvent(SignUpEvent.OnShowTermsAndConditions)
                 }
             ) {
                 Text(stringResource(R.string.terms))
@@ -149,9 +145,13 @@ fun SignUpScreen(
 
 val JeepNiIcons = Icons.Filled
 @Composable
-fun TermsAndConditions(){
+fun TermsAndConditions(
+    onClick : () -> Unit
+){
     Container(height = 0.9f) {
-        IconButton(onClick = {}) {}
+        IconButton(onClick = onClick) {
+
+        }
         Text(
             stringResource(R.string.terms),
             Modifier.fillMaxWidth(0.6f)

@@ -10,4 +10,6 @@ sealed class SignUpEvent {
     object OnCreateAccountWithGoogleClicked : SignUpEvent()
     object OnForgotPasswordClicked : SignUpEvent()
     object OnLogInClicked : SignUpEvent()
+
+    object OnShowTermsAndConditions : SignUpEvent()
 }

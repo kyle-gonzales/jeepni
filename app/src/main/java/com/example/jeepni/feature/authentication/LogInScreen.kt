@@ -41,15 +41,10 @@ fun LogInScreen(
             when(event) {
                 is UiEvent.Navigate -> onNavigate(event)
                 is UiEvent.PopBackStack -> onPopBackStack()
-                is UiEvent.ShowSnackBar -> {
-                    val result = scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action
-                    )
-                }
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+                else -> {}
             }
         }
     }
@@ -88,6 +83,7 @@ fun LogInScreen(
         TextButton(
             onClick = {
                 //TODO : implement forgot password
+                viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
             }
         ){
             Text("Forgot Password",
@@ -106,6 +102,7 @@ fun LogInScreen(
                 Black, White,
             onClick = {
                 //TODO: implement login with GOOGLE ACCOUNT
+                viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
             }) {
                 Text("Log In with Google")
             }

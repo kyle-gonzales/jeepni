@@ -72,9 +72,10 @@ class SignUpViewModel @Inject constructor(
                 }
             }
             is SignUpEvent.OnCreateAccountWithGoogleClicked -> {
-//                sendUiEvent(UiEvent.ShowSnackBar(
-//                    message = "Feature not available at the moment"
-//                ))
+                sendUiEvent(UiEvent.ShowToast("feature doesn't exist yet"))
+            }
+            is SignUpEvent.OnShowTermsAndConditions -> {
+                sendUiEvent(UiEvent.ShowToast("feature doesn't exist yet"))
             }
         }
     }

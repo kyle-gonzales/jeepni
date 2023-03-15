@@ -10,4 +10,6 @@ sealed class LogInEvent {
     object OnSignUpClicked : LogInEvent()
     object OnBackPressed : LogInEvent()
 
+    object OnLogInWithGoogle : LogInEvent()
+
 }

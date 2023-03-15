@@ -78,6 +78,9 @@ class LogInViewModel @Inject constructor(
             is LogInEvent.OnBackPressed -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
+            is LogInEvent.OnLogInWithGoogle -> {
+                sendUiEvent(UiEvent.ShowToast("feature doesn't exist yet"))
+            }
         }
     }
 
