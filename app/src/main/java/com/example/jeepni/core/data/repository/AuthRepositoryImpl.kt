@@ -50,7 +50,7 @@ class AuthRepositoryImpl (
     }
 
     override suspend fun isUserLoggedIn(): Boolean {
-        return auth.currentUser == null
+        return auth.currentUser != null
     }
 
     override suspend fun logOut() {

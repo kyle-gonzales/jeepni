@@ -24,11 +24,13 @@ import com.example.jeepni.util.UiEvent
 fun WelcomeActivityLayout2(
     viewModel: Welcome2ViewModel = hiltViewModel(),
     onNavigate : (UiEvent.Navigate) -> Unit,
+    onPopBackStack : (UiEvent.PopBackStack) -> Unit,
 ){
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {event ->
             when (event) {
                 is UiEvent.Navigate -> onNavigate(event)
+                is UiEvent.PopBackStack -> onPopBackStack(event)
                 else -> {}
             }
         }

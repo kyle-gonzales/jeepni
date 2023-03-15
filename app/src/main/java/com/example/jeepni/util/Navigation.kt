@@ -5,8 +5,10 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
 import com.google.accompanist.navigation.animation.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.WelcomeActivityLayout2
 import com.example.jeepni.feature.authentication.SignUpScreen
@@ -24,8 +26,7 @@ fun Navigation() {
         navController = navController,
         startDestination = Screen.WelcomeScreen.route,
         enterTransition = { EnterTransition.None},
-        exitTransition = {ExitTransition.None}
-
+        exitTransition = {ExitTransition.None},
     ) {
         // tell the navHost how the screens look like
         composable (
@@ -41,7 +42,7 @@ fun Navigation() {
                 email = entry.arguments?.getString("email")!!,
                 onNavigate = {
                     navController.navigate(it.route)
-                }
+                },
             )
         }
         composable (
@@ -49,7 +50,18 @@ fun Navigation() {
         ) {
             WelcomeActivityLayout2(
                 onNavigate = {
-                    navController.navigate(it.route)
+                    navController.navigate(it.route) {
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onPopBackStack = {
+                    navController.navigate(Screen.WelcomeScreen.route) {
+                        popUpTo(navController.graph.id) {
+                            inclusive = false
+                        }
+                    }
                 }
             )
         }

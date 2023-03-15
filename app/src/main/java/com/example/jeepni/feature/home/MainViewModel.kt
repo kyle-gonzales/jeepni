@@ -8,18 +8,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.*
 import com.example.jeepni.core.data.model.DailyAnalytics
+import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
+import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
 @Inject constructor(
     private val repository: DailyAnalyticsRepository,
+    private val authRepo : AuthRepository,
     savedStateHandle: SavedStateHandle //contains navigation arguments
 )
 : ViewModel() {
@@ -117,10 +123,18 @@ class MainViewModel
             }
             is MainEvent.OnTimeChange -> {
                 timeState = convertMillisToTime(time)
-
             }
             is MainEvent.OnLogOutClick -> {
-                //TODO : logout
+                viewModelScope.launch {
+                    authRepo.logOut()
+                    if (authRepo.isUserLoggedIn()) {
+                        sendUiEvent(UiEvent.ShowSnackBar(
+                            message = "Failed to log out..."
+                        ))
+                    } else {
+                        sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route))
+                    }
+                }
             }
         }
     }
