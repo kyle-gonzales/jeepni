@@ -1,7 +1,5 @@
 package com.example.jeepni.core.ui.theme
 
-import android.hardware.lights.Light
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 
 val Purple =  Color(0xFF831DE1)
