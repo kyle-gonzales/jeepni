@@ -1,24 +1,27 @@
 package com.example.jeepni.core.data.repository
 
 import android.app.Application
-import android.widget.Toast
-import com.firebase.ui.auth.data.model.User
+import com.example.jeepni.core.data.model.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 class AuthRepositoryImpl (
     private val app : Application,
     private val auth : FirebaseAuth,
     ) : AuthRepository {
 
-    override suspend fun addUser(user: User) {
+    override suspend fun addUser(email: String, password: String, confirmation: String) : Boolean{
+        if (confirmation != password) {
+            return false
+        }
+        return try {
+            auth.createUserWithEmailAndPassword(email.trim(), password.trim()).await()
+            true
+        } catch (e : Exception) {
+            false
+        }
     }
-
     override suspend fun logInWithEmail(email : String, password: String) : Boolean {
-
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
             true
@@ -27,11 +30,30 @@ class AuthRepositoryImpl (
             false
         }
     }
-
-    override suspend fun logInWithPhoneNumber(email: String, password: String) {
-
+    override suspend fun logInWithPhoneNumber(email: String, password: String) : Boolean {
+        return false
     }
-    override fun getUser(logInId: String){
+    override fun getUser(): User? {
+        val firebaseUser = auth.currentUser
+        if (firebaseUser != null) {
+            return User(
+                email = firebaseUser.email!!,
+                phoneNumber = "",
+                name =  firebaseUser.displayName!!,
+                route = ""
+            )
+        }
+        return null
+    }
+    override fun getUserEmail(): String {
+        return auth.currentUser?.email ?: ""
+    }
 
+    override suspend fun isUserLoggedIn(): Boolean {
+        return auth.currentUser != null
+    }
+
+    override suspend fun logOut() {
+        auth.signOut()
     }
 }

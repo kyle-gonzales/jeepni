@@ -84,7 +84,11 @@ fun MainScreen(
                 onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
                 onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
             ) },
-            drawerContent = { Menu(email) },
+            drawerContent = {
+                Menu(email) {
+                    viewModel.onEvent(MainEvent.OnLogOutClick)
+                }
+            },
             drawerGesturesEnabled = true,
             floatingActionButton = {
                 FloatingActionButton(onClick = {
@@ -339,6 +343,7 @@ fun TopActionBar(
 @Composable
 fun Menu(
     email : String,
+    onLogOutClick : () -> Unit
 ) {
     val context = LocalContext.current
     Column(
@@ -354,7 +359,8 @@ fun Menu(
         ) {
             Text(email) /*TODO: update info based on login info */
         }
-        Button(onClick = { /*TODO : logout of jeepNi account */ Toast.makeText(context, "logged out!", Toast.LENGTH_SHORT).show() },
+        Button(
+            onClick = { onLogOutClick() },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("Log Out")
