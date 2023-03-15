@@ -89,10 +89,10 @@ fun SolidButton(
 //    isClicked: Boolean = false,
 //    onButtonChange: (Boolean) -> Unit,
     onClick : () -> Unit,
-    content: @Composable () () -> Unit
+    content: @Composable () -> Unit
 ){
     Button(
-        onClick = {onClick()},
+        onClick = onClick,
         modifier = Modifier
             .height(75.dp)
             .fillMaxWidth(width)

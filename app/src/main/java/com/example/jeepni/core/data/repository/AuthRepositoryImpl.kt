@@ -15,7 +15,7 @@ class AuthRepositoryImpl (
             return false
         }
         return try {
-            auth.createUserWithEmailAndPassword(email.trim(), password.trim()).await()
+            auth.createUserWithEmailAndPassword(email, password).await()
             true
         } catch (e : Exception) {
             false
@@ -49,11 +49,11 @@ class AuthRepositoryImpl (
         return auth.currentUser?.email ?: ""
     }
 
-    override suspend fun isUserLoggedIn(): Boolean {
+    override fun isUserLoggedIn(): Boolean {
         return auth.currentUser != null
     }
 
-    override suspend fun logOut() {
+    override fun logOut() {
         auth.signOut()
     }
 }

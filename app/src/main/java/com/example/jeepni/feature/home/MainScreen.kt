@@ -47,7 +47,7 @@ fun MainScreen(
 //    var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
 //
 //    var loginId by remember {mutableStateOf("test@email.com")}
-
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {// don't subscribe to UI event flow every time the UI updates
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -65,6 +65,9 @@ fun MainScreen(
                     if (result == SnackbarResult.ActionPerformed) {
                         viewModel.onEvent(MainEvent.OnUndoDeleteClick)
                     }
+                }
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }

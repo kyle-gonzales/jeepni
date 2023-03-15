@@ -1,7 +1,7 @@
 package com.example.jeepni.feature.authentication
 
 sealed class LogInEvent {
-    data class OnPhoneNumberChange(val phoneNumber : String) : LogInEvent()
+    data class OnEmailChange(val email : String) : LogInEvent()
     data class OnPasswordChange (val password : String) : LogInEvent()
     object OnLogInClicked : LogInEvent()
     object OnForgotPasswordClicked : LogInEvent()

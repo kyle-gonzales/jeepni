@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.authentication
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,6 +9,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -15,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,13 +39,22 @@ fun SignUpScreen(
     onNavigate : (UiEvent.Navigate) -> Unit,
     onPopBackStack : () -> Unit
 ) {
-
+    val context = LocalContext.current
+    val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {event ->
             when (event) {
                 is UiEvent.Navigate -> onNavigate(event)
                 is UiEvent.PopBackStack -> onPopBackStack()
-                else -> {}
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.action
+                    )
+                }
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -58,7 +70,7 @@ fun SignUpScreen(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = {Text("Phone Number")},
+                label = {Text("Email")},
                 value = viewModel.email,
                 onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
@@ -75,8 +87,8 @@ fun SignUpScreen(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = {Text("Re-enter Password")},
-                value = viewModel.reEnterPassword,
+                label = {Text("Confirm Password")},
+                value = viewModel.confirmPassword,
                 onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
@@ -92,26 +104,29 @@ fun SignUpScreen(
             )
             Text(stringResource(R.string.agree))
             TextButton(
-                onClick = {}
+                onClick = {
+                    //TODO : open terms and conditions dialog
+                }
             ) {
                 Text(stringResource(R.string.terms))
             }
         }
+        val context = LocalContext.current
         Column {
             SolidButton(
                 onClick = {
-                    /*TODO: sign up*/
-                    viewModel.onEvent(SignUpEvent.OnSignUpClicked)
+                    viewModel.onEvent(SignUpEvent.OnCreateAccountClicked)
                 }
             ) {
                 Text(stringResource(R.string.create))
             }
             SolidButton(
                 Black, White,
-            onClick = {
-                /*TODO: sign up with GOOGLE ACCOUNT */
-
-            }) {
+                onClick = {
+                    /*TODO: sign up with GOOGLE ACCOUNT */
+                    viewModel.onEvent(SignUpEvent.OnCreateAccountWithGoogleClicked)
+                }
+            ) {
                 Text(stringResource(R.string.create_google))
             }
         }
