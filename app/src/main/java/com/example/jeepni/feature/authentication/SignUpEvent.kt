@@ -6,7 +6,10 @@ sealed class SignUpEvent {
     data class OnReEnterPasswordChange(val password: String) :SignUpEvent()
     data class OnAgreeTerms(val isAgree: Boolean) : SignUpEvent()
     object OnBackClicked : SignUpEvent()
-    object OnSignUpClicked : SignUpEvent()
+    object OnCreateAccountClicked : SignUpEvent()
+    object OnCreateAccountWithGoogleClicked : SignUpEvent()
     object OnForgotPasswordClicked : SignUpEvent()
     object OnLogInClicked : SignUpEvent()
+
+    object OnShowTermsAndConditions : SignUpEvent()
 }

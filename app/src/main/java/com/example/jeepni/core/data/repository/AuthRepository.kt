@@ -14,7 +14,7 @@ interface AuthRepository {
 
     fun getUserEmail() : String
 
-    suspend fun isUserLoggedIn() : Boolean
+    fun isUserLoggedIn() : Boolean
 
-    suspend fun logOut()
+    fun logOut()
 }

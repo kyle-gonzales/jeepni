@@ -4,23 +4,19 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
+import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.composable
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.example.jeepni.feature.authentication.LogInScreen
-import com.example.jeepni.WelcomeActivityLayout2
+import com.example.jeepni.feature.authentication.WelcomeActivityLayout2
 import com.example.jeepni.feature.authentication.SignUpScreen
 import com.example.jeepni.feature.home.MainScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun Navigation() {
-    val navController = rememberAnimatedNavController()
-
+fun Navigation (
+    navController : NavHostController,
+) {
 
     AnimatedNavHost(
         navController = navController,
@@ -31,11 +27,6 @@ fun Navigation() {
         // tell the navHost how the screens look like
         composable (
             route = Screen.MainScreen.route + "/{email}",// for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
-            arguments = listOf(
-                navArgument("email") {
-                    type = NavType.StringType
-                }
-            )
         ) {entry->
             // what composable represents our main screen
             MainScreen(
@@ -51,14 +42,7 @@ fun Navigation() {
             WelcomeActivityLayout2(
                 onNavigate = {
                     navController.navigate(it.route) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onPopBackStack = {
-                    navController.navigate(Screen.WelcomeScreen.route) {
-                        popUpTo(navController.graph.id) {
+                        popUpTo(Screen.WelcomeScreen.route) {
                             inclusive = false
                         }
                     }
@@ -71,40 +55,39 @@ fun Navigation() {
             LogInScreen(
                 onNavigate = {
                     navController.navigate(it.route) {
-                        popUpTo(navController.graph.id) { // exits the app directly
-                            inclusive = true
+                        popUpTo(Screen.WelcomeScreen.route) { // exits the app directly
+                            inclusive = false
                         }
                     }
                 },
                 onPopBackStack = {
                     navController.navigate(Screen.WelcomeScreen.route) {
-                        popUpTo(Screen.WelcomeScreen.route) {
-                            inclusive = false
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
                         }
                     }
                 }
             )
         }
         composable (
-            route = Screen.SignInScreen.route,
+            route = Screen.SignUpScreen.route,
         ) {
             SignUpScreen(
                 onNavigate = {
                     navController.navigate(it.route) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
+                        popUpTo(Screen.WelcomeScreen.route) {
+                            inclusive = false
                         }
                     }
                 },
                 onPopBackStack = {
                     navController.navigate(Screen.WelcomeScreen.route) {
-                        popUpTo(Screen.WelcomeScreen.route) {
-                            inclusive = false
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
                         }
                     }
                 }
             )
         }
-
     }
 }

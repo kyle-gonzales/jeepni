@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.authentication
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,10 +12,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.White
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -33,20 +34,17 @@ fun LogInScreen(
     onNavigate : (UiEvent.Navigate) -> Unit,
     onPopBackStack : () -> Unit,
 ){
+    val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
-    val logInContext = LocalContext.current
-
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {event ->
             when(event) {
                 is UiEvent.Navigate -> onNavigate(event)
                 is UiEvent.PopBackStack -> onPopBackStack()
-                is UiEvent.ShowSnackBar -> {
-                    val result = scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action
-                    )
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+                else -> {}
             }
         }
     }
@@ -66,9 +64,9 @@ fun LogInScreen(
             // TODO: TextFieldColors need to be changed. Contrast ratio is so bad
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                label = {Text("Phone Number")},
-                value = viewModel.phoneNumber,
-                onValueChange = {viewModel.onEvent(LogInEvent.OnPhoneNumberChange(it))},
+                label = {Text("Email")},
+                value = viewModel.email,
+                onValueChange = {viewModel.onEvent(LogInEvent.OnEmailChange(it))},
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
                 )
@@ -85,6 +83,7 @@ fun LogInScreen(
         TextButton(
             onClick = {
                 //TODO : implement forgot password
+                viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
             }
         ){
             Text("Forgot Password",
@@ -103,6 +102,7 @@ fun LogInScreen(
                 Black, White,
             onClick = {
                 //TODO: implement login with GOOGLE ACCOUNT
+                viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
             }) {
                 Text("Log In with Google")
             }

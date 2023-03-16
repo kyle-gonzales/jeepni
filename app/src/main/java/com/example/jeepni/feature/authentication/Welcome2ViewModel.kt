@@ -21,7 +21,7 @@ class Welcome2ViewModel @Inject constructor (
     fun onEvent(event : Welcome2Event) {
         when (event) {
             Welcome2Event.OnLogInClicked -> sendUiEvent(UiEvent.Navigate(Screen.LogInScreen.route))
-            Welcome2Event.OnSignUpClicked -> sendUiEvent(UiEvent.Navigate(Screen.SignInScreen.route))
+            Welcome2Event.OnSignUpClicked -> sendUiEvent(UiEvent.Navigate(Screen.SignUpScreen.route))
         }
     }
 
