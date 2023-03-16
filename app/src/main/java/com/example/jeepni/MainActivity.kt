@@ -5,9 +5,9 @@ import android.os.Bundle
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModelsimport com.google.firebase.auth.ktx.auth
+import androidx.activity.viewModels
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
