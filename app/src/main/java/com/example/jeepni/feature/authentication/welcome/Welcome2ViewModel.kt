@@ -1,7 +1,8 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.welcome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jeepni.feature.authentication.welcome.Welcome2Event
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

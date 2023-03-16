@@ -1,12 +1,12 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.login
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.feature.authentication.login.LogInEvent
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,14 +48,11 @@ class LogInViewModel @Inject constructor(
                 // TODO : forgot password
             }
             is LogInEvent.OnLogInClicked -> {
-                Log.i("KYLE", "outside")
                 viewModelScope.launch {
-                    Log.i("KYLE", "before")
 
                     val isLoggedIn = repository.logInWithEmail(
                         email, password
                     )
-                    Log.i("KYLE", isLoggedIn.toString())
                     withContext(Dispatchers.Main) {
                         if (isLoggedIn) {
                             sendUiEvent(UiEvent.Navigate(Screen.MainScreen.withArgs(email)))
@@ -63,7 +60,6 @@ class LogInViewModel @Inject constructor(
                             sendUiEvent(UiEvent.ShowToast("error"))
                         }
                     }
-                    Log.i("KYLE", "after")
                 }
             }
             is LogInEvent.OnValidPasswordChange -> {

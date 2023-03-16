@@ -91,3 +91,5 @@ fun Navigation (
         }
     }
 }
+
+// https://github.com/FirebaseExtended/make-it-so-android/blob/firebase-compose-codelab-start/app/src/main/java/com/example/makeitso/MakeItSoApp.kt

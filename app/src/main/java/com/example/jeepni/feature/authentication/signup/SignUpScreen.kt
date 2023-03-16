@@ -26,6 +26,8 @@ import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.White
+import com.example.jeepni.feature.authentication.signup.SignUpEvent
+import com.example.jeepni.feature.authentication.signup.SignUpViewModel
 import com.example.jeepni.util.UiEvent
 
 

@@ -1,9 +1,8 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.signup
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.repository.AuthRepository
