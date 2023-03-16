@@ -124,7 +124,7 @@ private fun loginUser(baseContext: Context, email: String, password: String) {
                 baseContext.startActivity(Intent(baseContext, MainActivity::class.java))
             } else {
                 // If sign in fails, display a message to the user.
-                Toast.makeText(baseContext, "Error signing in", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, "Error signing in ", Toast.LENGTH_SHORT).show()
             }
         }
 

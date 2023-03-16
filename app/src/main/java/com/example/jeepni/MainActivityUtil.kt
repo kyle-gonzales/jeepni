@@ -1,8 +1,11 @@
 package com.example.jeepni
 
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.text.isDigitsOnly
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
@@ -48,6 +51,8 @@ fun getCurrentDateString() : String {
 }
 
 fun logDailyStatUpdate(context: Context, salary : String, fuelCost : String) {
+    val auth = Firebase.auth
+    val user = auth.currentUser ?: return
     val db = Firebase.firestore
 
     val dat = hashMapOf(
@@ -55,7 +60,7 @@ fun logDailyStatUpdate(context: Context, salary : String, fuelCost : String) {
         "fuelCost" to (fuelCost.ifBlank { "0" })
     )
     db.collection("users")
-        .document("0") // TODO: change to firebase generated user ID
+        .document(user.uid) // TODO: change to firebase generated user ID
         .collection("analytics")
         .document(getCurrentDateString())
         .set(dat)
@@ -67,10 +72,12 @@ fun logDailyStatUpdate(context: Context, salary : String, fuelCost : String) {
         }
 }
 fun logDailyStatDelete(context: Context){
+    val auth = Firebase.auth
+    val user = auth.currentUser ?: return
     val db = Firebase.firestore
 
     db.collection("users")
-        .document("0") // TODO: change to firebase generated user ID
+        .document(user.uid) // TODO: change to firebase generated user ID
         .collection("analytics")
         .document(getCurrentDateString())
         .delete()
@@ -81,4 +88,19 @@ fun logDailyStatDelete(context: Context){
             Toast.makeText(context, "Could not delete the daily log", Toast.LENGTH_SHORT).show()
         }
 
+}
+
+fun logout(baseContext: Context){
+    Firebase.auth.signOut()
+
+    val intent = Intent(baseContext, LogInActivity::class.java)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    startActivity(baseContext, intent, null)
+
+}
+
+
+fun getUserEmail(): String{
+    val user = Firebase.auth.currentUser ?: return ""
+    return user.email.toString()
 }

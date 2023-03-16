@@ -1,6 +1,5 @@
 package com.example.jeepni
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,7 +15,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -25,13 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jeepni.ui.theme.JeepNiTheme
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +41,7 @@ fun MainActivityLayout() {
     var isValidSalary by remember { mutableStateOf(isValidDecimal(salary))}
     var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
 
-    var loginId by remember {mutableStateOf("test@email.com")}
+    var loginId by remember {mutableStateOf(getUserEmail())}
 
     JeepNiTheme {
         Scaffold (
@@ -324,7 +317,11 @@ fun Menu(
         ) {
             Text(email) /*TODO: update info based on login info */
         }
-        Button(onClick = { /*TODO : logout of jeepNi account */ Toast.makeText(context, "logged out!", Toast.LENGTH_SHORT).show() },
+        Button(onClick = {
+                            /*TODO : logout of jeepNi account */
+                            logout(context)
+                            Toast.makeText(context, "logged out!", Toast.LENGTH_SHORT).show()
+                         },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("Log Out")
