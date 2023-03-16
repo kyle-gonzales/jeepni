@@ -5,10 +5,11 @@ import android.content.Context
 import android.widget.Toast
 import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.getCurrentDateString
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.flow.Flow
 
-class DailyAnalyticsRepositoryImpl (private val usersRef: CollectionReference, appContext: Application) :
+class DailyAnalyticsRepositoryImpl (private val auth: FirebaseAuth, private val usersRef: CollectionReference, appContext: Application) :
     DailyAnalyticsRepository {
     private var context : Context
     init {
@@ -16,7 +17,7 @@ class DailyAnalyticsRepositoryImpl (private val usersRef: CollectionReference, a
     }
 
     override suspend fun logDailyStat(dailyStat: DailyAnalytics) {
-        usersRef.document("0")
+        usersRef.document(auth.currentUser!!.uid)
             .collection("analytics")
             .document(getCurrentDateString())
             .set(dailyStat)
@@ -29,7 +30,7 @@ class DailyAnalyticsRepositoryImpl (private val usersRef: CollectionReference, a
     }
 
     override suspend fun deleteDailyStat() {
-        usersRef.document("0")
+        usersRef.document(auth.currentUser!!.uid)
             .collection("analytics")
             .document(getCurrentDateString())
             .delete()
