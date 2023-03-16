@@ -1,4 +1,4 @@
-package com.example.jeepni
+package com.example.jeepni.feature.home
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,43 +19,83 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.jeepni.ui.theme.JeepNiTheme
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jeepni.R
+import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.util.UiEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainActivityLayout() {
-    val context = LocalContext.current
+fun MainScreen(
+    email : String,
+    onNavigate : (UiEvent.Navigate) -> Unit,
+    viewModel : MainViewModel = hiltViewModel(),
+) {
+//    val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
-    var drivingMode by remember { mutableStateOf(false) }
-    var isLogDailyAnalyticsDialogOpen by remember {mutableStateOf(false) }
+//    var drivingMode by remember { mutableStateOf(false) }
+//    var isLogDailyAnalyticsDialogOpen by remember {mutableStateOf(false) }
+//
+//    var salary by rememberSaveable { mutableStateOf("") }
+//    var fuelCost by rememberSaveable { mutableStateOf("")}
+//    var isValidSalary by remember { mutableStateOf(isValidDecimal(salary))}
+//    var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
+//
+//    var loginId by remember {mutableStateOf("test@email.com")}
+    val context = LocalContext.current
+    LaunchedEffect(key1 = true) {// don't subscribe to UI event flow every time the UI updates
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.Navigate -> {
+                    onNavigate(event)
+                }
+                is UiEvent.PopBackStack -> {
 
-    var salary by rememberSaveable { mutableStateOf("") }
-    var fuelCost by rememberSaveable { mutableStateOf("")}
-    var isValidSalary by remember { mutableStateOf(isValidDecimal(salary))}
-    var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
+                }
+                is UiEvent.ShowSnackBar -> {
+                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.action
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        viewModel.onEvent(MainEvent.OnUndoDeleteClick)
+                    }
+                }
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
-    var loginId by remember {mutableStateOf(getUserEmail())}
+    }
 
     JeepNiTheme {
         Scaffold (
             scaffoldState = scaffoldState,
             topBar = { TopActionBar(
-                drivingMode = drivingMode ,
+                drivingMode = viewModel.drivingMode ,
                 scaffoldState = scaffoldState,
-                coroutineScope = coroutineScope,
-                toggleDrivingMode = { drivingMode = it })
+                scope = coroutineScope,
+                toggleDrivingMode ={ viewModel.onEvent(MainEvent.OnToggleDrivingMode(it)) },
+                distance = viewModel.distanceState,
+                time = viewModel.timeState,
+                onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
+                onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
+            ) },
+            drawerContent = {
+                Menu(email) {
+                    viewModel.onEvent(MainEvent.OnLogOutClick)
+                }
             },
-            drawerContent = {Menu(loginId)},
             drawerGesturesEnabled = true,
             floatingActionButton = {
                 FloatingActionButton(onClick = {
-                    isLogDailyAnalyticsDialogOpen = true
+                    viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
                 }) {
                     Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
                 }
@@ -67,7 +106,7 @@ fun MainActivityLayout() {
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    if (drivingMode) {
+                    if (viewModel.drivingMode) {
                         DrivingModeOnContent(paddingValues = it)
                     } else {
                         DrivingModeOffContent(paddingValues = it)
@@ -81,8 +120,7 @@ fun MainActivityLayout() {
                         FloatingActionButton(
                             onClick = {
                                 /*TODO: Delete the current daily log*/
-                                logDailyStatDelete(context)
-
+                                viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
                             },
                             modifier = Modifier.padding(16.dp)
                         ) {
@@ -93,31 +131,35 @@ fun MainActivityLayout() {
             }
         )
     }
-    if (isLogDailyAnalyticsDialogOpen) {
-        LogDailyStatDialog(salary, fuelCost, isValidSalary, isValidFuelCost,
-            onDialogChange = { isLogDailyAnalyticsDialogOpen = it },
-            onSalaryTextChange = {
-                salary = it
-                isValidSalary = isValidDecimal(it)
-                },
-            onFuelCostTextChange = {
-                fuelCost = it
-                isValidFuelCost = isValidDecimal(it)
-            }
+    if (viewModel.isAddDailyStatDialogOpen) {
+        LogDailyStatDialog(
+            salary = viewModel.salary,
+            onSalaryChange = {viewModel.onEvent(MainEvent.OnSalaryChange(it))},
+            fuelCost = viewModel.fuelCost,
+            onFuelCostChange = {viewModel.onEvent(MainEvent.OnFuelCostChange(it))},
+            isValidSalary = viewModel.isValidSalary,
+            isValidFuelCost = viewModel.isValidFuelCost,
+            isDialogOpen = viewModel.isAddDailyStatDialogOpen,
+            onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
+            onSave = { salary, fuelCost ->
+                viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
         )
+
     }
 }
 
 @Composable
 fun LogDailyStatDialog(
     salary: String,
+    onSalaryChange : (String) -> Unit,
     fuelCost : String,
+    onFuelCostChange : (String) -> Unit,
     isValidSalary : Boolean,
     isValidFuelCost : Boolean,
     isDialogOpen: Boolean = true,
-    onDialogChange: (Boolean) -> Unit,
-    onSalaryTextChange: (String) -> Unit,
-    onFuelCostTextChange: (String) -> Unit) {
+    onDialogOpenChange : (Boolean) -> Unit,
+    onSave : (String, String) -> Unit
+ ) {
 
     val context = LocalContext.current
 
@@ -125,15 +167,14 @@ fun LogDailyStatDialog(
         AlertDialog(
             modifier = Modifier,
             onDismissRequest = {
-                onDialogChange(false)
+                onDialogOpenChange(false)
             },
             confirmButton = {
                 TextButton(
                     onClick = {
                         /*TODO: add / edit to database*/
-                        logDailyStatUpdate(context, salary, fuelCost)
-
-                        onDialogChange(false)
+                        onSave(salary, fuelCost)
+                        onDialogOpenChange(false)
                     },
                     modifier = Modifier
                         .padding(8.dp),
@@ -145,7 +186,7 @@ fun LogDailyStatDialog(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onDialogChange(false)
+                        onDialogOpenChange(false)
                     },
                     modifier = Modifier
                         .padding(8.dp),
@@ -170,7 +211,8 @@ fun LogDailyStatDialog(
                     )
                     OutlinedTextField(
                         value = salary,
-                        onValueChange = { onSalaryTextChange(it) },
+                        placeholder = {Text(salary)},
+                        onValueChange = { onSalaryChange(it) },
                         label = {Text("Salary")},
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
@@ -194,7 +236,8 @@ fun LogDailyStatDialog(
                     )
                     OutlinedTextField(
                         value = fuelCost,
-                        onValueChange = {onFuelCostTextChange(it)},
+                        placeholder = {Text(fuelCost)},
+                        onValueChange = {onFuelCostChange(it)},
                         label = {Text("Fuel Cost")},
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
@@ -250,15 +293,16 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
 }
 
 @Composable
-fun TopActionBar(drivingMode : Boolean, scaffoldState: ScaffoldState, coroutineScope : CoroutineScope, toggleDrivingMode : (Boolean) -> Unit) {
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    var distance = 12132.0
-    var distanceState by remember { mutableStateOf(convertDistanceToString(distance))}
-
-    var timeInMillis = 3999999L
-    var timeState by remember { mutableStateOf(convertMillisToTime(timeInMillis)) }
-
+fun TopActionBar(
+    drivingMode : Boolean,
+    scaffoldState: ScaffoldState,
+    scope : CoroutineScope,
+    toggleDrivingMode : (Boolean) -> Unit,
+    distance : String,
+    time : String,
+    onDistanceChange: (String) -> Unit,
+    onTimeChange : (String) -> Unit
+    ) {
     Surface(
         contentColor = Color.White,
         color = MaterialTheme.colors.primarySurface,
@@ -269,12 +313,12 @@ fun TopActionBar(drivingMode : Boolean, scaffoldState: ScaffoldState, coroutineS
                 Icon(Icons.Filled.LocationOn, contentDescription = null)
                 Text(
                     modifier = Modifier.padding(4.dp, 0.dp),
-                    text = distanceState
+                    text = distance
                 )
                 Icon(painterResource(R.drawable.white_timer_24), contentDescription = null)
                 Text(
                     modifier = Modifier.padding(4.dp, 0.dp),
-                    text = timeState
+                    text = time
                 )
             },
             modifier = Modifier,
@@ -282,7 +326,7 @@ fun TopActionBar(drivingMode : Boolean, scaffoldState: ScaffoldState, coroutineS
                 IconButton(
                     onClick = {
                         scope.launch {
-                            coroutineScope.launch { scaffoldState.drawerState.open() }
+                            scope.launch { scaffoldState.drawerState.open() }
                         }
                     }) {
                     Icon(Icons.Filled.Menu, contentDescription = null)
@@ -302,6 +346,7 @@ fun TopActionBar(drivingMode : Boolean, scaffoldState: ScaffoldState, coroutineS
 @Composable
 fun Menu(
     email : String,
+    onLogOutClick : () -> Unit
 ) {
     val context = LocalContext.current
     Column(
@@ -317,20 +362,11 @@ fun Menu(
         ) {
             Text(email) /*TODO: update info based on login info */
         }
-        Button(onClick = {
-                            /*TODO : logout of jeepNi account */
-                            logout(context)
-                            Toast.makeText(context, "logged out!", Toast.LENGTH_SHORT).show()
-                         },
+        Button(
+            onClick = { onLogOutClick() },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("Log Out")
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun DefaultPreview() {
-    MainActivityLayout()
 }
