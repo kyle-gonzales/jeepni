@@ -5,15 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +28,7 @@ import com.example.jeepni.core.ui.theme.White
 import com.example.jeepni.util.UiEvent
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
@@ -40,7 +36,6 @@ fun SignUpScreen(
     onPopBackStack : () -> Unit
 ) {
     val context = LocalContext.current
-    val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {event ->
             when (event) {
@@ -107,7 +102,6 @@ fun SignUpScreen(
                 Text(stringResource(R.string.terms))
             }
         }
-        val context = LocalContext.current
         Column {
             SolidButton(
                 onClick = {
