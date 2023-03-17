@@ -20,7 +20,7 @@ val quicksandFontFamily = FontFamily(
 val JeepNiTypography = Typography(
     bodyMedium = TextStyle(
         fontFamily = quicksandFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         letterSpacing = 0.sp
     )

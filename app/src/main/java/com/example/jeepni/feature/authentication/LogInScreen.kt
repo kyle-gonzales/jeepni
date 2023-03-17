@@ -1,7 +1,9 @@
 package com.example.jeepni.feature.authentication
 
 import android.widget.Toast
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,18 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import com.example.jeepni.core.ui.theme.Black
-import com.example.jeepni.core.ui.theme.White
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.BackIconButton
-import com.example.jeepni.core.ui.Container
-import com.example.jeepni.core.ui.SolidButton
-import com.example.jeepni.core.ui.theme.JeepNiTheme
-import com.example.jeepni.core.ui.theme.JeepNiTypography
+import com.example.jeepni.core.ui.*
+import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.UiEvent
 
 
@@ -49,32 +50,37 @@ fun LogInScreen(
             }
         }
     }
-    JeepNiTheme {
+    MaterialTheme (
+        colorScheme = if (isSystemInDarkTheme()) DarkColors else LightColors,
+        typography = JeepNiTypography
+    ) {
         Surface {
             Container(0.9f){
                 BackIconButton {
                     viewModel.onEvent(LogInEvent.OnBackPressed)
                 }
-                Text(
+                JeepNiText(
                     stringResource(R.string.welcome_back),
-                    Modifier.fillMaxWidth(0.6f)
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Column (
                     modifier = Modifier
                         .fillMaxWidth()
                 ){
                     // TODO: TextFieldColors need to be changed. Contrast ratio is so bad
-                    OutlinedTextField(
+                    JeepNiTextField (
                         modifier = Modifier.fillMaxWidth(),
-                        label = {Text("Email")},
+                        label = "Email",
                         value = viewModel.email,
                         onValueChange = {viewModel.onEvent(LogInEvent.OnEmailChange(it))},
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
                         )
-                    OutlinedTextField(
+                    JeepNiTextField (
                         modifier = Modifier.fillMaxWidth(),
-                        label = {Text("Password")},
+                        label = "Password",
                         value = viewModel.password,
                         onValueChange = {viewModel.onEvent(LogInEvent.OnPasswordChange(it))},
                         singleLine = true,
@@ -88,17 +94,16 @@ fun LogInScreen(
                         viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
                     }
                 ){
-                    Text("Forgot Password",
-                        color = Color.White)
+                    Text("Forgot Password", fontWeight = FontWeight.Bold)
                 }
-                Column{
+                Column {
                     SolidButton(
                         onClick = {
                             //TODO: implement login with phone number
                             viewModel.onEvent(LogInEvent.OnLogInClicked)
                         }
                     ) {
-                        Text("Log In")
+                        Text("Log In", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                     SolidButton(
                         Black, White,
@@ -106,25 +111,23 @@ fun LogInScreen(
                         //TODO: implement login with GOOGLE ACCOUNT
                         viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
                     }) {
-                        Text("Log In with Google")
+                        Text("Log In with Google", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                 }
                 Row (
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Text(stringResource(R.string.no_account))
+                    JeepNiText(stringResource(R.string.no_account))
                     TextButton(
                         onClick = {
                             viewModel.onEvent(LogInEvent.OnSignUpClicked)
-                        }
+                        },
                     ){
-                        Text(stringResource(R.string.sign_up))
+                        Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                 }
             }
-
         }
-
     }
 }
 
