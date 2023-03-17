@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import com.example.jeepni.core.data.model.DailyAnalytics
-import com.example.jeepni.getCurrentDateString
+import com.example.jeepni.feature.home.getCurrentDateString
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.flow.Flow

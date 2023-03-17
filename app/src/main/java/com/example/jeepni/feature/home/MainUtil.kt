@@ -1,9 +1,5 @@
-package com.example.jeepni
+package com.example.jeepni.feature.home
 
-import android.content.Context
-import android.widget.Toast
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import java.util.*
 
 /*
@@ -33,8 +29,10 @@ fun convertDistanceToString(distance: Double): String {
     return res
 }
 
+
 fun isValidDecimal(text: String) : Boolean {
-    return (text.count {it == '.'} <= 1)
+    val regex = Regex("^\\d*\\.?\\d*\$") // regex to identify decimals
+    return regex.matches(text)
 }
 
 fun getCurrentDateString() : String {

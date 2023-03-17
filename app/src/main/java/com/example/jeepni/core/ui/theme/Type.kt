@@ -21,7 +21,7 @@ val JeepNiTypography = Typography(
     bodyMedium = TextStyle(
         fontFamily = quicksandFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         letterSpacing = 0.sp
     )
     /* Other default text styles to override

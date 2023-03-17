@@ -22,7 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
+import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.UiEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -164,8 +166,6 @@ fun LogDailyStatDialog(
     onDialogOpenChange : (Boolean) -> Unit,
     onSave : (String, String) -> Unit
  ) {
-    val context = LocalContext.current
-
     if (isDialogOpen) {
         AlertDialog(
             modifier = Modifier,
@@ -199,7 +199,7 @@ fun LogDailyStatDialog(
                 )
             },
             title = {
-                Text("Log Daily Analytics")
+                Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
             },
             text = {
 
@@ -212,24 +212,16 @@ fun LogDailyStatDialog(
                         text = "Enter your earnings for today: ",
                         textAlign = TextAlign.Start
                     )
-                    OutlinedTextField(
+                    JeepNiTextField(
                         value = salary,
-                        placeholder = {Text(salary)},
                         onValueChange = { onSalaryChange(it) },
-                        label = {Text("Salary")},
+                        label = "Salary",
                         singleLine = true,
-                        leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
+                        leadingIcon = { Icon(painterResource(id = R.drawable.white_dollar_24), null) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
-                        isError = !isValidSalary
-                        // TODO: parse input to accept commas, no letters in case of external keyboard
+                        isError = !isValidSalary,
+                        errorMessage = "Invalid Input"
                     )
-//                    if (!isValidSalary) {
-//                        Text(
-//                            text = "Invalid Salary",
-//                            style = MaterialTheme.typography.caption,
-//                            color = MaterialTheme.colors.error,
-//                        )
-//                    }
                     Text(
                         modifier = Modifier
                             .padding(0.dp, 8.dp)
@@ -237,16 +229,15 @@ fun LogDailyStatDialog(
                         text = "Enter the amount you spent on fuel for today: ",
                         textAlign = TextAlign.Start
                     )
-                    OutlinedTextField(
+                    JeepNiTextField(
                         value = fuelCost,
-                        placeholder = {Text(fuelCost)},
                         onValueChange = {onFuelCostChange(it)},
-                        label = {Text("Fuel Cost")},
+                        label = "Fuel Cost",
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        isError = !isValidFuelCost
-                        // TODO: parse input to accept commas, no letters in case of external keyboard
+                        isError = !isValidFuelCost,
+                        errorMessage = "Invalid Input"
                     )
                 }
             }
@@ -256,42 +247,46 @@ fun LogDailyStatDialog(
 
 @Composable
 fun DrivingModeOnContent(paddingValues : PaddingValues) {
-    Column (
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize(),
-        ) {
-        Text(
+    Surface {
+        Column (
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .weight(0.8f)
-                .background(Color.Gray),
-            textAlign = TextAlign.Center,
-            text = "Map"
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .weight(0.2f)
-                .background(Color.LightGray),
-            horizontalArrangement = Arrangement.Center
-        ) {
+                .padding(paddingValues)
+                .fillMaxSize(),
+            ) {
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .weight(0.8f)
+                    .background(Color.Gray),
+                textAlign = TextAlign.Center,
+                text = "Map"
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .weight(0.2f)
+                    .background(Color.LightGray),
+                horizontalArrangement = Arrangement.Center
+            ) {
 
+            }
         }
     }
 }
 @Composable
 fun DrivingModeOffContent(paddingValues: PaddingValues) {
-    Column (
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Driving Mode is Off")
+    Surface {
+        Column (
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Driving Mode is Off")
+        }
     }
 }
 
@@ -317,6 +312,7 @@ fun TopActionBar(
                 Row (
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = null)
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
                         text = distance
@@ -327,7 +323,6 @@ fun TopActionBar(
                         text = time
                     )
                 }
-                Icon(Icons.Filled.LocationOn, contentDescription = null)
             },
             modifier = Modifier,
             navigationIcon = {

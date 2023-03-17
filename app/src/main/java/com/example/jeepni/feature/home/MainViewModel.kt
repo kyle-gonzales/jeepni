@@ -6,19 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jeepni.*
 import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -80,10 +76,14 @@ class MainViewModel
             }
             is MainEvent.OnSaveDailyAnalyticClick -> {
                 //TODO: perform network call to update state on relaunch
-                viewModelScope.launch {
-                    repository.updateDailyStat(
-                        DailyAnalytics(event.salary, event.fuelCost)
-                    )
+                if (isValidFuelCost && isValidSalary) {
+                    viewModelScope.launch {
+                        repository.updateDailyStat(
+                            DailyAnalytics(event.salary, event.fuelCost)
+                        )
+                    }
+                } else {
+                    sendUiEvent(UiEvent.ShowToast("Invalid Input"))
                 }
             }
             is MainEvent.OnDeleteDailyStatClick -> {
