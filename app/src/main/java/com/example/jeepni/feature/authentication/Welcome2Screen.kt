@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
@@ -17,7 +18,7 @@ import com.example.jeepni.core.ui.theme.White
 import com.example.jeepni.util.UiEvent
 
 @Composable
-fun WelcomeActivityLayout2(
+fun Welcome2Screen(
     viewModel: Welcome2ViewModel = hiltViewModel(),
     onNavigate : (UiEvent.Navigate) -> Unit,
 ){
@@ -32,7 +33,7 @@ fun WelcomeActivityLayout2(
     Container(0.6f){
         Logo()
         Text(
-            stringResource(R.string.welcome1, R.color.white),
+            stringResource(R.string.welcome1, Color.White),
             Modifier.fillMaxWidth(0.6f)
         )
         Column{

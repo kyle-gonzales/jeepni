@@ -9,7 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,8 +36,9 @@ fun MainScreen(
     viewModel : MainViewModel = hiltViewModel(),
 ) {
 //    val context = LocalContext.current
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 //    var drivingMode by remember { mutableStateOf(false) }
 //    var isLogDailyAnalyticsDialogOpen by remember {mutableStateOf(false) }
 //
@@ -58,7 +59,7 @@ fun MainScreen(
 
                 }
                 is UiEvent.ShowSnackBar -> {
-                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                    val result = snackbarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = event.action
                     )
@@ -75,79 +76,80 @@ fun MainScreen(
     }
 
     JeepNiTheme {
-        Scaffold (
-            scaffoldState = scaffoldState,
-            topBar = { TopActionBar(
-                drivingMode = viewModel.drivingMode ,
-                scaffoldState = scaffoldState,
-                scope = coroutineScope,
-                toggleDrivingMode ={ viewModel.onEvent(MainEvent.OnToggleDrivingMode(it)) },
-                distance = viewModel.distanceState,
-                time = viewModel.timeState,
-                onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
-                onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
-            ) },
-            drawerContent = {
-                Menu(email) {
-                    viewModel.onEvent(MainEvent.OnLogOutClick)
-                }
-            },
-            drawerGesturesEnabled = true,
-            floatingActionButton = {
-                FloatingActionButton(onClick = {
-                    viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
-                }) {
-                    Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
-                }
-            },
-            floatingActionButtonPosition = FabPosition.End,
-            content = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    if (viewModel.drivingMode) {
-                        DrivingModeOnContent(paddingValues = it)
-                    } else {
-                        DrivingModeOffContent(paddingValues = it)
+        Menu(
+            drawerState = drawerState,
+            email = email,
+            onLogOutClick = {viewModel.onEvent(MainEvent.OnLogOutClick)}
+        ) {
+            Scaffold (
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                topBar = { TopActionBar(
+                    drawerState = drawerState,
+                    drivingMode = viewModel.drivingMode,
+                    scope = coroutineScope,
+                    toggleDrivingMode ={ viewModel.onEvent(MainEvent.OnToggleDrivingMode(it)) },
+                    distance = viewModel.distanceState,
+                    time = viewModel.timeState,
+                    onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
+                    onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
+                ) },
+
+                floatingActionButton = {
+                    FloatingActionButton(onClick = {
+                        viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+                    }) {
+                        Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
                     }
-                    Column(
+                },
+                floatingActionButtonPosition = FabPosition.End,
+                content = {
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Bottom
+                            .fillMaxSize()
                     ) {
-                        FloatingActionButton(
-                            onClick = {
-                                /*TODO: Delete the current daily log*/
-                                viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
-                            },
-                            modifier = Modifier.padding(16.dp)
+                        if (viewModel.drivingMode) {
+                            DrivingModeOnContent(paddingValues = it)
+                        } else {
+                            DrivingModeOffContent(paddingValues = it)
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Bottom
                         ) {
-                            Icon(Icons.Filled.Delete, null)
+                            FloatingActionButton(
+                                onClick = {
+                                    /*TODO: Delete the current daily log*/
+                                    viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
+                                },
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Icon(Icons.Filled.Delete, null)
+                            }
                         }
                     }
                 }
-            }
-        )
-    }
-    if (viewModel.isAddDailyStatDialogOpen) {
-        LogDailyStatDialog(
-            salary = viewModel.salary,
-            onSalaryChange = {viewModel.onEvent(MainEvent.OnSalaryChange(it))},
-            fuelCost = viewModel.fuelCost,
-            onFuelCostChange = {viewModel.onEvent(MainEvent.OnFuelCostChange(it))},
-            isValidSalary = viewModel.isValidSalary,
-            isValidFuelCost = viewModel.isValidFuelCost,
-            isDialogOpen = viewModel.isAddDailyStatDialogOpen,
-            onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
-            onSave = { salary, fuelCost ->
-                viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
-        )
-
+            )
+        }
+        if (viewModel.isAddDailyStatDialogOpen) {
+            LogDailyStatDialog(
+                salary = viewModel.salary,
+                onSalaryChange = {viewModel.onEvent(MainEvent.OnSalaryChange(it))},
+                fuelCost = viewModel.fuelCost,
+                onFuelCostChange = {viewModel.onEvent(MainEvent.OnFuelCostChange(it))},
+                isValidSalary = viewModel.isValidSalary,
+                isValidFuelCost = viewModel.isValidFuelCost,
+                isDialogOpen = viewModel.isAddDailyStatDialogOpen,
+                onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
+                onSave = { salary, fuelCost ->
+                    viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
+            )
+        }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogDailyStatDialog(
     salary: String,
@@ -160,7 +162,6 @@ fun LogDailyStatDialog(
     onDialogOpenChange : (Boolean) -> Unit,
     onSave : (String, String) -> Unit
  ) {
-
     val context = LocalContext.current
 
     if (isDialogOpen) {
@@ -292,10 +293,11 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopActionBar(
+    drawerState: DrawerState,
     drivingMode : Boolean,
-    scaffoldState: ScaffoldState,
     scope : CoroutineScope,
     toggleDrivingMode : (Boolean) -> Unit,
     distance : String,
@@ -305,68 +307,89 @@ fun TopActionBar(
     ) {
     Surface(
         contentColor = Color.White,
-        color = MaterialTheme.colors.primarySurface,
-        elevation = 8.dp // can be changed
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 8.dp // can be changed
     ) {
         TopAppBar(
             title = {
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.padding(4.dp, 0.dp),
+                        text = distance
+                    )
+                    Icon(painterResource(R.drawable.white_timer_24), contentDescription = null)
+                    Text(
+                        modifier = Modifier.padding(4.dp, 0.dp),
+                        text = time
+                    )
+                }
                 Icon(Icons.Filled.LocationOn, contentDescription = null)
-                Text(
-                    modifier = Modifier.padding(4.dp, 0.dp),
-                    text = distance
-                )
-                Icon(painterResource(R.drawable.white_timer_24), contentDescription = null)
-                Text(
-                    modifier = Modifier.padding(4.dp, 0.dp),
-                    text = time
-                )
             },
             modifier = Modifier,
             navigationIcon = {
                 IconButton(
                     onClick = {
                         scope.launch {
-                            scope.launch { scaffoldState.drawerState.open() }
+                            scope.launch { drawerState.open() }
                         }
                     }) {
                     Icon(Icons.Filled.Menu, contentDescription = null)
                 }
             },
             actions = {
-                Switch(
-                    checked = drivingMode,
-                    onCheckedChange = { toggleDrivingMode(it) },
-                    enabled = true,
-                    colors = SwitchDefaults.colors()
-                )
+                Row(modifier = Modifier.padding(8.dp,0.dp)) {
+                    Switch(
+                        checked = drivingMode,
+                        onCheckedChange = { toggleDrivingMode(it) },
+                        enabled = true,
+                        colors = SwitchDefaults.colors()
+                    )
+                }
             }
         )
     }
 }
 @Composable
-fun Menu(
+fun MenuContent(
     email : String,
     onLogOutClick : () -> Unit
 ) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column (
-            modifier = Modifier.fillMaxWidth()
+    Surface {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(email) /*TODO: update info based on login info */
-        }
-        Button(
-            onClick = { onLogOutClick() },
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Text("Log Out")
+            Column (
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(email) /*TODO: update info based on login info */
+            }
+            Button(
+                onClick = { onLogOutClick() },
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("Log Out")
+            }
         }
     }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Menu(drawerState: DrawerState,
+         email : String,
+         onLogOutClick: () -> Unit,
+        content : @Composable () -> Unit
+) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = { MenuContent(email = email, onLogOutClick= onLogOutClick) },
+        content = content
+    )
 }

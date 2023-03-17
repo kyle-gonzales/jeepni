@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.White
-import com.example.jeepni.core.ui.theme.gradientColors
 
 @Composable
 fun Gradient(
@@ -27,12 +26,7 @@ fun Gradient(
 ){
     Box(
         modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    gradientColors
-                )
-            ),
+            .fillMaxSize(),
     ){
         content()
     }
@@ -116,7 +110,6 @@ fun GradientButton(
         modifier = Modifier
             .height(75.dp)
             .fillMaxWidth()
-            .background(brush = Brush.horizontalGradient(gradientColors))
             .padding(vertical = 10.dp),
         shape = RoundedCornerShape(10.dp),
     ){

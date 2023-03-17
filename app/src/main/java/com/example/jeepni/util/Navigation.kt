@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.composable
 import com.example.jeepni.feature.authentication.LogInScreen
-import com.example.jeepni.feature.authentication.WelcomeActivityLayout2
+import com.example.jeepni.feature.authentication.Welcome2Screen
 import com.example.jeepni.feature.authentication.SignUpScreen
 import com.example.jeepni.feature.home.MainScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -39,7 +39,7 @@ fun Navigation (
         composable (
             route = Screen.WelcomeScreen.route
         ) {
-            WelcomeActivityLayout2(
+            Welcome2Screen(
                 onNavigate = {
                     navController.navigate(it.route) {
                         popUpTo(Screen.WelcomeScreen.route) {
