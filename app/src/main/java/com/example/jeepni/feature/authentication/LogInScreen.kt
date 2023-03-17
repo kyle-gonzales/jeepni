@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.White
 import androidx.compose.ui.text.input.ImeAction
@@ -23,6 +24,8 @@ import com.example.jeepni.R
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.Container
 import com.example.jeepni.core.ui.SolidButton
+import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.core.ui.theme.JeepNiTypography
 import com.example.jeepni.util.UiEvent
 
 
@@ -46,77 +49,82 @@ fun LogInScreen(
             }
         }
     }
-
-    Container(0.9f){
-        BackIconButton {
-            viewModel.onEvent(LogInEvent.OnBackPressed)
-        }
-        Text(
-            stringResource(R.string.welcome_back),
-            Modifier.fillMaxWidth(0.6f)
-        )
-        Column (
-            modifier = Modifier
-                .fillMaxWidth()
-        ){
-            // TODO: TextFieldColors need to be changed. Contrast ratio is so bad
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                label = {Text("Email")},
-                value = viewModel.email,
-                onValueChange = {viewModel.onEvent(LogInEvent.OnEmailChange(it))},
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
+    JeepNiTheme {
+        Surface {
+            Container(0.9f){
+                BackIconButton {
+                    viewModel.onEvent(LogInEvent.OnBackPressed)
+                }
+                Text(
+                    stringResource(R.string.welcome_back),
+                    Modifier.fillMaxWidth(0.6f)
                 )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                label = {Text("Password")},
-                value = viewModel.password,
-                onValueChange = {viewModel.onEvent(LogInEvent.OnPasswordChange(it))},
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-        }
-        TextButton(
-            onClick = {
-                //TODO : implement forgot password
-                viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
-            }
-        ){
-            Text("Forgot Password",
-                color = Color.White)
-        }
-        Column{
-            SolidButton(
-                onClick = {
-                    //TODO: implement login with phone number
-                    viewModel.onEvent(LogInEvent.OnLogInClicked)
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ){
+                    // TODO: TextFieldColors need to be changed. Contrast ratio is so bad
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {Text("Email")},
+                        value = viewModel.email,
+                        onValueChange = {viewModel.onEvent(LogInEvent.OnEmailChange(it))},
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
+                        )
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {Text("Password")},
+                        value = viewModel.password,
+                        onValueChange = {viewModel.onEvent(LogInEvent.OnPasswordChange(it))},
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    )
                 }
-            ) {
-                Text("Log In")
-            }
-            SolidButton(
-                Black, White,
-            onClick = {
-                //TODO: implement login with GOOGLE ACCOUNT
-                viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
-            }) {
-                Text("Log In with Google")
-            }
-        }
-        Row (
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(stringResource(R.string.no_account))
-            TextButton(
-                onClick = {
-                    viewModel.onEvent(LogInEvent.OnSignUpClicked)
+                TextButton(
+                    onClick = {
+                        //TODO : implement forgot password
+                        viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
+                    }
+                ){
+                    Text("Forgot Password",
+                        color = Color.White)
                 }
-            ){
-                Text(stringResource(R.string.sign_up))
+                Column{
+                    SolidButton(
+                        onClick = {
+                            //TODO: implement login with phone number
+                            viewModel.onEvent(LogInEvent.OnLogInClicked)
+                        }
+                    ) {
+                        Text("Log In")
+                    }
+                    SolidButton(
+                        Black, White,
+                    onClick = {
+                        //TODO: implement login with GOOGLE ACCOUNT
+                        viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
+                    }) {
+                        Text("Log In with Google")
+                    }
+                }
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(stringResource(R.string.no_account))
+                    TextButton(
+                        onClick = {
+                            viewModel.onEvent(LogInEvent.OnSignUpClicked)
+                        }
+                    ){
+                        Text(stringResource(R.string.sign_up))
+                    }
+                }
             }
+
         }
+
     }
 }
 

@@ -24,6 +24,7 @@ import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.Container
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.Black
+import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.White
 import com.example.jeepni.util.UiEvent
 
@@ -48,90 +49,96 @@ fun SignUpScreen(
             }
         }
     }
-    Container(0.9f) {
-        BackIconButton {
-            viewModel.onEvent(SignUpEvent.OnBackClicked)
-        }
-        Text(
-            stringResource(R.string.sign_up_welcome2),
-            Modifier.fillMaxWidth(0.6f)
-        )
-        Column {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = {Text("Email")},
-                value = viewModel.email,
-                onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = {Text("Password")},
-                value = viewModel.password,
-                onValueChange = {viewModel.onEvent(SignUpEvent.OnPasswordChange(it))},
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = {Text("Confirm Password")},
-                value = viewModel.confirmPassword,
-                onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
-            )
-        }
-        Row (modifier = Modifier,
-            verticalAlignment = Alignment.CenterVertically,
 
-        ) {
-            Checkbox(
-                checked = viewModel.isAgreeToTerms,
-                onCheckedChange = { viewModel.onEvent(SignUpEvent.OnAgreeTerms(it)) }
-            )
-            Text(stringResource(R.string.agree))
-            TextButton(
-                onClick = {
-                    //TODO : open terms and conditions dialog
-                    viewModel.onEvent(SignUpEvent.OnShowTermsAndConditions)
+    JeepNiTheme() {
+        Surface {
+
+            Container(0.9f) {
+                BackIconButton {
+                    viewModel.onEvent(SignUpEvent.OnBackClicked)
                 }
-            ) {
-                Text(stringResource(R.string.terms))
-            }
-        }
-        Column {
-            SolidButton(
-                onClick = {
-                    viewModel.onEvent(SignUpEvent.OnCreateAccountClicked)
+                Text(
+                    stringResource(R.string.sign_up_welcome2),
+                    Modifier.fillMaxWidth(0.6f)
+                )
+                Column {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        label = {Text("Email")},
+                        value = viewModel.email,
+                        onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        label = {Text("Password")},
+                        value = viewModel.password,
+                        onValueChange = {viewModel.onEvent(SignUpEvent.OnPasswordChange(it))},
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        label = {Text("Confirm Password")},
+                        value = viewModel.confirmPassword,
+                        onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+                    )
                 }
-            ) {
-                Text(stringResource(R.string.create))
-            }
-            SolidButton(
-                Black, White,
-                onClick = {
-                    /*TODO: sign up with GOOGLE ACCOUNT */
-                    viewModel.onEvent(SignUpEvent.OnCreateAccountWithGoogleClicked)
+                Row (modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+
+                ) {
+                    Checkbox(
+                        checked = viewModel.isAgreeToTerms,
+                        onCheckedChange = { viewModel.onEvent(SignUpEvent.OnAgreeTerms(it)) }
+                    )
+                    Text(stringResource(R.string.agree))
+                    TextButton(
+                        onClick = {
+                            //TODO : open terms and conditions dialog
+                            viewModel.onEvent(SignUpEvent.OnShowTermsAndConditions)
+                        }
+                    ) {
+                        Text(stringResource(R.string.terms))
+                    }
                 }
-            ) {
-                Text(stringResource(R.string.create_google))
-            }
-        }
-        Row (modifier = Modifier,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(stringResource(R.string.has_account))
-            TextButton(
-                modifier = Modifier
-                    .padding(0.dp),
-                onClick = {
-                    viewModel.onEvent(SignUpEvent.OnLogInClicked)
+                Column {
+                    SolidButton(
+                        onClick = {
+                            viewModel.onEvent(SignUpEvent.OnCreateAccountClicked)
+                        }
+                    ) {
+                        Text(stringResource(R.string.create))
+                    }
+                    SolidButton(
+                        Black, White,
+                        onClick = {
+                            /*TODO: sign up with GOOGLE ACCOUNT */
+                            viewModel.onEvent(SignUpEvent.OnCreateAccountWithGoogleClicked)
+                        }
+                    ) {
+                        Text(stringResource(R.string.create_google))
+                    }
                 }
-            ) {
-                Text(stringResource(R.string.log_in))
+                Row (modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(stringResource(R.string.has_account))
+                    TextButton(
+                        modifier = Modifier
+                            .padding(0.dp),
+                        onClick = {
+                            viewModel.onEvent(SignUpEvent.OnLogInClicked)
+                        }
+                    ) {
+                        Text(stringResource(R.string.log_in))
+                    }
+                }
             }
         }
     }

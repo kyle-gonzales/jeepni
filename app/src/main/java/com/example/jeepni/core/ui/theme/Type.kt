@@ -22,6 +22,7 @@ val JeepNiTypography = Typography(
         fontFamily = quicksandFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
+        letterSpacing = 0.sp
     )
     /* Other default text styles to override
     titleLarge = TextStyle(

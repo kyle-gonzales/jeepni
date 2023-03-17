@@ -76,77 +76,79 @@ fun MainScreen(
     }
 
     JeepNiTheme {
-        Menu(
-            drawerState = drawerState,
-            email = email,
-            onLogOutClick = {viewModel.onEvent(MainEvent.OnLogOutClick)}
-        ) {
-            Scaffold (
-                snackbarHost = { SnackbarHost(snackbarHostState) },
-                topBar = { TopActionBar(
+        Surface {
+                Menu(
                     drawerState = drawerState,
-                    drivingMode = viewModel.drivingMode,
-                    scope = coroutineScope,
-                    toggleDrivingMode ={ viewModel.onEvent(MainEvent.OnToggleDrivingMode(it)) },
-                    distance = viewModel.distanceState,
-                    time = viewModel.timeState,
-                    onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
-                    onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
-                ) },
+                    email = email,
+                    onLogOutClick = {viewModel.onEvent(MainEvent.OnLogOutClick)}
+                ) {
+                    Scaffold (
+                        snackbarHost = { SnackbarHost(snackbarHostState) },
+                        topBar = { TopActionBar(
+                            drawerState = drawerState,
+                            drivingMode = viewModel.drivingMode,
+                            scope = coroutineScope,
+                            toggleDrivingMode ={ viewModel.onEvent(MainEvent.OnToggleDrivingMode(it)) },
+                            distance = viewModel.distanceState,
+                            time = viewModel.timeState,
+                            onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
+                            onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
+                        ) },
 
-                floatingActionButton = {
-                    FloatingActionButton(onClick = {
-                        viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
-                    }) {
-                        Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
-                    }
-                },
-                floatingActionButtonPosition = FabPosition.End,
-                content = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        if (viewModel.drivingMode) {
-                            DrivingModeOnContent(paddingValues = it)
-                        } else {
-                            DrivingModeOffContent(paddingValues = it)
-                        }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.Bottom
-                        ) {
-                            FloatingActionButton(
-                                onClick = {
-                                    /*TODO: Delete the current daily log*/
-                                    viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
-                                },
-                                modifier = Modifier.padding(16.dp)
+                        floatingActionButton = {
+                            FloatingActionButton(onClick = {
+                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+                            }) {
+                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+                            }
+                        },
+                        floatingActionButtonPosition = FabPosition.End,
+                        content = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
                             ) {
-                                Icon(Icons.Filled.Delete, null)
+                                if (viewModel.drivingMode) {
+                                    DrivingModeOnContent(paddingValues = it)
+                                } else {
+                                    DrivingModeOffContent(paddingValues = it)
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.Bottom
+                                ) {
+                                    FloatingActionButton(
+                                        onClick = {
+                                            /*TODO: Delete the current daily log*/
+                                            viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
+                                        },
+                                        modifier = Modifier.padding(16.dp)
+                                    ) {
+                                        Icon(Icons.Filled.Delete, null)
+                                    }
+                                }
                             }
                         }
-                    }
+                    )
                 }
-            )
+                if (viewModel.isAddDailyStatDialogOpen) {
+                    LogDailyStatDialog(
+                        salary = viewModel.salary,
+                        onSalaryChange = {viewModel.onEvent(MainEvent.OnSalaryChange(it))},
+                        fuelCost = viewModel.fuelCost,
+                        onFuelCostChange = {viewModel.onEvent(MainEvent.OnFuelCostChange(it))},
+                        isValidSalary = viewModel.isValidSalary,
+                        isValidFuelCost = viewModel.isValidFuelCost,
+                        isDialogOpen = viewModel.isAddDailyStatDialogOpen,
+                        onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
+                        onSave = { salary, fuelCost ->
+                            viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
+                    )
+                }
+            }
         }
-        if (viewModel.isAddDailyStatDialogOpen) {
-            LogDailyStatDialog(
-                salary = viewModel.salary,
-                onSalaryChange = {viewModel.onEvent(MainEvent.OnSalaryChange(it))},
-                fuelCost = viewModel.fuelCost,
-                onFuelCostChange = {viewModel.onEvent(MainEvent.OnFuelCostChange(it))},
-                isValidSalary = viewModel.isValidSalary,
-                isValidFuelCost = viewModel.isValidFuelCost,
-                isDialogOpen = viewModel.isAddDailyStatDialogOpen,
-                onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
-                onSave = { salary, fuelCost ->
-                    viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
-            )
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -351,23 +353,27 @@ fun TopActionBar(
         )
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuContent(
     email : String,
     onLogOutClick : () -> Unit
 ) {
     val context = LocalContext.current
-    Surface {
-        Column(
+    ModalDrawerSheet(
+        modifier = Modifier
+            .padding(0.dp, 0.dp, 60.dp, 0.dp)
+            .fillMaxHeight(),
+    ) {
+        Column (
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxSize()
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column (
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(email) /*TODO: update info based on login info */
             }
@@ -388,6 +394,7 @@ fun Menu(drawerState: DrawerState,
         content : @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
+        modifier = Modifier.background(Color.Transparent),
         drawerState = drawerState,
         drawerContent = { MenuContent(email = email, onLogOutClick= onLogOutClick) },
         content = content

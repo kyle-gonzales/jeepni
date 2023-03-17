@@ -2,6 +2,7 @@ package com.example.jeepni.feature.authentication
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,6 +15,7 @@ import com.example.jeepni.core.ui.Container
 import com.example.jeepni.core.ui.Logo
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.Black
+import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.White
 import com.example.jeepni.util.UiEvent
 
@@ -30,24 +32,29 @@ fun Welcome2Screen(
             }
         }
     }
-    Container(0.6f){
-        Logo()
-        Text(
-            stringResource(R.string.welcome1, Color.White),
-            Modifier.fillMaxWidth(0.6f)
-        )
-        Column{
-            SolidButton(
-                onClick = {viewModel.onEvent(Welcome2Event.OnSignUpClicked)}
-            ) {
-                Text(stringResource(R.string.sign_up))
-            }
-            SolidButton(
-                bgColor = Black,
-                contentColor = White,
-                onClick = { viewModel.onEvent(Welcome2Event.OnLogInClicked) }
-            ) {
-                Text(stringResource(R.string.log_in))
+    JeepNiTheme {
+        Surface {
+
+            Container(0.6f){
+                Logo()
+                Text(
+                    stringResource(R.string.welcome1, Color.White),
+                    Modifier.fillMaxWidth(0.6f)
+                )
+                Column{
+                    SolidButton(
+                        onClick = {viewModel.onEvent(Welcome2Event.OnSignUpClicked)}
+                    ) {
+                        Text(stringResource(R.string.sign_up))
+                    }
+                    SolidButton(
+                        bgColor = Black,
+                        contentColor = White,
+                        onClick = { viewModel.onEvent(Welcome2Event.OnLogInClicked) }
+                    ) {
+                        Text(stringResource(R.string.log_in))
+                    }
+                }
             }
         }
     }
