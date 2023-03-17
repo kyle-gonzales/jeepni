@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -50,10 +49,7 @@ fun LogInScreen(
             }
         }
     }
-    MaterialTheme (
-        colorScheme = if (isSystemInDarkTheme()) DarkColors else LightColors,
-        typography = JeepNiTypography
-    ) {
+    JeepNiTheme {
         Surface {
             Container(0.9f){
                 BackIconButton {
@@ -69,7 +65,6 @@ fun LogInScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 ){
-                    // TODO: TextFieldColors need to be changed. Contrast ratio is so bad
                     JeepNiTextField (
                         modifier = Modifier.fillMaxWidth(),
                         label = "Email",
@@ -94,12 +89,11 @@ fun LogInScreen(
                         viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
                     }
                 ){
-                    Text("Forgot Password", fontWeight = FontWeight.Bold)
+                    Text("Forgot Password", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                 }
                 Column {
                     SolidButton(
                         onClick = {
-                            //TODO: implement login with phone number
                             viewModel.onEvent(LogInEvent.OnLogInClicked)
                         }
                     ) {
@@ -116,7 +110,7 @@ fun LogInScreen(
                 }
                 Row (
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     JeepNiText(stringResource(R.string.no_account))
                     TextButton(
                         onClick = {
@@ -131,20 +125,3 @@ fun LogInScreen(
     }
 }
 
-//private fun loginUser(baseContext: Context, email: String, password: String) {
-//    val auth = Firebase.auth
-//
-//
-//    auth.signInWithEmailAndPassword(email, password)
-//        .addOnCompleteListener {
-//            if (it.isSuccessful) {
-//                // Sign in success, update UI with the signed-in user's information
-//                Toast.makeText(baseContext, "Signed in successfully", Toast.LENGTH_SHORT).show()
-//                baseContext.startActivity(Intent(baseContext, MainActivity::class.java))
-//            } else {
-//                // If sign in fails, display a message to the user.
-//                Toast.makeText(baseContext, "Error signing in", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//}
