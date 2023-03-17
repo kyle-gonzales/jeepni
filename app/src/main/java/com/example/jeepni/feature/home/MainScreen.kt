@@ -317,6 +317,7 @@ fun TopActionBar(
                 Row (
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = null)
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
                         text = distance
@@ -327,7 +328,6 @@ fun TopActionBar(
                         text = time
                     )
                 }
-                Icon(Icons.Filled.LocationOn, contentDescription = null)
             },
             modifier = Modifier,
             navigationIcon = {
