@@ -2,6 +2,7 @@ package com.example.jeepni.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,11 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.Black
+import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.White
+import com.example.jeepni.core.ui.theme.quicksandFontFamily
+import com.example.jeepni.isValidDecimal
 
 @Composable
 fun Gradient(
@@ -117,28 +125,84 @@ fun GradientButton(
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun T() {
+    var inFocus by remember {
+        mutableStateOf(false)
+    }
+    var text by remember {
+        mutableStateOf("")
+    }
+    var width = 10.dp
+
+    var isValid by remember {
+        mutableStateOf(false)
+    }
+    JeepNiTheme(
+    ) {
+        Surface(
+            modifier = Modifier
+                .padding(16.dp) //remove this after
+        ) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+            ) {
+                if (!inFocus)
+                    width = 1.dp
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = text,
+                    onValueChange = { text = it },
+                    label = {Text("label")},
+                    isError = isValid,
+                    shape = RoundedCornerShape(50),
+                    textStyle = TextStyle(fontFamily = quicksandFontFamily)
+                )
+                if (isValid) {
+                    Text(
+                        text = "Invalid Phone Number", //! convert to state
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+        }
+    }
+
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTextField(
+fun JeepNiTextField(
     input: String,
     onValueChange: (String) -> Unit,
     isValid: Boolean,
     label: @Composable() (() -> Unit),
 ){
-    Column(modifier = Modifier
-        .fillMaxWidth()
-    ) {
-        OutlinedTextField(
-            value = input,
-            onValueChange = onValueChange,
-            label = label,
-            isError = !isValid,
-        )
-        if (!isValid) {
-            Text(
-                text = "Invalid Phone Number",
-                color = Color.Red
-            )
+    JeepNiTheme {
+        Surface {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = input,
+                    onValueChange = onValueChange,
+                    label = label,
+                    isError = !isValid,
+                )
+                if (!isValid) {
+                    Text(
+                        text = "Invalid Phone Number",
+                        color = Color.Red
+                    )
+                }
+            }
         }
     }
 }
