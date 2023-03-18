@@ -41,7 +41,7 @@ class SignUpViewModel @Inject constructor(
                 isAgreeToTerms = event.isAgree
             }
             is SignUpEvent.OnBackClicked -> {
-                sendUiEvent(UiEvent.PopBackStack)
+                sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route, "0"))
             }
             is SignUpEvent.OnEmailChange -> {
                 email = event.email
@@ -50,7 +50,7 @@ class SignUpViewModel @Inject constructor(
 //                sendUiEvent(UiEvent.Navigate(Screen.ForgotPasswordScreen.route))
             }
             is SignUpEvent.OnLogInClicked -> {
-                sendUiEvent(UiEvent.Navigate(Screen.LogInScreen.route))
+                sendUiEvent(UiEvent.Navigate(Screen.LogInScreen.route, Screen.WelcomeScreen.route))
             }
             is SignUpEvent.OnPasswordChange -> {
                 password = event.password

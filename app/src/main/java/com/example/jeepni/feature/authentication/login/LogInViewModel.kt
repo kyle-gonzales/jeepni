@@ -69,10 +69,10 @@ class LogInViewModel @Inject constructor(
                 validNumber = event.isValid
             }
             is LogInEvent.OnSignUpClicked -> {
-                sendUiEvent(UiEvent.Navigate(Screen.SignUpScreen.route))
+                sendUiEvent(UiEvent.Navigate(Screen.SignUpScreen.route, Screen.WelcomeScreen.route))
             }
             is LogInEvent.OnBackPressed -> {
-                sendUiEvent(UiEvent.PopBackStack)
+                sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route, "0"))
             }
             is LogInEvent.OnLogInWithGoogle -> {
                 sendUiEvent(UiEvent.ShowToast("feature doesn't exist yet"))
