@@ -5,6 +5,10 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.navOptions
+import com.example.jeepni.core.data.repository.AuthRepository
 import com.google.accompanist.navigation.animation.composable
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.feature.authentication.Welcome2Screen
@@ -15,24 +19,25 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation (
-    navController : NavHostController,
+    navController: NavHostController,
+    auth: AuthRepository,
 ) {
+
+    val initialState = if (auth.isUserLoggedIn()) Screen.MainScreen.route else Screen.WelcomeScreen.route
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.WelcomeScreen.route,
+        startDestination = initialState,
         enterTransition = { EnterTransition.None},
         exitTransition = {ExitTransition.None},
     ) {
         // tell the navHost how the screens look like
         composable (
-            route = Screen.MainScreen.route + "/{email}",// for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
-        ) {entry->
-            // what composable represents our main screen
+            route = Screen.MainScreen.route // for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
+        ) {
             MainScreen(
-                email = entry.arguments?.getString("email")!!,
                 onNavigate = {
-                    navController.navigate(it.route)
+                    navController.navigate(it.route, popUp(it))
                 },
             )
         }
@@ -54,19 +59,8 @@ fun Navigation (
         ) {
             LogInScreen(
                 onNavigate = {
-                    navController.navigate(it.route) {
-                        popUpTo(Screen.WelcomeScreen.route) { // exits the app directly
-                            inclusive = false
-                        }
-                    }
+                    navController.navigate(it.route, navOptions = popUp(it))
                 },
-                onPopBackStack = {
-                    navController.navigate(Screen.WelcomeScreen.route) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
-                        }
-                    }
-                }
             )
         }
         composable (
@@ -74,20 +68,33 @@ fun Navigation (
         ) {
             SignUpScreen(
                 onNavigate = {
-                    navController.navigate(it.route) {
-                        popUpTo(Screen.WelcomeScreen.route) {
-                            inclusive = false
-                        }
-                    }
+                    navController.navigate(it.route, popUp(it))
                 },
-                onPopBackStack = {
-                    navController.navigate(Screen.WelcomeScreen.route) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
-                        }
-                    }
-                }
             )
         }
     }
 }
+
+/*
+ * helper function for Navigation():
+ *  clears the screen back stack if popUp
+ *
+ */
+    fun popUp(screen : UiEvent.Navigate) : NavOptions? {
+        if (screen.popUp == null) { // do not pop the backstack when navigating to new screen
+            return null
+        }
+        return if (screen.popUp!! == "0") { // clear the entire backstack when navigating to new screen
+            navOptions {
+                popUpTo(0) {
+                    inclusive = true
+                }
+            }
+        } else {
+            navOptions { // pop back stack until a specific screen when navigating to a new screen, not inclusive
+                popUpTo(screen.popUp!!)
+            }
+        }
+    }
+
+// https://github.com/FirebaseExtended/make-it-so-android/blob/firebase-compose-codelab-start/app/src/main/java/com/example/makeitso/MakeItSoApp.kt

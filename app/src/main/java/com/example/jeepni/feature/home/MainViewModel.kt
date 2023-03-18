@@ -22,20 +22,14 @@ class MainViewModel
 @Inject constructor(
     private val repository: DailyAnalyticsRepository,
     private val authRepo : AuthRepository,
-    savedStateHandle: SavedStateHandle //contains navigation arguments
+    //savedStateHandle: SavedStateHandle //contains navigation arguments
 )
 : ViewModel() {
 
-    var user by mutableStateOf("")
-    init {
-        user = savedStateHandle.get<String>("email") ?: ""
-//        if (userLogIn.isNotEmpty()) {
-//            viewModelScope.launch {
-//                repository.get
-//            }
-//
-//        }
-    }
+    var user by mutableStateOf(authRepo.getUser())
+//    init {
+//        user = savedStateHandle.get<String>("email") ?: ""
+//    }
 
     // create a sharedFlow for one-time events: events that you don't want to rerun on configuration changes
 
@@ -132,7 +126,8 @@ class MainViewModel
                             message = "Failed to log out..."
                         ))
                     } else {
-                        sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route))
+                        sendUiEvent(UiEvent.Navigate(
+                            Screen.WelcomeScreen.route, "0"))
                     }
                 }
             }

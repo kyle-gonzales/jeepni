@@ -7,7 +7,7 @@ sealed class UiEvent {
         val action : String? = null
     ) : UiEvent()
 
-    data class Navigate(val route : String) : UiEvent()
+    data class Navigate(val route : String, var popUp : String? = null) : UiEvent()
 
     data class ShowToast(
         val message : String
