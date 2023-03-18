@@ -59,11 +59,7 @@ fun Navigation (
         ) {
             LogInScreen(
                 onNavigate = {
-                    navController.navigate(it.route) {
-                        popUpTo(Screen.WelcomeScreen.route) { // exits the app directly
-                            inclusive = false
-                        }
-                    }
+                    navController.navigate(it.route, navOptions = popUp(it))
                 },
                 onPopBackStack = {
                     navController.navigate(Screen.WelcomeScreen.route) {

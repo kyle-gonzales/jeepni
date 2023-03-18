@@ -55,7 +55,7 @@ class LogInViewModel @Inject constructor(
                     )
                     withContext(Dispatchers.Main) {
                         if (isLoggedIn) {
-                            sendUiEvent(UiEvent.Navigate(Screen.MainScreen.withArgs(email)))
+                            sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
                         } else {
                             sendUiEvent(UiEvent.ShowToast("error"))
                         }
