@@ -75,11 +75,7 @@ fun Navigation (
         ) {
             SignUpScreen(
                 onNavigate = {
-                    navController.navigate(it.route) {
-                        popUpTo(Screen.WelcomeScreen.route) {
-                            inclusive = false
-                        }
-                    }
+                    navController.navigate(it.route, popUp(it))
                 },
                 onPopBackStack = {
                     navController.navigate(Screen.WelcomeScreen.route) {
