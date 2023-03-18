@@ -5,6 +5,10 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.navOptions
+import com.example.jeepni.core.data.repository.AuthRepository
 import com.google.accompanist.navigation.animation.composable
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.feature.authentication.Welcome2Screen
@@ -15,22 +19,24 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation (
-    navController : NavHostController,
+    navController: NavHostController,
+    auth: AuthRepository,
 ) {
+
+    val initialState = if (auth.isUserLoggedIn()) Screen.MainScreen.route else Screen.WelcomeScreen.route
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.WelcomeScreen.route,
+        startDestination = initialState,
         enterTransition = { EnterTransition.None},
         exitTransition = {ExitTransition.None},
     ) {
         // tell the navHost how the screens look like
         composable (
-            route = Screen.MainScreen.route + "/{email}",// for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
-        ) {entry->
-            // what composable represents our main screen
+            route = Screen.MainScreen.route //+ "/{email}",// for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
+        ) {
             MainScreen(
-                email = entry.arguments?.getString("email")!!,
+//                email = entry.arguments?.getString("email")!!,
                 onNavigate = {
                     navController.navigate(it.route)
                 },
