@@ -37,7 +37,7 @@ fun Navigation (
         ) {
             MainScreen(
                 onNavigate = {
-                    navController.navigate(it.route)
+                    navController.navigate(it.route, popUp(it))
                 },
             )
         }

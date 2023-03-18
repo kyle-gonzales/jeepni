@@ -126,7 +126,8 @@ class MainViewModel
                             message = "Failed to log out..."
                         ))
                     } else {
-                        sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route))
+                        sendUiEvent(UiEvent.Navigate(
+                            Screen.WelcomeScreen.route, "0"))
                     }
                 }
             }
