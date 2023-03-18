@@ -31,14 +31,12 @@ import com.example.jeepni.util.UiEvent
 fun LogInScreen(
     viewModel : LogInViewModel = hiltViewModel(),
     onNavigate : (UiEvent.Navigate) -> Unit,
-    onPopBackStack : () -> Unit,
 ){
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {event ->
             when(event) {
                 is UiEvent.Navigate -> onNavigate(event)
-                is UiEvent.PopBackStack -> onPopBackStack()
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }

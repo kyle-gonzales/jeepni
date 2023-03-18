@@ -61,13 +61,6 @@ fun Navigation (
                 onNavigate = {
                     navController.navigate(it.route, navOptions = popUp(it))
                 },
-                onPopBackStack = {
-                    navController.navigate(Screen.WelcomeScreen.route) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
-                        }
-                    }
-                }
             )
         }
         composable (
@@ -77,13 +70,6 @@ fun Navigation (
                 onNavigate = {
                     navController.navigate(it.route, popUp(it))
                 },
-                onPopBackStack = {
-                    navController.navigate(Screen.WelcomeScreen.route) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
-                        }
-                    }
-                }
             )
         }
     }
