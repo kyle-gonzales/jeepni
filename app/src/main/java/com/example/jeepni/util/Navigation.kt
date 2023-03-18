@@ -98,4 +98,26 @@ fun Navigation (
     }
 }
 
+/*
+ * helper function for Navigation():
+ *  clears the screen back stack if popUp
+ *
+ */
+    fun popUp(screen : UiEvent.Navigate) : NavOptions? {
+        if (screen.popUp == null) { // do not pop the backstack when navigating to new screen
+            return null
+        }
+        return if (screen.popUp!! == "0") { // clear the entire backstack when navigating to new screen
+            navOptions {
+                popUpTo(0) {
+                    inclusive = true
+                }
+            }
+        } else {
+            navOptions { // pop back stack until a specific screen when navigating to a new screen, not inclusive
+                popUpTo(screen.popUp!!)
+            }
+        }
+    }
+
 // https://github.com/FirebaseExtended/make-it-so-android/blob/firebase-compose-codelab-start/app/src/main/java/com/example/makeitso/MakeItSoApp.kt
