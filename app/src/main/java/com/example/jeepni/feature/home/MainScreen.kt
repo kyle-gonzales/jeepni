@@ -33,7 +33,6 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    email : String,
     onNavigate : (UiEvent.Navigate) -> Unit,
     viewModel : MainViewModel = hiltViewModel(),
 ) {
@@ -81,7 +80,7 @@ fun MainScreen(
         Surface {
                 Menu(
                     drawerState = drawerState,
-                    email = email,
+                    email = viewModel.user!!.email,
                     onLogOutClick = {viewModel.onEvent(MainEvent.OnLogOutClick)}
                 ) {
                     Scaffold (

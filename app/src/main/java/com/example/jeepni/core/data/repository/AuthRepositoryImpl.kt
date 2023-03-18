@@ -39,7 +39,7 @@ class AuthRepositoryImpl (
             return User(
                 email = firebaseUser.email!!,
                 phoneNumber = "",
-                name =  firebaseUser.displayName!!,
+                name =  firebaseUser.displayName?: "",
                 route = ""
             )
         }

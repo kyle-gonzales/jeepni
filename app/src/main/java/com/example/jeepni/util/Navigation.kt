@@ -33,10 +33,9 @@ fun Navigation (
     ) {
         // tell the navHost how the screens look like
         composable (
-            route = Screen.MainScreen.route //+ "/{email}",// for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
+            route = Screen.MainScreen.route // for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
         ) {
             MainScreen(
-//                email = entry.arguments?.getString("email")!!,
                 onNavigate = {
                     navController.navigate(it.route)
                 },
