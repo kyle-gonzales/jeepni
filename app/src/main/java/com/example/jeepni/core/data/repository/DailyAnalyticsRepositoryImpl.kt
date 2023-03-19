@@ -10,9 +10,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.flow.Flow
 
-class DailyAnalyticsRepositoryImpl (private val auth: FirebaseAuth, private val usersRef: CollectionReference, appContext: Application) :
+class DailyAnalyticsRepositoryImpl(
+    private val auth: FirebaseAuth,
+    private val usersRef: CollectionReference,
+    appContext: Application
+) :
     DailyAnalyticsRepository {
-    private var context : Context
+    private var context: Context
+
     init {
         context = appContext.applicationContext
     }
@@ -22,7 +27,9 @@ class DailyAnalyticsRepositoryImpl (private val auth: FirebaseAuth, private val 
             .collection("analytics")
             .document(getCurrentDateString())
             .set(dailyStat)
-            .addOnSuccessListener {Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()} // not sure if this works
+            .addOnSuccessListener {
+                Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
+            } // not sure if this works
             .addOnFailureListener {}
     }
 
@@ -35,7 +42,7 @@ class DailyAnalyticsRepositoryImpl (private val auth: FirebaseAuth, private val 
             .collection("analytics")
             .document(getCurrentDateString())
             .delete()
-            .addOnSuccessListener {Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show()}
+            .addOnSuccessListener { Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show() }
             .addOnFailureListener {}
 
     }
@@ -58,5 +65,4 @@ class DailyAnalyticsRepositoryImpl (private val auth: FirebaseAuth, private val 
         // TODO: Remove nullable operator from return type and on interface
         return null
     }
-
 }
