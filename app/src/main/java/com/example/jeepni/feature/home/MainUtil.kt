@@ -5,6 +5,12 @@ import java.util.*
 /*
 * helper functions
 */
+
+data class MenuItem(
+    val icon : Int,
+    val title : String,
+    val onClick : MainEvent? = null
+)
 fun convertMillisToTime(timeInMillis: Long) : String {
 
     val res = if (timeInMillis >= 3600000L) {
