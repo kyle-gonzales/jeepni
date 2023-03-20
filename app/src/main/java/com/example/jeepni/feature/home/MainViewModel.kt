@@ -131,6 +131,15 @@ class MainViewModel
                     }
                 }
             }
+            is MainEvent.OnChartsClicked -> {
+
+            }
+            is MainEvent.OnCheckUpClicked -> {
+
+            }
+            is MainEvent.OnProfileClicked -> {
+
+            }
         }
     }
 
