@@ -26,6 +26,10 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseFirestore() = Firebase.firestore
+
+    @Provides
+    @Singleton
     fun provideDailyAnalyticsRepository(
         auth : FirebaseAuth,
         usersRef : CollectionReference,
