@@ -73,11 +73,24 @@ fun MainScreen(
     }
 
     JeepNiTheme {
+        val menuItems = listOf( /*TODO: may need to refactor this*/
+            MenuItem(R.drawable.black_chart_24, "Charts") { viewModel.onEvent(MainEvent.OnChartsClicked) },
+            MenuItem(R.drawable.black_tools_24, "JeepNi Check-Up") {
+                viewModel.onEvent(MainEvent.OnCheckUpClicked)
+            }
+        )
         Surface {
                 Menu(
                     drawerState = drawerState,
                     email = viewModel.user!!.email,
-                    scope = coroutineScope
+                    onProfileClicked = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        viewModel.onEvent(MainEvent.OnProfileClicked)
+                    },
+                    scope = coroutineScope,
+                    menuItems = menuItems
                 ) {
                     Scaffold (
                         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -345,12 +358,11 @@ fun TopActionBar(
 fun MenuContent(
     email : String,
     drawerState: DrawerState,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    onProfileClicked : () -> Unit,
+    menuItems : List<MenuItem>
 ) {
-    val menuItems = listOf(
-        MenuItem(R.drawable.black_chart_24, "Charts"),
-        MenuItem(R.drawable.black_tools_24, "JeepNi Check-Up")
-    )
+
     ModalDrawerSheet(
         modifier = Modifier
             .padding(0.dp, 0.dp, 60.dp, 0.dp)
@@ -388,12 +400,16 @@ fun MenuContent(
                                 .clip(CircleShape)
                                 .border(6.dp, MaterialTheme.colorScheme.surface, CircleShape)
                                 .clickable {
-                                    /*TODO: open profile*/
+                                    onProfileClicked()
                                 },
                             contentScale = ContentScale.Crop
                         )
                         Text(email, /* TODO: show user name instead */
-                            modifier = Modifier.padding(12.dp,8.dp),
+                            modifier = Modifier
+                                .padding(12.dp,8.dp)
+                                .clickable {
+                                    onProfileClicked()
+                                },
                             fontFamily = quicksandFontFamily,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
@@ -412,8 +428,8 @@ fun MenuContent(
                             icon = {  Icon(painterResource(id = menuItem.icon), null)  },
                             selected = false,
                             onClick = {
-                                menuItem.onClick
                                 scope.launch { drawerState.close() }
+                                menuItem.onClick()
                             },
                             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                         )
@@ -430,13 +446,15 @@ fun MenuContent(
 fun Menu(
     drawerState: DrawerState,
     email : String,
+    onProfileClicked : () -> Unit,
     scope: CoroutineScope,
-    content : @Composable () -> Unit
+    menuItems : List<MenuItem>,
+    content : @Composable () -> Unit,
 ) {
     ModalNavigationDrawer(
         modifier = Modifier.background(Color.Transparent),
         drawerState = drawerState,
-        drawerContent = { MenuContent(email = email,  drawerState = drawerState, scope = scope) },
+        drawerContent = { MenuContent(email = email,  drawerState = drawerState, scope = scope, onProfileClicked = onProfileClicked, menuItems = menuItems) },
         content = content
     )
 }
