@@ -9,7 +9,7 @@ import java.util.*
 data class MenuItem(
     val icon : Int,
     val title : String,
-    val onClick : MainEvent? = null
+    val onClick : () -> Unit = {}
 )
 fun convertMillisToTime(timeInMillis: Long) : String {
 
