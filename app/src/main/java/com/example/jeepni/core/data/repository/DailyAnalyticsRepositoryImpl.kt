@@ -47,7 +47,7 @@ class DailyAnalyticsRepositoryImpl(
 
     }
 
-    override fun getDailyStats(): Flow<List<DailyAnalytics>>? {
+    override suspend fun getDailyStats(): Flow<List<DailyAnalytics>>? {
         // NOTE: maybe use a persistent listener instead of a one-time get? https://firebase.google.com/docs/database/android/read-and-write#read_data_with_persistent_listeners
         usersRef.document(auth.currentUser!!.uid)
             .collection("analytics")
