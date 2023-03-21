@@ -36,6 +36,14 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideUserDetailRepository(
+        app : Application,
+        auth : FirebaseAuth,
+        db : FirebaseFirestore
+    ) : UserDetailRepository = UserDetailRepositoryImpl(app, auth, db)
+
+    @Provides
+    @Singleton
     fun provideDailyAnalyticsRepository(
         auth : FirebaseAuth,
         usersRef : CollectionReference,
