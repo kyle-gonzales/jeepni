@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.navOptions
 import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.feature.analytics.AnalyticsScreen
 import com.google.accompanist.navigation.animation.composable
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.feature.authentication.Welcome2Screen
@@ -89,7 +90,7 @@ fun Navigation (
         composable (
             route = Screen.AnalyticsScreen.route
         ) {
-            CheckUpScreen( /*TODO: replace with gel's screen*/
+            AnalyticsScreen( /*TODO: replace with gel's screen*/
                 onNavigate = {
                     navController.navigate(it.route, popUp(it))
                 },
