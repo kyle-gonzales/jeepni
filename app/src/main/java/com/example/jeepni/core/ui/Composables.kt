@@ -231,3 +231,48 @@ fun T() {
 
 }
 
+@Composable
+fun AnalyticsCard(
+    date: String,
+    revenue: String,
+    expenses: String,
+    content: @Composable () -> Unit
+) {
+    Row {
+        Card(
+            shape = RoundedCornerShape(size = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(25.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+            ) {
+                Text(
+                    text = date,
+                    fontSize = 15.sp,
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold
+                )
+                Column(
+                    modifier = Modifier
+                        .padding(start = 20.dp)
+                ) {
+                    Text(
+                        text = revenue,
+                        fontSize = 15.sp,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Light
+                    )
+                    Text(
+                        text = expenses,
+                        fontSize = 15.sp,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Light
+                    )}
+                content()
+            }
+        }
+    }
+}
