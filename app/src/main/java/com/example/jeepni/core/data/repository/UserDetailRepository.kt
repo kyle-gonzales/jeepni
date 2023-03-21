@@ -6,6 +6,6 @@ interface UserDetailRepository {
 
     suspend fun getUserDetails() : User?
 
-    suspend fun  updateUserDetails() : Boolean
+    suspend fun  updateUserDetails(email: String, phoneNumber: String, name: String, route: String)
 
 }
