@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.example.jeepni.core.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 class UserDetailRepositoryImpl(
     appContext: Application,
@@ -20,29 +21,27 @@ class UserDetailRepositoryImpl(
     }
 
     override suspend fun getUserDetails(): User? {
-        val firebaseUser = auth.currentUser
-        if (firebaseUser != null) {
-            return User(
-                email = firebaseUser.email!!,
-                phoneNumber = "",
-                name =  firebaseUser.displayName!!,
-                route = ""
-            )
-        }
-        return null
+        val firebaseUser = auth.currentUser ?: return null
+
+        val userDetails = db.collection("users")
+            .document(firebaseUser.uid)
+            .get()
+            .await()
+
+        return User(
+            email = userDetails.getString("email").toString(),
+            phoneNumber = userDetails.getString("phoneNumber").toString(),
+            name =  userDetails.getString("name").toString(),
+            route = userDetails.getString("route").toString()
+        )
     }
 
-    override suspend fun updateUserDetails(email: String, phoneNumber: String, name: String, route: String) {
+    override suspend fun updateUserDetails(userDetails : User) {
         // TODO: email/phone number should update auth info too
-
-        val details = mapOf(
-            "name" to name,
-            "route" to route,
-        )
 
         db.collection("users")
             .document(auth.currentUser!!.uid)
-            .set(details)
+            .set(userDetails)
             .addOnSuccessListener { Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()}
             .addOnFailureListener {}
     }
