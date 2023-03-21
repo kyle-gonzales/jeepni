@@ -1,6 +1,6 @@
 package com.example.jeepni.core.data.repository
 
-import com.example.jeepni.core.data.model.User
+import com.google.firebase.auth.FirebaseUser
 
 interface AuthRepository {
 
@@ -10,7 +10,7 @@ interface AuthRepository {
 
     suspend fun logInWithPhoneNumber(email : String, password : String) : Boolean
 
-    fun getUser() : User?
+    fun getUser() : FirebaseUser?
 
     fun getUserEmail() : String
 

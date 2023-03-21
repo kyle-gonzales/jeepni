@@ -1,8 +1,8 @@
 package com.example.jeepni.core.data.repository
 
 import android.app.Application
-import com.example.jeepni.core.data.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImpl (
@@ -33,15 +33,10 @@ class AuthRepositoryImpl (
     override suspend fun logInWithPhoneNumber(email: String, password: String) : Boolean {
         return false
     }
-    override fun getUser(): User? {
+    override fun getUser(): FirebaseUser? {
         val firebaseUser = auth.currentUser
         if (firebaseUser != null) {
-            return User(
-                email = firebaseUser.email!!,
-                phoneNumber = "",
-                name =  firebaseUser.displayName!!,
-                route = ""
-            )
+            return firebaseUser
         }
         return null
     }
