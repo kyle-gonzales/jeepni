@@ -63,7 +63,7 @@ class SignUpViewModel @Inject constructor(
                     val isSuccessful = repository.addUser(email.trim(), password.trim(), confirmPassword.trim())
                     withContext(Dispatchers.Main.immediate) {
                         if (isSuccessful) {
-                            sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
+                            sendUiEvent(UiEvent.Navigate(Screen.AboutDriverScreen.route, "0"))
                         } else {
                             sendUiEvent(UiEvent.ShowToast("failed to make account"))
                         }
