@@ -3,7 +3,7 @@ package com.example.jeepni.core.data.repository
 import android.app.Application
 import android.content.Context
 import android.widget.Toast
-import com.example.jeepni.core.data.model.User
+import com.example.jeepni.core.data.model.UserDetails
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -20,7 +20,7 @@ class UserDetailRepositoryImpl(
         context = appContext.applicationContext
     }
 
-    override suspend fun getUserDetails(): User? {
+    override suspend fun getUserDetails(): UserDetails? {
         val firebaseUser = auth.currentUser ?: return null
 
         val userDetails = db.collection("users")
@@ -28,17 +28,13 @@ class UserDetailRepositoryImpl(
             .get()
             .await()
 
-        return User(
-            email = userDetails.getString("email").toString(),
-            phoneNumber = userDetails.getString("phoneNumber").toString(),
+        return UserDetails(
             name =  userDetails.getString("name").toString(),
             route = userDetails.getString("route").toString()
         )
     }
 
-    override suspend fun updateUserDetails(userDetails : User) {
-        // TODO: email/phone number should update auth info too
-
+    override suspend fun updateUserDetails(userDetails : UserDetails) {
         db.collection("users")
             .document(auth.currentUser!!.uid)
             .set(userDetails)
