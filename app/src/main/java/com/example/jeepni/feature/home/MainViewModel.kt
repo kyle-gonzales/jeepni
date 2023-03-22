@@ -132,10 +132,10 @@ class MainViewModel
                 }
             }
             is MainEvent.OnChartsClicked -> {
-                sendUiEvent(UiEvent.Navigate(Screen.CheckUpScreen.route))
+                sendUiEvent(UiEvent.Navigate(Screen.AnalyticsScreen.route))
             }
             is MainEvent.OnCheckUpClicked -> {
-                sendUiEvent(UiEvent.Navigate(Screen.AnalyticsScreen.route))
+                sendUiEvent(UiEvent.Navigate(Screen.CheckUpScreen.route))
             }
             is MainEvent.OnProfileClicked -> {
                 sendUiEvent(UiEvent.Navigate(Screen.ProfileScreen.route))
