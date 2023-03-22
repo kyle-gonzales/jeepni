@@ -2,19 +2,27 @@ package com.example.jeepni.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.White
@@ -150,5 +158,66 @@ fun BackIconButton(
     IconButton(onClick = { onClick() })
     {
         Icon(Icons.Filled.ArrowBack, contentDescription = null )
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDropDown(
+    label:String,
+    expanded:Boolean,
+    value:String,
+    onClickIcon: () -> Unit,
+    onSizeChange: () -> Unit,
+    onSelected:Int,
+    size:Size,
+    items:List<String>
+){
+    val icon = if(expanded){
+        Icons.Filled.KeyboardArrowDown
+    }else{
+        Icons.Filled.KeyboardArrowUp
+    }
+
+    Column{
+        Box{
+            OutlinedTextField(
+                value = value,
+                onValueChange = {},
+                label = { Text(text = label)},
+                trailingIcon = {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        Modifier.clickable{
+                            onClickIcon
+                        }
+                    )
+                },
+                modifier = Modifier.onGloballyPositioned {
+                    onSizeChange
+                }
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = {
+                    onClickIcon
+                },
+                modifier = Modifier.width(
+                    with(LocalDensity.current){
+                        size.width.toDp()
+                    }
+                )
+            ) {
+                items.forEachIndexed() { index, s ->
+                    DropdownMenuItem(
+                        text = {Text(text = s)},
+                        onClick = {
+                            onSelected
+                            onClickIcon
+                        }
+                    )
+                }
+            }
+        }
     }
 }
