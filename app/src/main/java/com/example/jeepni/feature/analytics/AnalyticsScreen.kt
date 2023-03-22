@@ -1,17 +1,12 @@
 package com.example.jeepni.feature.analytics
 
-import androidx.compose.material.*
 import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -66,7 +61,7 @@ fun AnalyticsScreen(
                     LazyColumn(contentPadding = paddingValues) {
                         items(analytics ?: emptyList()) { item ->
                             AnalyticsCard(
-                                date = "2-22-2222",
+                                date = item.date,
                                 revenue = "Revenue: " + item.salary.toString(),
                                 expenses = "Fuel Cost: " + item.fuelCost.toString()
                             ) {
