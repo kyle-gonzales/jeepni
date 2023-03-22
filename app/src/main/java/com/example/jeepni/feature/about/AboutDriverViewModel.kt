@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jeepni.core.data.model.Jeeps
 import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.core.data.repository.JeepsRepository
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -16,9 +18,15 @@ import javax.inject.Inject
 @HiltViewModel
 class AboutDriverViewModel
 @Inject constructor(
-    private val auth : AuthRepository
+    private val auth : AuthRepository,
+    private val jeepsRepository: JeepsRepository,
 )
 : ViewModel() {
+    lateinit var jeepneyRoutes : List<Jeeps>
+    init {
+        getRoutes()
+    }
+
     var firstName by mutableStateOf("")
         private set
     var route by mutableStateOf("")
@@ -47,11 +55,17 @@ class AboutDriverViewModel
 
             }
             is AboutDriverEvent.OnRouteChange -> {
-
+                route = event.route
             }
             is AboutDriverEvent.OnRouteDropDownClick -> {
 
             }
+        }
+    }
+
+    private fun getRoutes() {
+        viewModelScope.launch {
+            jeepneyRoutes = jeepsRepository.getJeepneyRoutes()
         }
     }
 
