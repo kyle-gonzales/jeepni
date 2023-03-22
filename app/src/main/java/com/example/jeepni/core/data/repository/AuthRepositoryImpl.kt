@@ -1,6 +1,7 @@
 package com.example.jeepni.core.data.repository
 
 import android.app.Application
+import com.example.jeepni.core.data.model.UserCredentials
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
@@ -21,16 +22,16 @@ class AuthRepositoryImpl (
             false
         }
     }
-    override suspend fun logInWithEmail(email : String, password: String) : Boolean {
+    override suspend fun logInWithEmail(creds : UserCredentials) : Boolean {
         return try {
-            auth.signInWithEmailAndPassword(email, password).await()
+            auth.signInWithEmailAndPassword(creds.email, creds.password).await()
             true
         } catch (e : Exception) {
             e.printStackTrace()
             false
         }
     }
-    override suspend fun logInWithPhoneNumber(email: String, password: String) : Boolean {
+    override suspend fun logInWithPhoneNumber(creds : UserCredentials) : Boolean {
         return false
     }
     override fun getUser(): FirebaseUser? {
