@@ -73,7 +73,7 @@ class MainViewModel
                 if (isValidFuelCost && isValidSalary) {
                     viewModelScope.launch {
                         repository.updateDailyStat(
-                            DailyAnalytics(event.salary, event.fuelCost)
+                            DailyAnalytics(salary = event.salary, fuelCost = event.fuelCost)
                         )
                     }
                 } else {
