@@ -54,20 +54,21 @@ class DailyAnalyticsRepositoryImpl(
             val result = mutableListOf<DailyAnalytics>()
 
             // NOTE: maybe use a persistent listener instead of a one-time get? https://firebase.google.com/docs/database/android/read-and-write#read_data_with_persistent_listeners
-            val snapshotListener = usersRef.document(auth.currentUser!!.uid)
-                .collection("analytics").addSnapshotListener {
-                    snapshot, exception ->
-                    if (exception != null) {
-                        exception.printStackTrace()
-                        return@addSnapshotListener
+            val snapshotListener = auth.currentUser?.uid?.let {
+                usersRef.document(it)
+                    .collection("analytics").addSnapshotListener { snapshot, exception ->
+                        if (exception != null) {
+                            exception.printStackTrace()
+                            return@addSnapshotListener
+                        }
+                        snapshot?.let { _snapshot ->
+                            trySend(_snapshot.toObjects(DailyAnalytics::class.java)).isSuccess
+                        }
                     }
-                    snapshot?.let { _snapshot ->
-                        trySend(_snapshot.toObjects(DailyAnalytics::class.java)).isSuccess
-                    }
-                }
+            }
 
             awaitClose { // cleanup
-                snapshotListener.remove()
+                snapshotListener?.remove()
             }
 //            for (stats in analytics.documents) result.add(
 //                DailyAnalytics(

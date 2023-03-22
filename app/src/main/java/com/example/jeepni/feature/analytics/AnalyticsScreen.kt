@@ -3,6 +3,7 @@ package com.example.jeepni.feature.analytics
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.core.ui.AnalyticsCard
@@ -20,13 +21,13 @@ fun AnalyticsScreen(
     onPopBackStack : () -> Unit,
 ) {
 
-    val analytics = viewModel.analytics.collectAsState(initial = emptyList()) // this is the list that is used in the lazy column
+    val analytics by viewModel.analytics.collectAsState(initial = null) // this is the list that is used in the lazy column
     JeepNiTheme {
         Surface {
             AnalyticsCard(
                 date = "2-22-2222",
-                revenue = analytics.value[0].salary.toString(),
-                expenses = analytics.value[0].fuelCost.toString()
+                revenue = analytics?.get(0)?.salary.toString(),
+                expenses = analytics?.get(0)?.fuelCost.toString()
             ) {
             }
         }
