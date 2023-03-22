@@ -26,6 +26,8 @@ import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.White
+import com.example.jeepni.feature.authentication.signup.SignUpEvent
+import com.example.jeepni.feature.authentication.signup.SignUpViewModel
 import com.example.jeepni.util.UiEvent
 
 
@@ -34,14 +36,12 @@ import com.example.jeepni.util.UiEvent
 fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
     onNavigate : (UiEvent.Navigate) -> Unit,
-    onPopBackStack : () -> Unit
 ) {
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {event ->
             when (event) {
                 is UiEvent.Navigate -> onNavigate(event)
-                is UiEvent.PopBackStack -> onPopBackStack()
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }

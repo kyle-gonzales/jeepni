@@ -6,19 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jeepni.*
 import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,20 +22,14 @@ class MainViewModel
 @Inject constructor(
     private val repository: DailyAnalyticsRepository,
     private val authRepo : AuthRepository,
-    savedStateHandle: SavedStateHandle //contains navigation arguments
+    //savedStateHandle: SavedStateHandle //contains navigation arguments
 )
 : ViewModel() {
 
-    var user by mutableStateOf("")
-    init {
-        user = savedStateHandle.get<String>("email") ?: ""
-//        if (userLogIn.isNotEmpty()) {
-//            viewModelScope.launch {
-//                repository.get
-//            }
-//
-//        }
-    }
+    var user by mutableStateOf(authRepo.getUser())
+//    init {
+//        user = savedStateHandle.get<String>("email") ?: ""
+//    }
 
     // create a sharedFlow for one-time events: events that you don't want to rerun on configuration changes
 
@@ -80,10 +70,14 @@ class MainViewModel
             }
             is MainEvent.OnSaveDailyAnalyticClick -> {
                 //TODO: perform network call to update state on relaunch
-                viewModelScope.launch {
-                    repository.updateDailyStat(
-                        DailyAnalytics(event.salary, event.fuelCost)
-                    )
+                if (isValidFuelCost && isValidSalary) {
+                    viewModelScope.launch {
+                        repository.updateDailyStat(
+                            DailyAnalytics(event.salary, event.fuelCost)
+                        )
+                    }
+                } else {
+                    sendUiEvent(UiEvent.ShowToast("Invalid Input"))
                 }
             }
             is MainEvent.OnDeleteDailyStatClick -> {
@@ -132,9 +126,19 @@ class MainViewModel
                             message = "Failed to log out..."
                         ))
                     } else {
-                        sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route))
+                        sendUiEvent(UiEvent.Navigate(
+                            Screen.WelcomeScreen.route, "0"))
                     }
                 }
+            }
+            is MainEvent.OnChartsClicked -> {
+                sendUiEvent(UiEvent.Navigate(Screen.CheckUpScreen.route))
+            }
+            is MainEvent.OnCheckUpClicked -> {
+                sendUiEvent(UiEvent.Navigate(Screen.AnalyticsScreen.route))
+            }
+            is MainEvent.OnProfileClicked -> {
+                sendUiEvent(UiEvent.Navigate(Screen.ProfileScreen.route))
             }
         }
     }

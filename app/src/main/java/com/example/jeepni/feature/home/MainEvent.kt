@@ -13,5 +13,8 @@ sealed class MainEvent {
     data class OnFuelCostChange(val fuelCost: String) : MainEvent()
     data class OnDistanceChange(val distance : String) : MainEvent()
     data class OnTimeChange(val distance : String) : MainEvent()
+    object OnProfileClicked: MainEvent()
+    object OnChartsClicked : MainEvent()
+    object OnCheckUpClicked : MainEvent()
 
 }

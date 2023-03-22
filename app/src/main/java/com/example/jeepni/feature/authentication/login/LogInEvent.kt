@@ -1,4 +1,4 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.login
 
 sealed class LogInEvent {
     data class OnEmailChange(val email : String) : LogInEvent()

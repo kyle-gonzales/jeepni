@@ -7,8 +7,9 @@ sealed class Screen(val route : String) {
     object LogInScreen : Screen("login_screen")
     object SignUpScreen: Screen("signup_screen")
     object AnalyticsScreen : Screen("analytics_screen")
-
-
+    object CheckUpScreen : Screen ("checkup_screen")
+    object ProfileScreen : Screen("profile_screen")
+    object AboutDriverScreen : Screen("about_driver_screen")
     fun withArgs(vararg args : String) : String {
         return buildString {
             append(route)
