@@ -23,6 +23,7 @@ class AnalyticsViewModel @Inject constructor(
 
     var analytics = repository.getDailyStats()
 
+
     private var _uiEvent = Channel<UiEvent>()
     var uiEvent = _uiEvent.receiveAsFlow()
 

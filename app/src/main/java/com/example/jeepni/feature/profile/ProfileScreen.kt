@@ -61,7 +61,7 @@ fun ProfileScreen (
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                JeepNiText(viewModel.email)
+                JeepNiText(viewModel.email?:"error") //nag
 
             }
             SolidButton(

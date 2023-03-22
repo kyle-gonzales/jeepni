@@ -27,8 +27,8 @@ class MainActivity : ComponentActivity() {
     //    private val signUpViewModel by viewModels<SignUpViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        analyticsViewModel = ViewModelProvider(this)[AnalyticsViewModel::class.java]
-        analyticsViewModel.logAnalytics()
+//        analyticsViewModel = ViewModelProvider(this)[AnalyticsViewModel::class.java]
+//        analyticsViewModel.logAnalytics()
         setContent {
             JeepNiTheme {
                 navController = rememberAnimatedNavController()
