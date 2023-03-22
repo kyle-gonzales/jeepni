@@ -11,12 +11,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
 import java.util.*
@@ -26,7 +23,7 @@ import java.util.*
 @Composable
 fun AboutDriverScreen(
     viewModel : AboutDriverViewModel = hiltViewModel(),
-    //onNavigate : (UiEvent.Navigate) -> Unit,
+    onNavigate : (UiEvent.Navigate) -> Unit,
     onPopBackStack : () -> Unit
 ) {
     val context = LocalContext.current
@@ -89,11 +86,11 @@ fun AboutDriverScreen(
                         OutlinedTextField(
                             value = viewModel.firstName,
                             placeholder = { Text(viewModel.firstName) },
-                            onValueChange = { /*viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it)) */},
+                            onValueChange = { viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it)) },
                             label = { Text("First Name") },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            isError = viewModel.isValidFirstName
+                            isError = !viewModel.isValidFirstName
                         )
 
                     }
