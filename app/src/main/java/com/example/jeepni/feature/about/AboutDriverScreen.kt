@@ -14,6 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+
+import com.example.jeepni.R
+import com.example.jeepni.core.ui.CustomDropDown
+
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
 import java.util.*
@@ -67,7 +71,9 @@ fun AboutDriverScreen(
                             navigationIcon = {
                                 IconButton(
                                     onClick = {
+
                                         viewModel.onEvent(AboutDriverEvent.OnSaveDetailsClick)
+
                                     }
                                 ) {
                                     Icon(Icons.Filled.ArrowForward, contentDescription = null)
@@ -86,13 +92,24 @@ fun AboutDriverScreen(
                         OutlinedTextField(
                             value = viewModel.firstName,
                             placeholder = { Text(viewModel.firstName) },
+
                             onValueChange = { viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it)) },
+
                             label = { Text("First Name") },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                             isError = !viewModel.isValidFirstName
                         )
-
+                        CustomDropDown(
+                            label = "Select route",
+                            expanded = viewModel.isRouteDropdownClicked,
+                            value = viewModel.route,
+                            size = viewModel.routeDropdownSize,
+                            onClickIcon = {viewModel.onEvent(AboutDriverEvent.OnRouteDropDownClick) },
+                            onSizeChange = {viewModel.onEvent(AboutDriverEvent.OnRouteSizeChange(it))}, // how to get it ????
+                            onSelected = {viewModel.onEvent(AboutDriverEvent.OnRouteChange(it))},
+                            items =
+                        )
                     }
                 }
             )

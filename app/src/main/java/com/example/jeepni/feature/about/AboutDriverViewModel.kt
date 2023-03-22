@@ -3,6 +3,7 @@ package com.example.jeepni.feature.about
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.Jeeps
@@ -33,15 +34,20 @@ class AboutDriverViewModel
     init {
         getRoutes()
     }
+    
+    
+    var isRouteDropdownClicked by mutableStateOf(false)
+        private set
+    var routeDropdownSize by mutableStateOf(Size.Zero)
+        private set
 
     var firstName by mutableStateOf("")
         private set
     var route by mutableStateOf("")
         private set
-    var language by mutableStateOf("")
-        private set
     var isValidFirstName by mutableStateOf(true)
         private set
+
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -100,5 +106,6 @@ class AboutDriverViewModel
             _uiEvent.send(event)
         }
     }
+
 
 }
