@@ -34,11 +34,17 @@ class UserDetailRepositoryImpl(
         )
     }
 
-    override suspend fun updateUserDetails(userDetails : UserDetails) {
-        db.collection("users")
-            .document(auth.currentUser!!.uid)
-            .set(userDetails)
-            .addOnSuccessListener { Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()}
-            .addOnFailureListener {}
+    override suspend fun updateUserDetails(userDetails : UserDetails) : Boolean {
+        return try {
+            db.collection("users")
+                .document(auth.currentUser!!.uid)
+                .set(userDetails)
+                .await()
+
+            true
+        } catch (e : Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 }

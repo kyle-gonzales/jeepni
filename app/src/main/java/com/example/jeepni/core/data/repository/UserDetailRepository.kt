@@ -6,6 +6,6 @@ interface UserDetailRepository {
 
     suspend fun getUserDetails() : UserDetails?
 
-    suspend fun  updateUserDetails( userDetails : UserDetails)
+    suspend fun  updateUserDetails( userDetails : UserDetails) : Boolean
 
 }
