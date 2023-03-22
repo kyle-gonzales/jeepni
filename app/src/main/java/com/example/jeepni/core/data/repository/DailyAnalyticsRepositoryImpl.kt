@@ -9,9 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.tasks.await
 
 class DailyAnalyticsRepositoryImpl(
     private val auth: FirebaseAuth,
@@ -76,9 +74,9 @@ class DailyAnalyticsRepositoryImpl(
                 }
             }
 
-            awaitClose { // cleanup
-                snapshotListener.remove()
-            }
+        awaitClose { // cleanup
+            snapshotListener.remove()
+        }
 //            for (stats in analytics.documents) result.add(
 //                DailyAnalytics(
 //                    // these strings might change, perhaps we should hardcode their values somewhere in R.values.strings
@@ -87,5 +85,5 @@ class DailyAnalyticsRepositoryImpl(
 //                )
 //            )
 
-        }
+    }
 }

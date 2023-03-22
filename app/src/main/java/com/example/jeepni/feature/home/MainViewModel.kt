@@ -3,7 +3,6 @@ package com.example.jeepni.feature.home
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.DailyAnalytics
@@ -21,10 +20,9 @@ import javax.inject.Inject
 class MainViewModel
 @Inject constructor(
     private val repository: DailyAnalyticsRepository,
-    private val authRepo : AuthRepository,
+    private val authRepo: AuthRepository,
     //savedStateHandle: SavedStateHandle //contains navigation arguments
-)
-: ViewModel() {
+) : ViewModel() {
 
     var user by mutableStateOf(authRepo.getUser())
 //    init {
@@ -39,7 +37,7 @@ class MainViewModel
     //think about the user interactions that may happen in the main activity
     // event class -> events from the screen to the ViewModel when there is a user interaction
 
-    private var deletedStat : DailyAnalytics? = null // user can undo deleted stat
+    private var deletedStat: DailyAnalytics? = null // user can undo deleted stat
 
     var salary by mutableStateOf("100")
         private set
@@ -64,7 +62,7 @@ class MainViewModel
 
 
     fun onEvent(event: MainEvent) {
-        when(event) {
+        when (event) {
             is MainEvent.OnOpenAddDailyStatDialog -> {
                 isAddDailyStatDialogOpen = event.value
             }
@@ -96,10 +94,12 @@ class MainViewModel
                     viewModelScope.launch {
                         repository.updateDailyStat(deletedStat ?: return@launch)
                         deletedStat = null
-                        sendUiEvent(UiEvent.ShowSnackBar(
-                            message = "Daily Analytics Deleted",
-                            action = "Undo"
-                        ))
+                        sendUiEvent(
+                            UiEvent.ShowSnackBar(
+                                message = "Daily Analytics Deleted",
+                                action = "Undo"
+                            )
+                        )
                     }
                 }
             }
@@ -108,7 +108,7 @@ class MainViewModel
                 isValidSalary = isValidDecimal(salary)
             }
             is MainEvent.OnFuelCostChange -> {
-                fuelCost= event.fuelCost
+                fuelCost = event.fuelCost
                 isValidFuelCost = isValidDecimal(fuelCost)
             }
             is MainEvent.OnDistanceChange -> {
@@ -122,12 +122,17 @@ class MainViewModel
                 viewModelScope.launch {
                     authRepo.logOut()
                     if (authRepo.isUserLoggedIn()) {
-                        sendUiEvent(UiEvent.ShowSnackBar(
-                            message = "Failed to log out..."
-                        ))
+                        sendUiEvent(
+                            UiEvent.ShowSnackBar(
+                                message = "Failed to log out..."
+                            )
+                        )
                     } else {
-                        sendUiEvent(UiEvent.Navigate(
-                            Screen.WelcomeScreen.route, "0"))
+                        sendUiEvent(
+                            UiEvent.Navigate(
+                                Screen.WelcomeScreen.route, "0"
+                            )
+                        )
                     }
                 }
             }
