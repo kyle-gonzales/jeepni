@@ -70,8 +70,8 @@ fun AnalyticsScreen(
                         items(analytics ?: emptyList()) { item ->
                             AnalyticsCard(
                                 date = "2-22-2222",
-                                revenue = item.salary.toString(),
-                                expenses = item.fuelCost.toString()
+                                revenue = "Revenue: " + item.salary.toString(),
+                                expenses = "Expenses: " + item.fuelCost.toString()
                             ) {
                             }
                         }
