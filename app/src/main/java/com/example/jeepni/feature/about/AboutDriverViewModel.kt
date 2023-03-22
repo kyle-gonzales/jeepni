@@ -58,12 +58,6 @@ class AboutDriverViewModel
             is AboutDriverEvent.OnFirstNameChange -> {
                 firstName = event.firstName
             }
-            is AboutDriverEvent.OnLanguageChange -> {
-
-            }
-            is AboutDriverEvent.OnLanguageDropDownClick -> {
-
-            }
             is AboutDriverEvent.OnSaveDetailsClick -> {
                 viewModelScope.launch {
                     var isUserDetailsUpdated = false
@@ -90,6 +84,9 @@ class AboutDriverViewModel
                 route = event.route
             }
             is AboutDriverEvent.OnRouteDropDownClick -> {
+
+            }
+            is AboutDriverEvent.OnRouteSizeChange -> {
 
             }
         }

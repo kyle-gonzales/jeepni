@@ -280,7 +280,7 @@ fun CustomDropDown(
                         icon,
                         contentDescription = null,
                         Modifier.clickable{
-                            onClickIcon
+                            onClickIcon // you should put parentheses here because onClickIcon is inside '{}'
                         }
                     )
                 },
