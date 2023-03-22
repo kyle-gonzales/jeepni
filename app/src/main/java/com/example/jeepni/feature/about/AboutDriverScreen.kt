@@ -67,7 +67,7 @@ fun AboutDriverScreen(
                             navigationIcon = {
                                 IconButton(
                                     onClick = {
-                                        //viewModel.onEvent(AboutDriverEvent.OnNextClick)
+                                        viewModel.onEvent(AboutDriverEvent.OnSaveDetailsClick)
                                     }
                                 ) {
                                     Icon(Icons.Filled.ArrowForward, contentDescription = null)
