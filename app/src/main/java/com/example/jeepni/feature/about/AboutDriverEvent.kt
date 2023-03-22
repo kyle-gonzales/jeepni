@@ -1,10 +1,11 @@
 package com.example.jeepni.feature.about
 
+import androidx.compose.ui.geometry.Size
+
 sealed class AboutDriverEvent {
     object OnNextClick : AboutDriverEvent()
     data class OnFirstNameChange(val firstName: String): AboutDriverEvent()
     object OnRouteDropDownClick : AboutDriverEvent()
     data class OnRouteChange (val route: String): AboutDriverEvent()
-    object OnLanguageDropDownClick : AboutDriverEvent()
-    data class OnLanguageChange (val language: String): AboutDriverEvent()
+    data class OnRouteSizeChange(val s: Size): AboutDriverEvent()
 }

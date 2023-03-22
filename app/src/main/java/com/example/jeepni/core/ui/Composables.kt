@@ -168,7 +168,7 @@ fun CustomDropDown(
     value:String,
     onClickIcon: () -> Unit,
     onSizeChange: () -> Unit,
-    onSelected:Int,
+    onSelected: () -> Unit,
     size:Size,
     items:List<String>
 ){
