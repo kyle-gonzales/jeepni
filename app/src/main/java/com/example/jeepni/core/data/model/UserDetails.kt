@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class UserDetails(
-    val name : String,
-    val route : String,
+    val name : String?,
+    val route : String?,
 ): Parcelable
