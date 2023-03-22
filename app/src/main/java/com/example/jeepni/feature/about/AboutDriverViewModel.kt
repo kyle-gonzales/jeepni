@@ -4,13 +4,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AboutDriverViewModel
 @Inject constructor(
-
+    private val auth : AuthRepository
 )
 : ViewModel() {
     var firstName by mutableStateOf("")
@@ -21,5 +27,38 @@ class AboutDriverViewModel
         private set
     var isValidFirstName by mutableStateOf(true)
         private set
-    var uiEvent =
+
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
+
+
+    private fun onEvent(event : AboutDriverEvent) {
+        when (event) {
+            is AboutDriverEvent.OnFirstNameChange -> {
+                firstName = event.firstName
+            }
+            is AboutDriverEvent.OnLanguageChange -> {
+
+            }
+            is AboutDriverEvent.OnLanguageDropDownClick -> {
+
+            }
+            is AboutDriverEvent.OnNextClick -> {
+
+            }
+            is AboutDriverEvent.OnRouteChange -> {
+
+            }
+            is AboutDriverEvent.OnRouteDropDownClick -> {
+
+            }
+        }
+    }
+
+    private fun sendUiEvent(event: UiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event)
+        }
+    }
+
 }
