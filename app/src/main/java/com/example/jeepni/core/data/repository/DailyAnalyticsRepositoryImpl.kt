@@ -56,53 +56,42 @@ class DailyAnalyticsRepositoryImpl(
 
         val snapshotListener = usersRef.document(auth.currentUser!!.uid)
             .collection("analytics").addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    exception.printStackTrace()
-                    return@addSnapshotListener
-                }
-                snapshot?.let { _snapshot ->
-                    val result = mutableListOf<DailyAnalytics>()
-                    for (document in _snapshot.documents) {
-                        result.add(
-                            DailyAnalytics(
-                                date = document.id,
-                                salary = document.data?.get("salary") as Double,
-                                fuelCost = document.data?.get("fuelCost") as Double
-                            )
+            if (exception != null) {
+                exception.printStackTrace()
+                return@addSnapshotListener
+            }
+            snapshot?.let { _snapshot ->
+                val result = mutableListOf<DailyAnalytics>()
+                for (document in _snapshot.documents) {
+                    result.add(
+                        DailyAnalytics(
+                            date = document.id,
+                            salary = document.data?.get("salary") as Double,
+                            fuelCost = document.data?.get("fuelCost") as Double
                         )
-                    }
-                    trySend(result).isSuccess
+                    )
                 }
-
-            // NOTE: maybe use a persistent listener instead of a one-time get? https://firebase.google.com/docs/database/android/read-and-write#read_data_with_persistent_listeners
-            val snapshotListener = auth.currentUser?.uid?.let {
-                usersRef.document(it)
-                    .collection("analytics").addSnapshotListener { snapshot, exception ->
-                        if (exception != null) {
-                            exception.printStackTrace()
-                            return@addSnapshotListener
-                        }
-                        snapshot?.let { _snapshot ->
-                            trySend(_snapshot.toObjects(DailyAnalytics::class.java)).isSuccess
-                        }
-                    }
+                trySend(result).isSuccess
             }
-
-            awaitClose { // cleanup
-                snapshotListener?.remove()
-
-            }
-
+        }
         awaitClose { // cleanup
             snapshotListener.remove()
         }
-//            for (stats in analytics.documents) result.add(
-//                DailyAnalytics(
-//                    // these strings might change, perhaps we should hardcode their values somewhere in R.values.strings
-//                    salary = stats.data?.get("salary") as Double,
-//                    fuelCost = stats.data?.get("fuelCost") as Double
-//                )
-//            )
-
+        // NOTE: maybe use a persistent listener instead of a one-time get? https://firebase.google.com/docs/database/android/read-and-write#read_data_with_persistent_listeners
+//        val snapshotListener2 = auth.currentUser?.uid?.let {
+//            usersRef.document(it)
+//                .collection("analytics").addSnapshotListener { snapshot, exception ->
+//                if (exception != null) {
+//                    exception.printStackTrace()
+//                    return@addSnapshotListener
+//                }
+//                snapshot?.let { _snapshot ->
+//                    trySend(_snapshot.toObjects(DailyAnalytics::class.java)).isSuccess
+//                }
+//            }
+//        }
+//        awaitClose { // cleanup
+//            snapshotListener2?.remove()
+//        }
     }
 }
