@@ -23,13 +23,15 @@ class AnalyticsViewModel @Inject constructor(
 
     var analytics = repository.getDailyStats()
 
+
     private var _uiEvent = Channel<UiEvent>()
     var uiEvent = _uiEvent.receiveAsFlow()
 
     fun onEvent(event : AnalyticsEvent) {
         when (event) {
-
-            else -> {}
+            is AnalyticsEvent.OnBackPressed -> {
+                sendUiEvent(UiEvent.PopBackStack)
+            }
         }
     }
     private fun sendUiEvent(event: UiEvent) {
