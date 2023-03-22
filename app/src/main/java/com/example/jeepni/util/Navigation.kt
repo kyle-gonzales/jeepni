@@ -90,14 +90,14 @@ fun Navigation (
         composable (
             route = Screen.AnalyticsScreen.route
         ) {
-//            AnalyticsScreen( /*TODO: replace with gel's screen*/
-//                onNavigate = {
-//                    navController.navigate(it.route, popUp(it))
-//                },
-//                onPopBackStack = {
-//                    navController.popBackStack()
-//                }
-//            )
+            AnalyticsScreen( /*TODO: replace with gel's screen*/
+                onNavigate = {
+                    navController.navigate(it.route, popUp(it))
+                },
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable (
             route = Screen.CheckUpScreen.route
