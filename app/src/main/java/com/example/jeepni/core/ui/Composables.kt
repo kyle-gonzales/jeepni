@@ -244,7 +244,7 @@ fun AnalyticsCard(
             shape = RoundedCornerShape(size = 5.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(25.dp)
+                .padding(24.dp, 8.dp)
         ) {
             Column(
                 modifier = Modifier

@@ -29,8 +29,9 @@ class AnalyticsViewModel @Inject constructor(
 
     fun onEvent(event : AnalyticsEvent) {
         when (event) {
-
-            else -> {}
+            is AnalyticsEvent.OnBackPressed -> {
+                sendUiEvent(UiEvent.PopBackStack)
+            }
         }
     }
     private fun sendUiEvent(event: UiEvent) {

@@ -25,9 +25,6 @@ import com.example.jeepni.util.UiEvent
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnalyticsScreen(
-//    date: String,
-//    revenue: String,
-//    expenses: String,
     viewModel : AnalyticsViewModel = hiltViewModel(),
     onNavigate : (UiEvent.Navigate) -> Unit,
     onPopBackStack : () -> Unit,
@@ -62,7 +59,7 @@ fun AnalyticsScreen(
                 topBar = {
                     AppBar(
                         titledesc = "Analytics",
-                        onPopBackStack
+                        onPopBackStack = {  viewModel.onEvent(AnalyticsEvent.OnBackPressed)  }
                     )
                 },
                 content = { paddingValues ->
