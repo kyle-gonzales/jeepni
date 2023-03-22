@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jeepni.core.data.model.UserCredentials
 import com.example.jeepni.core.data.repository.AuthRepository
-import com.example.jeepni.feature.authentication.login.LogInEvent
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,7 +51,7 @@ class LogInViewModel @Inject constructor(
                 viewModelScope.launch {
 
                     val isLoggedIn = repository.logInWithEmail(
-                        email, password
+                        UserCredentials(email, password)
                     )
                     withContext(Dispatchers.Main) {
                         if (isLoggedIn) {
