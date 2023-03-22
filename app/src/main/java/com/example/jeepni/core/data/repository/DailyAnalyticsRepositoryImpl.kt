@@ -28,8 +28,11 @@ class DailyAnalyticsRepositoryImpl(
     override suspend fun logDailyStat(dailyStat: DailyAnalytics) {
         usersRef.document(auth.currentUser!!.uid)
             .collection("analytics")
-            .document(getCurrentDateString())
-            .set(dailyStat)
+            .document(dailyStat.date)
+            .set(hashMapOf(
+                "salary" to dailyStat.salary,
+                "fuelCost" to dailyStat.fuelCost
+            ))
             .addOnSuccessListener {
                 Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
             } // not sure if this works
