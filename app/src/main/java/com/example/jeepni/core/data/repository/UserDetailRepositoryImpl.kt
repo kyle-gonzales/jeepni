@@ -2,7 +2,7 @@ package com.example.jeepni.core.data.repository
 
 import android.app.Application
 import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import com.example.jeepni.core.data.model.UserDetails
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,10 +28,16 @@ class UserDetailRepositoryImpl(
             .get()
             .await()
 
-        return UserDetails(
-            name =  userDetails.getString("name").toString(),
-            route = userDetails.getString("route").toString()
+//        if (userDetails.getString("name").isNullOrEmpty() || userDetails.getString("route").isNullOrEmpty()) {
+//            return null
+//        } // possible fix
+
+        val result = UserDetails(
+            name =  userDetails.getString("name"),
+            route = userDetails.getString("route")
         )
+        Log.i("USER-DETAILS", result.toString())
+        return result
     }
 
     override suspend fun updateUserDetails(userDetails : UserDetails) : Boolean {
