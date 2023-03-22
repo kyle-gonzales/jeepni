@@ -19,5 +19,7 @@ class AboutDriverViewModel
         private set
     var language by mutableStateOf("")
         private set
+    var isValidFirstName by mutableStateOf(true)
+        private set
     var uiEvent =
 }

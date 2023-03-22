@@ -1,7 +1,7 @@
 package com.example.jeepni.feature.about
 
 sealed class AboutDriverEvent {
-    object OnNextButtonClick : AboutDriverEvent()
+    object OnNextClick : AboutDriverEvent()
     data class OnFirstNameChange(val firstName: String): AboutDriverEvent()
     object OnRouteDropDownClick : AboutDriverEvent()
     data class OnRouteChange (val route: String): AboutDriverEvent()
