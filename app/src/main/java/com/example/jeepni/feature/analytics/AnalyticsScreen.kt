@@ -68,7 +68,7 @@ fun AnalyticsScreen(
                             AnalyticsCard(
                                 date = "2-22-2222",
                                 revenue = "Revenue: " + item.salary.toString(),
-                                expenses = "Expenses: " + item.fuelCost.toString()
+                                expenses = "Fuel Cost: " + item.fuelCost.toString()
                             ) {
                             }
                         }
