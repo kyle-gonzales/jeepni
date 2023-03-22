@@ -5,7 +5,8 @@ import androidx.compose.ui.geometry.Size
 sealed class AboutDriverEvent {
     object OnSaveDetailsClick : AboutDriverEvent()
     data class OnFirstNameChange(val firstName: String): AboutDriverEvent()
-    object OnRouteDropDownClick : AboutDriverEvent()
+    data class OnRouteDropDownClick(val isOpen: Boolean) : AboutDriverEvent()
     data class OnRouteChange (val route: Int): AboutDriverEvent()
     data class OnRouteSizeChange(val s: Size): AboutDriverEvent()
+    object OnBackPressesd : AboutDriverEvent()
 }

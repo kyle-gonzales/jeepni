@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.about
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,10 +31,8 @@ class AboutDriverViewModel
     private val userDetailRepository: UserDetailRepository,
 )
 : ViewModel() {
-    lateinit var jeepneyRoutes : List<Jeeps>
-    init {
-        getRoutes()
-    }
+    var jeepneyRoutes : List<Jeeps> by mutableStateOf(listOf())
+
     
     
     var isRouteDropdownClicked by mutableStateOf(false)
@@ -81,13 +80,17 @@ class AboutDriverViewModel
                 }
             }
             is AboutDriverEvent.OnRouteChange -> {
-                route = event.route
+                route = jeepneyRoutes[event.route].route
             }
             is AboutDriverEvent.OnRouteDropDownClick -> {
-
+                getRoutes()
+                isRouteDropdownClicked = event.isOpen
             }
             is AboutDriverEvent.OnRouteSizeChange -> {
-
+                routeDropdownSize = event.s
+            }
+            is AboutDriverEvent.OnBackPressesd -> {
+                sendUiEvent(UiEvent.PopBackStack)
             }
         }
     }
@@ -101,6 +104,12 @@ class AboutDriverViewModel
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
+        }
+    }
+
+    fun logJeepneyRoutes() {
+        jeepneyRoutes.forEach {
+            Log.i("JEEPNEY-ROUTE", it.route)
         }
     }
 

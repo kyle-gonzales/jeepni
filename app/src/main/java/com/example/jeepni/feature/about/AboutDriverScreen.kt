@@ -5,20 +5,26 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 import com.example.jeepni.R
+import com.example.jeepni.core.data.model.Jeeps
 import com.example.jeepni.core.ui.CustomDropDown
+import com.example.jeepni.core.ui.JeepNiTextField
+import com.example.jeepni.core.ui.SolidButton
 
 import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.UiEvent
 import java.util.*
 
@@ -74,11 +80,11 @@ fun AboutDriverScreen(
                                 IconButton(
                                     onClick = {
 
-                                        viewModel.onEvent(AboutDriverEvent.OnSaveDetailsClick)
+                                        viewModel.onEvent(AboutDriverEvent.OnBackPressesd)
 
                                     }
                                 ) {
-                                    Icon(Icons.Filled.ArrowForward, contentDescription = null)
+                                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
                                 }
                             }
                         )
@@ -87,31 +93,38 @@ fun AboutDriverScreen(
                 content = {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth(0.85f)
-                            .fillMaxHeight(),
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(36.dp),
                         contentAlignment = Alignment.Center
                     ){
-                        OutlinedTextField(
-                            value = viewModel.firstName,
-                            placeholder = { Text(viewModel.firstName) },
+                        Column (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ){
+                            JeepNiTextField(
+                                value = viewModel.firstName,
+                                onValueChange = { viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it)) },
 
-                            onValueChange = { viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it)) },
-
-                            label = { Text("First Name") },
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            isError = !viewModel.isValidFirstName
-                        )
-                        CustomDropDown(
-                            label = "Select route",
-                            expanded = viewModel.isRouteDropdownClicked,
-                            value = viewModel.route,
-                            size = viewModel.routeDropdownSize,
-                            onClickIcon = {viewModel.onEvent(AboutDriverEvent.OnRouteDropDownClick) },
-                            onSizeChange = {viewModel.onEvent(AboutDriverEvent.OnRouteSizeChange(it))}, // how to get it ????
-                            onSelected = {viewModel.onEvent(AboutDriverEvent.OnRouteChange(it))},
-                            items = routes
-                        )
+                                label = "First Name",
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                                isError = !viewModel.isValidFirstName //TODO: implement check for valid first name
+                            )
+                            CustomDropDown(
+                                label = "Select route",
+                                expanded = viewModel.isRouteDropdownClicked,
+                                value = viewModel.route,
+                                size = viewModel.routeDropdownSize,
+                                onClickIcon = {viewModel.onEvent(AboutDriverEvent.OnRouteDropDownClick(it)) },
+                                onSizeChange = {viewModel.onEvent(AboutDriverEvent.OnRouteSizeChange(it))}, // how to get it ????
+                                onSelected = {viewModel.onEvent(AboutDriverEvent.OnRouteChange(it))},
+                                items = routes
+                            )
+                            SolidButton(onClick = { viewModel.onEvent(AboutDriverEvent.OnSaveDetailsClick) }) {
+                                Text("Save Details", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                            }
+                        }
                     }
                 }
             )

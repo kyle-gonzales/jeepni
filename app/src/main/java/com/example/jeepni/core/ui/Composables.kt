@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -157,6 +158,7 @@ fun JeepNiTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     keyboardActions: KeyboardActions = KeyboardActions(),
     singleLine : Boolean = true,
+    readOnly : Boolean = false
     ){
     Column(
         modifier = Modifier
@@ -173,6 +175,7 @@ fun JeepNiTextField(
             trailingIcon = trailingIcon,
             textStyle = TextStyle(fontFamily = quicksandFontFamily),
             singleLine = singleLine,
+            readOnly = readOnly,
             supportingText = {
                 if (isError) {
                     Text(
@@ -244,10 +247,8 @@ fun T() {
                     }
                 )
             }
-
         }
     }
-
 }
 
 
@@ -257,54 +258,66 @@ fun CustomDropDown(
     label:String,
     expanded:Boolean,
     value:String,
-    onClickIcon: () -> Unit,
+    onClickIcon: (Boolean) -> Unit,
     onSizeChange: (Size) -> Unit,
     onSelected: (Int) -> Unit,
     size:Size,
     items:List<String>
 ){
     val icon = if(expanded){
-        Icons.Filled.KeyboardArrowDown
-    }else{
         Icons.Filled.KeyboardArrowUp
+    }else{
+        Icons.Filled.KeyboardArrowDown
     }
 
-    Column{
-        Box{
-            OutlinedTextField(
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+    ){
+        Box (
+            modifier = Modifier
+                .fillMaxWidth()
+        ){
+            JeepNiTextField(
+                readOnly = true,
                 value = value,
                 onValueChange = {},
-                label = { Text(text = label)},
+                label = label,
                 trailingIcon = {
                     Icon(
                         icon,
                         contentDescription = null,
                         Modifier.clickable{
-                            onClickIcon() // you should put parentheses here because onClickIcon is inside '{}'
+                            onClickIcon(!expanded)
                         }
                     )
                 },
-                modifier = Modifier.onGloballyPositioned {
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned {
                     onSizeChange(it.size.toSize())
                 }
             )
             DropdownMenu(
                 expanded = expanded,
-                onDismissRequest = onClickIcon,
-                modifier = Modifier.width(
-                    with(LocalDensity.current){
-                        size.width.toDp()
-                    }
-                )
+                onDismissRequest = { onClickIcon(false) },
+                modifier = Modifier
+                    .width(
+                        with(LocalDensity.current) {
+                            size.width.toDp()
+                        }
+                    )
+                    .requiredHeight(230.dp)
             ) {
-                items.forEachIndexed() { index, s ->
+                items.forEachIndexed { index, s ->
                     DropdownMenuItem(
                         text = {Text(text = s)},
                         onClick = {
                             onSelected(index)
-                            onClickIcon()
+                            onClickIcon(false)
                         }
                     )
+                    Divider(Modifier.padding(4.dp, 0.dp))
                 }
             }
         }
