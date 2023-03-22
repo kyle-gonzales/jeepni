@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
@@ -52,8 +51,8 @@ fun AboutDriverScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     Surface(
-                        contentColor = MaterialTheme.colors.onSurface,
-                        color = MaterialTheme.colors.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.surface,
                         tonalElevation = 8.dp // can be changed
                     ) {
                         TopAppBar(
