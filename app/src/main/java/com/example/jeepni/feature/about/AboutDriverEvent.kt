@@ -6,6 +6,6 @@ sealed class AboutDriverEvent {
     object OnSaveDetailsClick : AboutDriverEvent()
     data class OnFirstNameChange(val firstName: String): AboutDriverEvent()
     object OnRouteDropDownClick : AboutDriverEvent()
-    data class OnRouteChange (val route: String): AboutDriverEvent()
+    data class OnRouteChange (val route: Int): AboutDriverEvent()
     data class OnRouteSizeChange(val s: Size): AboutDriverEvent()
 }

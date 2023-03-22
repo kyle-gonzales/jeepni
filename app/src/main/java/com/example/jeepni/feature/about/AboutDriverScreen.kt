@@ -31,7 +31,7 @@ fun AboutDriverScreen(
     onPopBackStack : () -> Unit
 ) {
 
-    val jeepneyRoutes = viewModel.jeepneyRoutes
+    val routes = viewModel.jeepneyRoutes.mapTo(arrayListOf()) { it.route }
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {event ->
@@ -110,7 +110,7 @@ fun AboutDriverScreen(
                             onClickIcon = {viewModel.onEvent(AboutDriverEvent.OnRouteDropDownClick) },
                             onSizeChange = {viewModel.onEvent(AboutDriverEvent.OnRouteSizeChange(it))}, // how to get it ????
                             onSelected = {viewModel.onEvent(AboutDriverEvent.OnRouteChange(it))},
-//                            items =
+                            items = routes
                         )
                     }
                 }

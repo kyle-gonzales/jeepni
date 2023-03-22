@@ -258,8 +258,8 @@ fun CustomDropDown(
     expanded:Boolean,
     value:String,
     onClickIcon: () -> Unit,
-    onSizeChange: () -> Unit,
-    onSelected: () -> Unit,
+    onSizeChange: (Size) -> Unit,
+    onSelected: (Int) -> Unit,
     size:Size,
     items:List<String>
 ){
@@ -280,19 +280,17 @@ fun CustomDropDown(
                         icon,
                         contentDescription = null,
                         Modifier.clickable{
-                            onClickIcon // you should put parentheses here because onClickIcon is inside '{}'
+                            onClickIcon() // you should put parentheses here because onClickIcon is inside '{}'
                         }
                     )
                 },
                 modifier = Modifier.onGloballyPositioned {
-                    onSizeChange
+                    onSizeChange(it.size.toSize())
                 }
             )
             DropdownMenu(
                 expanded = expanded,
-                onDismissRequest = {
-                    onClickIcon
-                },
+                onDismissRequest = onClickIcon,
                 modifier = Modifier.width(
                     with(LocalDensity.current){
                         size.width.toDp()
@@ -303,8 +301,8 @@ fun CustomDropDown(
                     DropdownMenuItem(
                         text = {Text(text = s)},
                         onClick = {
-                            onSelected
-                            onClickIcon
+                            onSelected(index)
+                            onClickIcon()
                         }
                     )
                 }
