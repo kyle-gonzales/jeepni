@@ -4,6 +4,7 @@ import androidx.compose.material.*
 import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,17 +61,17 @@ fun AnalyticsScreen(
             Scaffold(
                 topBar = {
                     AppBar(
-                        titledesc = "Content",
+                        titledesc = "Analytics",
                         onPopBackStack
                     )
                 },
                 content = { paddingValues ->
                     LazyColumn(contentPadding = paddingValues) {
-                        item {
+                        items(analytics ?: emptyList()) { item ->
                             AnalyticsCard(
                                 date = "2-22-2222",
-                                revenue = analytics?.get(0)?.salary.toString(),
-                                expenses = analytics?.get(0)?.fuelCost.toString()
+                                revenue = item.salary.toString(),
+                                expenses = item.fuelCost.toString()
                             ) {
                             }
                         }
@@ -86,7 +87,8 @@ fun AnalyticsScreen(
 @Composable
 fun AppBar(
     titledesc: String,
-    onPopBackStack: () -> Unit
+    onPopBackStack: () -> Unit,
+//    onMenuItems: () -> Unit
 ) {
     val menuItems = listOf(
         "Revenue",
