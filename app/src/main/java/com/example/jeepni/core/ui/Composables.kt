@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -230,4 +231,79 @@ fun T() {
     }
 
 }
+
+@Composable
+fun AnalyticsCard(
+    date: String,
+    revenue: String,
+    expenses: String,
+    content: @Composable () -> Unit
+) {
+    Row {
+        Card(
+            shape = RoundedCornerShape(size = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp, 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+            ) {
+                Text(
+                    text = date,
+                    fontSize = 15.sp,
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold
+                )
+                Column(
+                    modifier = Modifier
+                        .padding(start = 20.dp)
+                ) {
+                    Text(
+                        text = revenue,
+                        fontSize = 15.sp,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Light
+                    )
+                    Text(
+                        text = expenses,
+                        fontSize = 15.sp,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Light
+                    )}
+                content()
+            }
+        }
+    }
+}
+
+//@Composable
+//fun FilterIconButton(
+//    onClick : () -> Unit,
+//    menuItems: List<String>,
+//    onMenuItemClick: (String) -> Unit
+//){
+//    var expanded by remember { mutableStateOf(false) }
+//
+//    IconButton(onClick = { expanded = true })
+//    {
+//        Icon(Icons.Filled.Menu, contentDescription = "Menu")
+//    }
+
+//    DropdownMenu(
+//        expanded = expanded,
+//        onDismissRequest = { expanded = false })
+//    {
+//        menuItems.forEach{ item ->
+//            DropdownMenuItem(
+//               onClick = {
+//                   onMenuItemClick(item)
+//                   expanded = false
+//               }){
+//                Text(item)
+//            }
+//        }
+//    }
+//}
 

@@ -9,11 +9,14 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.navOptions
 import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.feature.analytics.AnalyticsScreen
 import com.google.accompanist.navigation.animation.composable
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.feature.authentication.Welcome2Screen
 import com.example.jeepni.feature.authentication.SignUpScreen
+import com.example.jeepni.feature.checkup.CheckUpScreen
 import com.example.jeepni.feature.home.MainScreen
+import com.example.jeepni.feature.profile.ProfileScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -70,6 +73,42 @@ fun Navigation (
                 onNavigate = {
                     navController.navigate(it.route, popUp(it))
                 },
+            )
+        }
+        composable (
+            route = Screen.ProfileScreen.route
+        ) {
+            ProfileScreen(
+                onNavigate = {
+                    navController.navigate(it.route, popUp(it))
+                },
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable (
+            route = Screen.AnalyticsScreen.route
+        ) {
+            AnalyticsScreen( /*TODO: replace with gel's screen*/
+                onNavigate = {
+                    navController.navigate(it.route, popUp(it))
+                },
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable (
+            route = Screen.CheckUpScreen.route
+        ) {
+            CheckUpScreen(
+                onNavigate = {
+                    navController.navigate(it.route, popUp(it))
+                },
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
             )
         }
     }
