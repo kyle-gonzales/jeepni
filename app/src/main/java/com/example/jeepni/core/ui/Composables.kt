@@ -1,19 +1,35 @@
 package com.example.jeepni.core.ui
 
 import androidx.compose.foundation.Image
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +38,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
+
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.JeepNiTheme
@@ -140,6 +161,7 @@ fun JeepNiTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     keyboardActions: KeyboardActions = KeyboardActions(),
     singleLine : Boolean = true,
+    readOnly : Boolean = false
     ){
     Column(
         modifier = Modifier
@@ -156,6 +178,7 @@ fun JeepNiTextField(
             trailingIcon = trailingIcon,
             textStyle = TextStyle(fontFamily = quicksandFontFamily),
             singleLine = singleLine,
+            readOnly = readOnly,
             supportingText = {
                 if (isError) {
                     Text(
@@ -181,6 +204,7 @@ fun BackIconButton(
         Icon(Icons.Filled.ArrowBack, contentDescription = null )
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -226,10 +250,81 @@ fun T() {
                     }
                 )
             }
-
         }
     }
+}
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDropDown(
+    label:String,
+    expanded:Boolean,
+    value:String,
+    onClickIcon: (Boolean) -> Unit,
+    onSizeChange: (Size) -> Unit,
+    onSelected: (Int) -> Unit,
+    size:Size,
+    items:List<String>
+){
+    val icon = if(expanded){
+        Icons.Filled.KeyboardArrowUp
+    }else{
+        Icons.Filled.KeyboardArrowDown
+    }
+
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+    ){
+        Box (
+            modifier = Modifier
+                .fillMaxWidth()
+        ){
+            JeepNiTextField(
+                readOnly = true,
+                value = value,
+                onValueChange = {},
+                label = label,
+                trailingIcon = {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        Modifier.clickable{
+                            onClickIcon(!expanded)
+                        }
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned {
+                    onSizeChange(it.size.toSize())
+                }
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { onClickIcon(false) },
+                modifier = Modifier
+                    .width(
+                        with(LocalDensity.current) {
+                            size.width.toDp()
+                        }
+                    )
+                    .requiredHeight(230.dp)
+            ) {
+                items.forEachIndexed { index, s ->
+                    DropdownMenuItem(
+                        text = {Text(text = s)},
+                        onClick = {
+                            onSelected(index)
+                            onClickIcon(false)
+                        }
+                    )
+                    Divider(Modifier.padding(4.dp, 0.dp))
+                }
+            }
+        }
+    }
 }
 
 @Composable

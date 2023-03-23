@@ -1,7 +1,6 @@
 package com.example.jeepni.core.data.repository
 
 import com.example.jeepni.core.data.model.DailyAnalytics
-import kotlinx.coroutines.flow.Flow
 
 interface DailyAnalyticsRepository {
 

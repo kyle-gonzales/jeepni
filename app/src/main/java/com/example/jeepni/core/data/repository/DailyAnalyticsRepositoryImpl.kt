@@ -7,9 +7,12 @@ import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.feature.home.getCurrentDateString
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+
+import kotlinx.coroutines.tasks.await
 
 class DailyAnalyticsRepositoryImpl(
     private val auth: FirebaseAuth,
@@ -31,6 +34,7 @@ class DailyAnalyticsRepositoryImpl(
                 "salary" to dailyStat.salary,
                 "fuelCost" to dailyStat.fuelCost
             ))
+
             .addOnSuccessListener {
                 Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
             } // not sure if this works
@@ -50,7 +54,6 @@ class DailyAnalyticsRepositoryImpl(
             .addOnFailureListener {}
 
     }
-
     override fun getDailyStats(): Flow<List<DailyAnalytics>> = callbackFlow {
 
 

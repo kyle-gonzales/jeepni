@@ -1,13 +1,13 @@
 package com.example.jeepni
 
 import android.os.Bundle
-
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.feature.analytics.AnalyticsViewModel
 import com.example.jeepni.util.Navigation
@@ -23,6 +23,8 @@ class MainActivity : ComponentActivity() {
     lateinit var auth : AuthRepository // automatically injected. no need for initialization
 
     private lateinit var analyticsViewModel : AnalyticsViewModel
+    @Inject
+    lateinit var userDetailsRepository : UserDetailRepository
 
     //    private val signUpViewModel by viewModels<SignUpViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JeepNiTheme {
                 navController = rememberAnimatedNavController()
-                Navigation(navController, auth)
+                Navigation(navController, auth, userDetailsRepository)
             }
         }
     }

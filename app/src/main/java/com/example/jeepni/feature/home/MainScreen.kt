@@ -83,7 +83,7 @@ fun MainScreen(
         Surface {
                 Menu(
                     drawerState = drawerState,
-                    email = viewModel.user!!.email,
+                    email = viewModel.user?.email,
                     onProfileClicked = {
                         coroutineScope.launch {
                             drawerState.close()
@@ -357,7 +357,7 @@ fun TopActionBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuContent(
-    email : String,
+    email : String?,
     drawerState: DrawerState,
     scope: CoroutineScope,
     onProfileClicked : () -> Unit,
@@ -405,7 +405,7 @@ fun MenuContent(
                                 },
                             contentScale = ContentScale.Crop
                         )
-                        Text(email, /* TODO: show user name instead */
+                        Text(email?:"no email found", /* TODO: show user name instead */
                             modifier = Modifier
                                 .padding(12.dp,8.dp)
                                 .clickable {
@@ -446,7 +446,7 @@ fun MenuContent(
 @Composable
 fun Menu(
     drawerState: DrawerState,
-    email : String,
+    email : String?,
     onProfileClicked : () -> Unit,
     scope: CoroutineScope,
     menuItems : List<MenuItem>,
