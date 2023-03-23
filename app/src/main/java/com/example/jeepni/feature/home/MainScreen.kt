@@ -1,8 +1,9 @@
 package com.example.jeepni.feature.home
 
 import android.widget.Toast
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,16 +14,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.core.ui.JeepNiTextField
+import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.UiEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -31,7 +37,6 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    email : String,
     onNavigate : (UiEvent.Navigate) -> Unit,
     viewModel : MainViewModel = hiltViewModel(),
 ) {
@@ -39,15 +44,7 @@ fun MainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-//    var drivingMode by remember { mutableStateOf(false) }
-//    var isLogDailyAnalyticsDialogOpen by remember {mutableStateOf(false) }
-//
-//    var salary by rememberSaveable { mutableStateOf("") }
-//    var fuelCost by rememberSaveable { mutableStateOf("")}
-//    var isValidSalary by remember { mutableStateOf(isValidDecimal(salary))}
-//    var isValidFuelCost by remember {mutableStateOf(isValidDecimal(fuelCost))}
-//
-//    var loginId by remember {mutableStateOf("test@email.com")}
+
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {// don't subscribe to UI event flow every time the UI updates
         viewModel.uiEvent.collect { event ->
@@ -76,11 +73,24 @@ fun MainScreen(
     }
 
     JeepNiTheme {
+        val menuItems = listOf( /*TODO: may need to refactor this*/
+            MenuItem(R.drawable.black_chart_24, "Charts") { viewModel.onEvent(MainEvent.OnChartsClicked) },
+            MenuItem(R.drawable.black_tools_24, "JeepNi Check-Up") {
+                viewModel.onEvent(MainEvent.OnCheckUpClicked)
+            }
+        )
         Surface {
                 Menu(
                     drawerState = drawerState,
-                    email = email,
-                    onLogOutClick = {viewModel.onEvent(MainEvent.OnLogOutClick)}
+                    email = viewModel.user?.email,
+                    onProfileClicked = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                        viewModel.onEvent(MainEvent.OnProfileClicked)
+                    },
+                    scope = coroutineScope,
+                    menuItems = menuItems
                 ) {
                     Scaffold (
                         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -164,8 +174,6 @@ fun LogDailyStatDialog(
     onDialogOpenChange : (Boolean) -> Unit,
     onSave : (String, String) -> Unit
  ) {
-    val context = LocalContext.current
-
     if (isDialogOpen) {
         AlertDialog(
             modifier = Modifier,
@@ -199,7 +207,7 @@ fun LogDailyStatDialog(
                 )
             },
             title = {
-                Text("Log Daily Analytics")
+                Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
             },
             text = {
 
@@ -212,24 +220,16 @@ fun LogDailyStatDialog(
                         text = "Enter your earnings for today: ",
                         textAlign = TextAlign.Start
                     )
-                    OutlinedTextField(
+                    JeepNiTextField(
                         value = salary,
-                        placeholder = {Text(salary)},
                         onValueChange = { onSalaryChange(it) },
-                        label = {Text("Salary")},
+                        label = "Salary",
                         singleLine = true,
-                        leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
+                        leadingIcon = { Icon(painterResource(id = R.drawable.white_dollar_24), null) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
-                        isError = !isValidSalary
-                        // TODO: parse input to accept commas, no letters in case of external keyboard
+                        isError = !isValidSalary,
+                        errorMessage = "Invalid Input"
                     )
-//                    if (!isValidSalary) {
-//                        Text(
-//                            text = "Invalid Salary",
-//                            style = MaterialTheme.typography.caption,
-//                            color = MaterialTheme.colors.error,
-//                        )
-//                    }
                     Text(
                         modifier = Modifier
                             .padding(0.dp, 8.dp)
@@ -237,16 +237,15 @@ fun LogDailyStatDialog(
                         text = "Enter the amount you spent on fuel for today: ",
                         textAlign = TextAlign.Start
                     )
-                    OutlinedTextField(
+                    JeepNiTextField(
                         value = fuelCost,
-                        placeholder = {Text(fuelCost)},
                         onValueChange = {onFuelCostChange(it)},
-                        label = {Text("Fuel Cost")},
+                        label = "Fuel Cost",
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        isError = !isValidFuelCost
-                        // TODO: parse input to accept commas, no letters in case of external keyboard
+                        isError = !isValidFuelCost,
+                        errorMessage = "Invalid Input"
                     )
                 }
             }
@@ -256,42 +255,46 @@ fun LogDailyStatDialog(
 
 @Composable
 fun DrivingModeOnContent(paddingValues : PaddingValues) {
-    Column (
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize(),
-        ) {
-        Text(
+    Surface {
+        Column (
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .weight(0.8f)
-                .background(Color.Gray),
-            textAlign = TextAlign.Center,
-            text = "Map"
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .weight(0.2f)
-                .background(Color.LightGray),
-            horizontalArrangement = Arrangement.Center
-        ) {
+                .padding(paddingValues)
+                .fillMaxSize(),
+            ) {
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .weight(0.8f)
+                    .background(Color.Gray),
+                textAlign = TextAlign.Center,
+                text = "Map"
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .weight(0.2f)
+                    .background(Color.LightGray),
+                horizontalArrangement = Arrangement.Center
+            ) {
 
+            }
         }
     }
 }
 @Composable
 fun DrivingModeOffContent(paddingValues: PaddingValues) {
-    Column (
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Driving Mode is Off")
+    Surface {
+        Column (
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Driving Mode is Off")
+        }
     }
 }
 
@@ -332,11 +335,8 @@ fun TopActionBar(
             modifier = Modifier,
             navigationIcon = {
                 IconButton(
-                    onClick = {
-                        scope.launch {
-                            scope.launch { drawerState.open() }
-                        }
-                    }) {
+                    onClick = {    scope.launch { scope.launch { drawerState.open() } }    }
+                ) {
                     Icon(Icons.Filled.Menu, contentDescription = null)
                 }
             },
@@ -356,47 +356,105 @@ fun TopActionBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuContent(
-    email : String,
-    onLogOutClick : () -> Unit
+    email : String?,
+    drawerState: DrawerState,
+    scope: CoroutineScope,
+    onProfileClicked : () -> Unit,
+    menuItems : List<MenuItem>
 ) {
-    val context = LocalContext.current
+
     ModalDrawerSheet(
         modifier = Modifier
             .padding(0.dp, 0.dp, 60.dp, 0.dp)
             .fillMaxHeight(),
     ) {
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
+        Surface {
             Column (
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                Text(email) /*TODO: update info based on login info */
-            }
-            Button(
-                onClick = { onLogOutClick() },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text("Log Out")
+                Box (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                ) {
+                    Box ( // backdrop
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp)
+                            .background(dark_primaryContainer),
+                        contentAlignment = Alignment.BottomStart
+                    ) {
+                    }
+                    Row (
+                        modifier = Modifier
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                            .align(Alignment.BottomStart),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.profile_pic), // should become state
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape)
+                                .border(6.dp, MaterialTheme.colorScheme.surface, CircleShape)
+                                .clickable {
+                                    onProfileClicked()
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+                        Text(email?:"no email found", /* TODO: show user name instead */
+                            modifier = Modifier
+                                .padding(12.dp,8.dp)
+                                .clickable {
+                                    onProfileClicked()
+                                },
+                            fontFamily = quicksandFontFamily,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = light_onPrimary
+                        )
+                    }
+                }
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Spacer(Modifier.height(12.dp))
+                    menuItems.forEach {  menuItem ->
+                        NavigationDrawerItem(
+                            label = { Text(menuItem.title, fontFamily = quicksandFontFamily, fontSize = 18.sp) },
+                            icon = {  Icon(painterResource(id = menuItem.icon), null)  },
+                            selected = false,
+                            onClick = {
+                                scope.launch { drawerState.close() }
+                                menuItem.onClick()
+                            },
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        )
+                    }
+
+                }
+
             }
         }
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Menu(drawerState: DrawerState,
-         email : String,
-         onLogOutClick: () -> Unit,
-        content : @Composable () -> Unit
+fun Menu(
+    drawerState: DrawerState,
+    email : String?,
+    onProfileClicked : () -> Unit,
+    scope: CoroutineScope,
+    menuItems : List<MenuItem>,
+    content : @Composable () -> Unit,
 ) {
     ModalNavigationDrawer(
         modifier = Modifier.background(Color.Transparent),
         drawerState = drawerState,
-        drawerContent = { MenuContent(email = email, onLogOutClick= onLogOutClick) },
+        drawerContent = { MenuContent(email = email,  drawerState = drawerState, scope = scope, onProfileClicked = onProfileClicked, menuItems = menuItems) },
         content = content
     )
 }

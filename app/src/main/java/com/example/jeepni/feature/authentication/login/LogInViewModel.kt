@@ -1,4 +1,4 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.login
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -6,9 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jeepni.core.data.model.UserCredentials
+import com.example.jeepni.core.data.model.UserDetails
 import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
+import com.example.jeepni.util.isIncompleteUserDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LogInViewModel @Inject constructor(
-    val repository: AuthRepository
+    val repository: AuthRepository,
+    private val userDetailRepository: UserDetailRepository
 ) : ViewModel() {
 
     private val _uiEvent = Channel<UiEvent>()
@@ -48,22 +53,24 @@ class LogInViewModel @Inject constructor(
                 // TODO : forgot password
             }
             is LogInEvent.OnLogInClicked -> {
-                Log.i("KYLE", "outside")
                 viewModelScope.launch {
-                    Log.i("KYLE", "before")
-
-                    val isLoggedIn = repository.logInWithEmail(
-                        email, password
-                    )
-                    Log.i("KYLE", isLoggedIn.toString())
-                    withContext(Dispatchers.Main) {
-                        if (isLoggedIn) {
-                            sendUiEvent(UiEvent.Navigate(Screen.MainScreen.withArgs(email)))
-                        } else {
-                            sendUiEvent(UiEvent.ShowToast("error"))
-                        }
+                    var isInvalidUserDetails = false
+                    val isLoggedIn = repository.logInWithEmail(  UserCredentials(email, password)  )
+                    if (isLoggedIn) {
+                        isInvalidUserDetails = isIncompleteUserDetails(userDetailRepository.getUserDetails()?:UserDetails(null,null))
+                        Log.i("INVALID-USER", isInvalidUserDetails.toString())
                     }
-                    Log.i("KYLE", "after")
+                    withContext(Dispatchers.Main) {
+                        if (! isLoggedIn) {
+                            sendUiEvent(UiEvent.ShowToast("error"))
+                            return@withContext
+                        }
+                        if (isInvalidUserDetails) {
+                            sendUiEvent(UiEvent.Navigate(Screen.AboutDriverScreen.route))
+                            return@withContext
+                        }
+                        sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
+                    }
                 }
             }
             is LogInEvent.OnValidPasswordChange -> {
@@ -73,10 +80,10 @@ class LogInViewModel @Inject constructor(
                 validNumber = event.isValid
             }
             is LogInEvent.OnSignUpClicked -> {
-                sendUiEvent(UiEvent.Navigate(Screen.SignUpScreen.route))
+                sendUiEvent(UiEvent.Navigate(Screen.SignUpScreen.route, Screen.WelcomeScreen.route))
             }
             is LogInEvent.OnBackPressed -> {
-                sendUiEvent(UiEvent.PopBackStack)
+                sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route, "0"))
             }
             is LogInEvent.OnLogInWithGoogle -> {
                 sendUiEvent(UiEvent.ShowToast("feature doesn't exist yet"))

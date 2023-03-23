@@ -1,9 +1,8 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.signup
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.repository.AuthRepository
@@ -42,7 +41,7 @@ class SignUpViewModel @Inject constructor(
                 isAgreeToTerms = event.isAgree
             }
             is SignUpEvent.OnBackClicked -> {
-                sendUiEvent(UiEvent.PopBackStack)
+                sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route, "0"))
             }
             is SignUpEvent.OnEmailChange -> {
                 email = event.email
@@ -51,7 +50,7 @@ class SignUpViewModel @Inject constructor(
 //                sendUiEvent(UiEvent.Navigate(Screen.ForgotPasswordScreen.route))
             }
             is SignUpEvent.OnLogInClicked -> {
-                sendUiEvent(UiEvent.Navigate(Screen.LogInScreen.route))
+                sendUiEvent(UiEvent.Navigate(Screen.LogInScreen.route, Screen.WelcomeScreen.route))
             }
             is SignUpEvent.OnPasswordChange -> {
                 password = event.password
@@ -64,7 +63,7 @@ class SignUpViewModel @Inject constructor(
                     val isSuccessful = repository.addUser(email.trim(), password.trim(), confirmPassword.trim())
                     withContext(Dispatchers.Main.immediate) {
                         if (isSuccessful) {
-                            sendUiEvent(UiEvent.Navigate(Screen.MainScreen.withArgs(email.trim())))
+                            sendUiEvent(UiEvent.Navigate(Screen.AboutDriverScreen.route, "0"))
                         } else {
                             sendUiEvent(UiEvent.ShowToast("failed to make account"))
                         }

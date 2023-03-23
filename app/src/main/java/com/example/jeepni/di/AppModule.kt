@@ -1,13 +1,11 @@
 package com.example.jeepni.di
 
 import android.app.Application
-import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
-import com.example.jeepni.core.data.repository.DailyAnalyticsRepositoryImpl
-import com.example.jeepni.core.data.repository.AuthRepository
-import com.example.jeepni.core.data.repository.AuthRepositoryImpl
+import com.example.jeepni.core.data.repository.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.Module
@@ -23,6 +21,26 @@ object AppModule {
     @Provides
     @Singleton
     fun provideUsersCollectionReference() = Firebase.firestore.collection("users")
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFirestore() = Firebase.firestore
+
+    @Provides
+    @Singleton
+    fun provideJeepsRepository(
+        app: Application,
+        auth : FirebaseAuth,
+        db : FirebaseFirestore
+    ) : JeepsRepository = JeepsRepositoryImpl(app, auth, db)
+
+    @Provides
+    @Singleton
+    fun provideUserDetailRepository(
+        app : Application,
+        auth : FirebaseAuth,
+        db : FirebaseFirestore
+    ) : UserDetailRepository = UserDetailRepositoryImpl(app, auth, db)
 
     @Provides
     @Singleton

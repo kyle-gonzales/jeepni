@@ -1,8 +1,9 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.checkup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jeepni.util.Screen
+import com.example.jeepni.core.data.repository.AuthRepository
+import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -11,23 +12,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class Welcome2ViewModel @Inject constructor (
-
+class CheckUpViewModel @Inject constructor(
+    repository: DailyAnalyticsRepository,
+    auth : AuthRepository
 ) : ViewModel() {
 
     private val _uiEvent = Channel<UiEvent>()
-    var uiEvent = _uiEvent.receiveAsFlow()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onEvent(event : Welcome2Event) {
+
+    fun onEvent(event: CheckUpEvent) {
         when (event) {
-            Welcome2Event.OnLogInClicked -> sendUiEvent(UiEvent.Navigate(Screen.LogInScreen.route))
-            Welcome2Event.OnSignUpClicked -> sendUiEvent(UiEvent.Navigate(Screen.SignUpScreen.route))
+
+            else -> {}
         }
     }
 
-    fun sendUiEvent(event : UiEvent) {
+    private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
         }
     }
+
 }
