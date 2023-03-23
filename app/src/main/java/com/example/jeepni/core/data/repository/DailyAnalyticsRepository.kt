@@ -10,6 +10,6 @@ interface DailyAnalyticsRepository {
 
     suspend fun deleteDailyStat()
 
-    suspend fun getDailyStats() : List<DailyAnalytics>
+    fun getDailyStats() : Flow<List<DailyAnalytics>>
 
 }

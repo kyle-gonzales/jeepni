@@ -62,6 +62,7 @@ fun ProfileScreen (
             ) {
                 JeepNiText(viewModel.email?:"no email found")
 
+
             }
             SolidButton(
                 onClick = { viewModel.onEvent(ProfileEvent.OnLogOutClicked) },

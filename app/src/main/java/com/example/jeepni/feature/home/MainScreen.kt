@@ -58,7 +58,8 @@ fun MainScreen(
                 is UiEvent.ShowSnackBar -> {
                     val result = snackbarHostState.showSnackbar(
                         message = event.message,
-                        actionLabel = event.action
+                        actionLabel = event.action,
+                        duration = SnackbarDuration.Short
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         viewModel.onEvent(MainEvent.OnUndoDeleteClick)
