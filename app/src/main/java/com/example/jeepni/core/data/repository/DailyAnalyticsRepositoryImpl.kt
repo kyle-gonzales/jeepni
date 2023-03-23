@@ -66,8 +66,8 @@ class DailyAnalyticsRepositoryImpl(
                     result.add(
                         DailyAnalytics(
                             date = document.id,
-                            salary = document.data?.get("salary") as Double,
-                            fuelCost = document.data?.get("fuelCost") as Double
+                            salary = _snapshot.toObjects(DailyAnalytics::class.java)[0].salary,
+                            fuelCost = _snapshot.toObjects(DailyAnalytics::class.java)[0].fuelCost
                         )
                     )
                 }
