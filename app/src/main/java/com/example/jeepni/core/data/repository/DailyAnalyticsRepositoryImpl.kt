@@ -62,12 +62,12 @@ class DailyAnalyticsRepositoryImpl(
             }
             snapshot?.let { _snapshot ->
                 val result = mutableListOf<DailyAnalytics>()
-                for (document in _snapshot.documents) {
+                _snapshot.documents.forEachIndexed { index, document ->
                     result.add(
                         DailyAnalytics(
                             date = document.id,
-                            salary = _snapshot.toObjects(DailyAnalytics::class.java)[0].salary,
-                            fuelCost = _snapshot.toObjects(DailyAnalytics::class.java)[0].fuelCost
+                            salary = _snapshot.toObjects(DailyAnalytics::class.java)[index].salary,
+                            fuelCost = _snapshot.toObjects(DailyAnalytics::class.java)[index].fuelCost
                         )
                     )
                 }
