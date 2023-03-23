@@ -22,7 +22,7 @@ class ProfileViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
     var user by mutableStateOf(repository.getUser())
-    var email by mutableStateOf(user!!.email)
+    var email by mutableStateOf(user?.email)
 
     fun onEvent(event: ProfileEvent) {
         when (event) {
