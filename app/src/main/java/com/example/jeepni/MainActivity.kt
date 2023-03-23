@@ -21,10 +21,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var navController: NavHostController
     @Inject
     lateinit var auth : AuthRepository // automatically injected. no need for initialization
-
-    private lateinit var analyticsViewModel : AnalyticsViewModel
     @Inject
     lateinit var userDetailsRepository : UserDetailRepository
+
+    private lateinit var analyticsViewModel : AnalyticsViewModel
 
     //    private val signUpViewModel by viewModels<SignUpViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {

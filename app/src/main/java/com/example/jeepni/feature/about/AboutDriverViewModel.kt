@@ -62,7 +62,7 @@ class AboutDriverViewModel
                     var isUserDetailsUpdated = false
                     val userDetails = UserDetails(
                             name = firstName,
-                            route = "000"
+                            route = route
                         )
                     val isInvalidDetails = isIncompleteUserDetails(userDetails)
                     if (!isInvalidDetails) {

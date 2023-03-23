@@ -118,7 +118,7 @@ fun Navigation (
         composable (
             route = Screen.AnalyticsScreen.route
         ) {
-            AnalyticsScreen( /*TODO: replace with gel's screen*/
+            AnalyticsScreen(
                 onNavigate = {
                     navController.navigate(it.route, popUp(it))
                 },
