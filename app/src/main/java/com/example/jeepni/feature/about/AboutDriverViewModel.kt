@@ -90,7 +90,7 @@ class AboutDriverViewModel
                 routeDropdownSize = event.s
             }
             is AboutDriverEvent.OnBackPressesd -> {
-                sendUiEvent(UiEvent.PopBackStack)
+                sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route, "0")) // TODO: fix this. user still remains logged in while in the welcome screen
             }
         }
     }
