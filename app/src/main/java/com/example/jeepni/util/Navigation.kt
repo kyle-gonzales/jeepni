@@ -1,19 +1,18 @@
 package com.example.jeepni.util
 
+import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
 import com.example.jeepni.core.data.model.UserDetails
 import com.example.jeepni.core.data.repository.AuthRepository
-import com.example.jeepni.feature.analytics.AnalyticsScreen
-import com.google.accompanist.navigation.animation.composable
 import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.feature.about.AboutDriverScreen
+import com.example.jeepni.feature.analytics.AnalyticsScreen
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.feature.authentication.SignUpScreen
 import com.example.jeepni.feature.authentication.Welcome2Screen
@@ -22,6 +21,7 @@ import com.example.jeepni.feature.home.MainScreen
 import com.example.jeepni.feature.profile.ProfileScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -31,7 +31,8 @@ fun Navigation (
     userDetailRepository: UserDetailRepository,
 ) {
     var userDetails : UserDetails? = null
-    LaunchedEffect(Unit) {
+    runBlocking {
+        // kinda blocked the main thread... on purpose... but in a normal coroutine, initialState won't wait for userDetails to finish initializing. That's why, previously, initialState would always be in WelcomeScreen (userDetails is null) even if the user was signed in...
         userDetails = userDetailRepository.getUserDetails()
     }
 
@@ -63,6 +64,7 @@ fun Navigation (
         composable (
             route = Screen.WelcomeScreen.route
         ) {
+            Log.i("LOGIN STATUS", auth.getUser()?.let {it.email + " is logged in"}?: "user is not logged in")
             Welcome2Screen(
                 onNavigate = {
                     navController.navigate(it.route) {
