@@ -2,6 +2,7 @@ package com.example.jeepni.feature.about
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -36,6 +37,10 @@ fun AboutDriverScreen(
     onNavigate : (UiEvent.Navigate) -> Unit,
     onPopBackStack : () -> Unit
 ) {
+
+    BackHandler {
+        viewModel.onEvent(AboutDriverEvent.OnBackPress)
+    }
 
     val routes = viewModel.jeepneyRoutes.mapTo(arrayListOf()) { it.route }
     val context = LocalContext.current
@@ -79,9 +84,7 @@ fun AboutDriverScreen(
                             navigationIcon = {
                                 IconButton(
                                     onClick = {
-
-                                        viewModel.onEvent(AboutDriverEvent.OnBackPressesd)
-
+                                        viewModel.onEvent(AboutDriverEvent.OnBackPress)
                                     }
                                 ) {
                                     Icon(Icons.Filled.ArrowBack, contentDescription = null)
