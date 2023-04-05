@@ -8,5 +8,7 @@ sealed class AboutDriverEvent {
     data class OnRouteDropDownClick(val isOpen: Boolean) : AboutDriverEvent()
     data class OnRouteChange (val route: Int): AboutDriverEvent()
     data class OnRouteSizeChange(val s: Size): AboutDriverEvent()
-    object OnBackPressesd : AboutDriverEvent()
+    object OnBackPress : AboutDriverEvent()
+    object OnDialogDismissPress : AboutDriverEvent()
+    object OnDialogConfirmPress : AboutDriverEvent()
 }

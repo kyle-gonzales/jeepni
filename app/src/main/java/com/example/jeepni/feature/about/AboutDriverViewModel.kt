@@ -46,6 +46,8 @@ class AboutDriverViewModel
         private set
     var isValidFirstName by mutableStateOf(true)
         private set
+    var isDialogOpen by mutableStateOf(false)
+        private set
 
 
     private val _uiEvent = Channel<UiEvent>()
