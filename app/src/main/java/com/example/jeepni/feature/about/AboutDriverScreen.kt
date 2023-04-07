@@ -2,24 +2,25 @@ package com.example.jeepni.feature.about
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-
 import com.example.jeepni.R
-import com.example.jeepni.core.data.model.Jeeps
+
 import com.example.jeepni.core.ui.CustomDropDown
+import com.example.jeepni.core.ui.JeepNiAlertDialog
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.SolidButton
 
@@ -36,6 +37,10 @@ fun AboutDriverScreen(
     onNavigate : (UiEvent.Navigate) -> Unit,
     onPopBackStack : () -> Unit
 ) {
+
+    BackHandler {
+        viewModel.onEvent(AboutDriverEvent.OnBackPress)
+    }
 
     val routes = viewModel.jeepneyRoutes.mapTo(arrayListOf()) { it.route }
     val context = LocalContext.current
@@ -79,9 +84,7 @@ fun AboutDriverScreen(
                             navigationIcon = {
                                 IconButton(
                                     onClick = {
-
-                                        viewModel.onEvent(AboutDriverEvent.OnBackPressesd)
-
+                                        viewModel.onEvent(AboutDriverEvent.OnBackPress)
                                     }
                                 ) {
                                     Icon(Icons.Filled.ArrowBack, contentDescription = null)
@@ -128,6 +131,23 @@ fun AboutDriverScreen(
                     }
                 }
             )
+        }
+    }
+
+    if (viewModel.isDialogOpen) {
+        JeepNiAlertDialog(
+            isOpen = viewModel.isDialogOpen,
+            onDismiss = {
+                viewModel.onEvent(AboutDriverEvent.OnDialogDismissPress)
+            }, onConfirm = {
+                viewModel.onEvent(AboutDriverEvent.OnDialogConfirmPress)
+            }, icon = {
+                Icon(painterResource(R.drawable.logout_white_24), null)
+            },
+            titleText = "Logout?"
+        ) {
+            Text("It seems that you haven't completed your user profile... Going back to the previous screen will sign you out",
+                fontFamily = quicksandFontFamily)
         }
     }
 }

@@ -46,6 +46,8 @@ class AboutDriverViewModel
         private set
     var isValidFirstName by mutableStateOf(true)
         private set
+    var isDialogOpen by mutableStateOf(false)
+        private set
 
 
     private val _uiEvent = Channel<UiEvent>()
@@ -89,8 +91,20 @@ class AboutDriverViewModel
             is AboutDriverEvent.OnRouteSizeChange -> {
                 routeDropdownSize = event.s
             }
-            is AboutDriverEvent.OnBackPressesd -> {
-                sendUiEvent(UiEvent.PopBackStack)
+            is AboutDriverEvent.OnBackPress -> {
+                isDialogOpen = true
+            }
+            is AboutDriverEvent.OnDialogConfirmPress -> {
+                auth.logOut()
+                // TODO: create an alert dialog to inform the user that they are being logged out
+                if (! auth.isUserLoggedIn()) {
+                    sendUiEvent(UiEvent.Navigate(Screen.WelcomeScreen.route, "0"))
+                } else {
+                    sendUiEvent(UiEvent.ShowToast("failed to log out..."))
+                }
+            }
+            is AboutDriverEvent.OnDialogDismissPress -> {
+                isDialogOpen = false
             }
         }
     }

@@ -1,8 +1,6 @@
 package com.example.jeepni.core.ui
 
 import androidx.compose.foundation.Image
-
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,43 +8,26 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
-
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
-
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
-
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.JeepNiTheme
-import com.example.jeepni.core.ui.theme.White
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 
 @Composable
@@ -298,8 +279,8 @@ fun CustomDropDown(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onGloballyPositioned {
-                    onSizeChange(it.size.toSize())
-                }
+                        onSizeChange(it.size.toSize())
+                    }
             )
             DropdownMenu(
                 expanded = expanded,
@@ -371,6 +352,49 @@ fun AnalyticsCard(
             }
         }
     }
+}
+
+@Composable
+fun JeepNiAlertDialog(
+    modifier : Modifier = Modifier,
+    isOpen : Boolean,
+    onDismiss : () -> Unit,
+    onConfirm : () -> Unit,
+    confirmText : String = "Confirm",
+    dismissText : String = "Cancel",
+    titleText : String = "Alert",
+    icon : @Composable () -> Unit,
+    content : @Composable () -> Unit,
+) {
+    Surface {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            modifier = modifier,
+            confirmButton = {
+                TextButton(onClick = {
+                    onDismiss()
+                    onConfirm()
+                }
+                ) {
+                    Text(confirmText, fontFamily = quicksandFontFamily)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDismiss,
+                ) {
+                    Text(dismissText, fontFamily = quicksandFontFamily)
+                }
+            },
+            title = {
+                Text(titleText, fontFamily = quicksandFontFamily)
+            },
+            icon = icon,
+            text = content,
+        )
+
+    }
+
 }
 
 //@Composable
