@@ -30,6 +30,9 @@ import com.example.jeepni.R
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.UiEvent
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -256,21 +259,31 @@ fun LogDailyStatDialog(
 
 @Composable
 fun DrivingModeOnContent(paddingValues : PaddingValues) {
+    val singapore = LatLng(1.35, 103.87)
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(singapore, 10f)
+    }
     Surface {
         Column (
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
             ) {
-            Text(
+
+            GoogleMap(
                 modifier = Modifier
-                    .padding(8.dp)
                     .fillMaxWidth()
                     .weight(0.8f)
-                    .background(Color.Gray),
-                textAlign = TextAlign.Center,
-                text = "Map"
-            )
+                    .padding(8.dp),
+
+                cameraPositionState = cameraPositionState
+            ) {
+                Marker(
+                    state = MarkerState(position = singapore),
+                    title = "Singapore:)"
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -407,7 +420,7 @@ fun MenuContent(
                         )
                         Text(email?:"no email found", /* TODO: show user name instead */
                             modifier = Modifier
-                                .padding(12.dp,8.dp)
+                                .padding(12.dp, 8.dp)
                                 .clickable {
                                     onProfileClicked()
                                 },
