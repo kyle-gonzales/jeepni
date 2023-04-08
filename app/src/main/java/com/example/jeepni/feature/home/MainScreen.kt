@@ -133,7 +133,16 @@ fun MainScreen(
                             drawerState = drawerState,
                             drivingMode = viewModel.drivingMode,
                             scope = coroutineScope,
-                            toggleDrivingMode ={ viewModel.onEvent(MainEvent.OnToggleDrivingMode(it)) },
+                            toggleDrivingMode ={
+
+                                val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+
+                                if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                                    viewModel.onEvent(MainEvent.OnToggleDrivingMode(it))
+                                } else {
+                                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                                }
+                            },
                             distance = viewModel.distanceState,
                             time = viewModel.timeState,
                             onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
