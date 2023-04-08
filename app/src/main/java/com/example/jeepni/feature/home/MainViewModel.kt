@@ -1,6 +1,7 @@
 package com.example.jeepni.feature.home
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -25,9 +26,8 @@ class MainViewModel
 ) : ViewModel() {
 
     var user by mutableStateOf(authRepo.getUser())
-//    init {
-//        user = savedStateHandle.get<String>("email") ?: ""
-//    }
+
+    val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     // create a sharedFlow for one-time events: events that you don't want to rerun on configuration changes
 
@@ -153,4 +153,18 @@ class MainViewModel
             _uiEvent.send(event)
         }
     }
+
+    fun dismissDialog() {
+        visiblePermissionDialogQueue.removeFirst()
+    }
+
+    fun onPermissionResult(
+        permission: String,
+        isGranted : Boolean
+    ) {
+        if (!isGranted && !visiblePermissionDialogQueue.contains(permission)) {
+            visiblePermissionDialogQueue.add(permission)
+        }
+    }
+
 }
