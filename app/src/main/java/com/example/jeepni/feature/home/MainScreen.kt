@@ -1,6 +1,14 @@
 package com.example.jeepni.feature.home
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,10 +33,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jeepni.MainActivity
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.JeepNiTextField
+import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
+import com.example.jeepni.util.LocationPermissionTextProvider
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -43,12 +56,30 @@ fun MainScreen(
     onNavigate : (UiEvent.Navigate) -> Unit,
     viewModel : MainViewModel = hiltViewModel(),
 ) {
-//    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
     val context = LocalContext.current
+
+    val dialogQueue = viewModel.visiblePermissionDialogQueue
+    
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+        viewModel.onPermissionResult(
+            permission = Manifest.permission.ACCESS_FINE_LOCATION,
+            isGranted = isGranted
+        )
+    }
+    val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        permissions.keys.forEach { permission ->
+            viewModel.onPermissionResult(
+                permission = permission,
+                isGranted = permissions[permission] == true
+            )
+        }
+    }
+
     LaunchedEffect(key1 = true) {// don't subscribe to UI event flow every time the UI updates
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -135,7 +166,6 @@ fun MainScreen(
                                 ) {
                                     FloatingActionButton(
                                         onClick = {
-                                            /*TODO: Delete the current daily log*/
                                             viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
                                         },
                                         modifier = Modifier.padding(16.dp)
@@ -163,6 +193,13 @@ fun MainScreen(
                 }
             }
         }
+}
+
+fun Activity.openAppSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    ).also(::startActivity)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
