@@ -200,6 +200,28 @@ fun MainScreen(
                             viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
                     )
                 }
+                val activity = LocalContext.current as MainActivity //TODO: find another solution. this is probably a memory leak..
+                dialogQueue.reversed().forEach { permission ->
+                    PermissionDialog(
+                        permissionTextProvider = when (permission) {
+                            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                                LocationPermissionTextProvider()
+                            }
+                            else -> {
+                                return@forEach
+                            }
+                        },
+                        isPermanentlyDeclined = ! shouldShowRequestPermissionRationale(activity, permission) ,
+                        onDismiss = viewModel::dismissDialog,
+                        onConfirm = {
+                            multiplePermissionResultLauncher.launch(
+                                arrayOf(permission)
+                            )
+                        },
+                        onGoToAppSettings = activity::openAppSettings
+                    )
+
+                }
             }
         }
 }
