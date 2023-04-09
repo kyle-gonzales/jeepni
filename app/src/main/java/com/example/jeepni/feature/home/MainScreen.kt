@@ -43,8 +43,8 @@ import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.LocationPermissionTextProvider
 import com.example.jeepni.util.UiEvent
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -352,12 +352,31 @@ fun DrivingModeOnContent(
                     .fillMaxWidth()
                     .weight(0.8f)
                     .padding(8.dp),
-
-                cameraPositionState = cameraPositionState
+                cameraPositionState = cameraPositionState,
+                onMapLoaded = {
+                    viewModel.onMapLoaded()
+                    onMapLoaded()
+                },
+                uiSettings = MapUiSettings(
+                    myLocationButtonEnabled = true,
+                    compassEnabled = true,
+                    zoomControlsEnabled = true,
+                ),
+                properties = MapProperties(
+                    mapStyleOptions = MapStyleOptions(
+                        if (isSystemInDarkTheme())
+                            JsonMapStyle.DARK_MAP_STYLE
+                        else
+                            JsonMapStyle.LIGHT_MAP_STYLE
+                    ),
+                )
             ) {
                 Marker(
-                    state = MarkerState(position = singapore),
-                    title = "Singapore:)"
+                    state = MarkerState(position = targetPosition),
+                    title = "You", //TODO: give the name of the driver?
+                    onClick = {
+                        viewModel.simulateLocationChange() // Delete after
+                        false}
                 )
             }
             Row(
