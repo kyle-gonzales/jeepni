@@ -11,8 +11,14 @@ import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,6 +65,41 @@ class MainViewModel
         private set
     var timeState by mutableStateOf(convertMillisToTime(time))
         private set
+
+
+    private var longitude = 1.35
+    private var latitude = 100.8
+    var targetPosition by mutableStateOf(LatLng(longitude, latitude))
+        private set
+    var cameraPositionState by mutableStateOf(CameraPositionState())
+        private set
+
+    fun onMapLoaded() {
+        viewModelScope.launch {
+            try {
+                cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 10f)))
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                e.printStackTrace()
+            }
+        }
+    }
+    fun simulateLocationChange() {
+        sendUiEvent(UiEvent.ShowToast("starting..."))
+        viewModelScope.launch {
+            repeat(5) {
+                targetPosition = LatLng(longitude++, latitude++)
+                try {
+                    cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 10f)))
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    e.printStackTrace()
+                }
+                delay(1000)
+            }
+            sendUiEvent(UiEvent.ShowToast("ending..."))
+        }
+    }
 
 
     fun onEvent(event: MainEvent) {
