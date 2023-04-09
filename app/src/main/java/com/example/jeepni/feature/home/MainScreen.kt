@@ -537,6 +537,7 @@ fun Menu(
         modifier = Modifier.background(Color.Transparent),
         drawerState = drawerState,
         drawerContent = { MenuContent(email = email,  drawerState = drawerState, scope = scope, onProfileClicked = onProfileClicked, menuItems = menuItems) },
+        gesturesEnabled = drawerState.isOpen,
         content = content
     )
 }
