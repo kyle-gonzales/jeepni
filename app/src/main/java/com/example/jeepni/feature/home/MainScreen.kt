@@ -163,7 +163,11 @@ fun MainScreen(
                                     .fillMaxSize()
                             ) {
                                 if (viewModel.drivingMode) {
-                                    DrivingModeOnContent(paddingValues = it)
+                                    DrivingModeOnContent(
+                                        paddingValues = it,
+                                        cameraPositionState = viewModel.cameraPositionState,
+                                        targetPosition = viewModel.targetPosition
+                                    )
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)
                                 }
@@ -326,12 +330,16 @@ fun LogDailyStatDialog(
 }
 
 @Composable
-fun DrivingModeOnContent(paddingValues : PaddingValues) {
-    val singapore = LatLng(1.35, 103.87)
+fun DrivingModeOnContent(
+    paddingValues : PaddingValues,
+    targetPosition : LatLng,
+    cameraPositionState: CameraPositionState,
+    onMapLoaded : () -> Unit = {},
 
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(singapore, 10f)
-    }
+    viewModel: MainViewModel = hiltViewModel(), //TODO: only for testing purposes. delete after.
+) {
+
+
     Surface {
         Column (
             modifier = Modifier
