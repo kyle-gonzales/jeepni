@@ -1,5 +1,7 @@
 package com.example.jeepni.feature.home
 
+import android.annotation.SuppressLint
+import android.os.Looper
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +13,7 @@ import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -66,23 +69,17 @@ class MainViewModel
     var timeState by mutableStateOf(convertMillisToTime(time))
         private set
 
-
-    private var longitude = 1.35
-    private var latitude = 100.8
-    var targetPosition by mutableStateOf(LatLng(longitude, latitude))
+    //cebu basic coords
+    private var latitude by mutableStateOf(10.3157)
+    private var longitude by mutableStateOf(123.8854)
+    var targetPosition by mutableStateOf(LatLng(latitude, longitude))
         private set
-    var cameraPositionState by mutableStateOf(CameraPositionState())
+    var cameraPositionState by mutableStateOf(CameraPositionState(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
         private set
 
     fun onMapLoaded() {
-        viewModelScope.launch {
-            try {
-                cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 10f)))
-            } catch (e: Exception) {
-                if (e is CancellationException) throw e
-                e.printStackTrace()
-            }
-        }
+        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
+
     }
     fun simulateLocationChange() {
         sendUiEvent(UiEvent.ShowToast("starting..."))
