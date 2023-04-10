@@ -166,7 +166,8 @@ fun MainScreen(
                                     DrivingModeOnContent(
                                         paddingValues = it,
                                         cameraPositionState = viewModel.cameraPositionState,
-                                        targetPosition = viewModel.targetPosition
+                                        targetPosition = viewModel.targetPosition,
+                                        onMapLoaded = viewModel::onMapLoaded
                                     )
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)
@@ -334,9 +335,7 @@ fun DrivingModeOnContent(
     paddingValues : PaddingValues,
     targetPosition : LatLng,
     cameraPositionState: CameraPositionState,
-    onMapLoaded : () -> Unit = {},
-
-    viewModel: MainViewModel = hiltViewModel(), //TODO: only for testing purposes. delete after.
+    onMapLoaded : () -> Unit,
 ) {
 
 
@@ -346,17 +345,13 @@ fun DrivingModeOnContent(
                 .padding(paddingValues)
                 .fillMaxSize(),
             ) {
-
             GoogleMap(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.8f)
                     .padding(8.dp),
                 cameraPositionState = cameraPositionState,
-                onMapLoaded = {
-                    viewModel.onMapLoaded()
-                    onMapLoaded()
-                },
+                onMapLoaded = onMapLoaded,
                 uiSettings = MapUiSettings(
                     myLocationButtonEnabled = true,
                     compassEnabled = true,
@@ -374,9 +369,6 @@ fun DrivingModeOnContent(
                 Marker(
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
-                    onClick = {
-                        viewModel.simulateLocationChange() // Delete after
-                        false}
                 )
             }
             Row(
