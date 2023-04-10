@@ -79,7 +79,7 @@ dependencies {
 
     // Dependencies for Google Map
     implementation "com.google.android.gms:play-services-maps:18.1.0"
-    implementation "com.google.android.gms:play-services-location:21.0.1"
+    implementation "com.google.android.gms:play-services-location:21.0.1" // for getting user location
 
     implementation "com.google.maps.android:maps-compose:2.2.0" // compose support for google maps
 

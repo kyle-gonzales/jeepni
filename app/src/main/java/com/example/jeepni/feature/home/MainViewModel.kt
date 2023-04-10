@@ -28,7 +28,7 @@ class MainViewModel
 @Inject constructor(
     private val repository: DailyAnalyticsRepository,
     private val authRepo: AuthRepository,
-    //savedStateHandle: SavedStateHandle //contains navigation arguments
+    private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
 
     var user by mutableStateOf(authRepo.getUser())
