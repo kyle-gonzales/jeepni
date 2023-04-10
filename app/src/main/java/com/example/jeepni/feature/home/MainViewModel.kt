@@ -206,6 +206,23 @@ class MainViewModel
             visiblePermissionDialogQueue.add(permission)
         }
     }
+    private val locationCallBack = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val lastLocation = locationResult.lastLocation!!
+            latitude = lastLocation.latitude
+            longitude = lastLocation.longitude
+            targetPosition = LatLng(latitude, longitude)
+
+            viewModelScope.launch {
+                try {
+                    cameraPositionState.animate(CameraUpdateFactory.newLatLng(targetPosition))
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
