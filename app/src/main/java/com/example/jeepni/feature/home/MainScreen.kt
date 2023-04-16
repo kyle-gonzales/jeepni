@@ -43,12 +43,16 @@ import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.LocationPermissionTextProvider
 import com.example.jeepni.util.UiEvent
+import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -338,6 +342,10 @@ fun DrivingModeOnContent(
     onMapLoaded : () -> Unit,
 ) {
 
+    val cebuBounds = LatLngBounds(
+        LatLng(9.263293, 123.119609),
+        LatLng(11.476362, 125.494500)
+    )
 
     Surface {
         Column (
@@ -352,10 +360,21 @@ fun DrivingModeOnContent(
                     .padding(8.dp),
                 cameraPositionState = cameraPositionState,
                 onMapLoaded = onMapLoaded,
+                googleMapOptionsFactory = {
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(LatLng(10.3157, 123.8854)) // set to a point within cebuBounds
+                        .zoom(10f)
+                        .build()
+                    GoogleMapOptions()
+                        .maxZoomPreference(18f)
+                        .minZoomPreference(10f)
+                        .latLngBoundsForCameraTarget(cebuBounds)
+                        .camera(cameraPosition)
+                },
                 uiSettings = MapUiSettings(
                     myLocationButtonEnabled = true,
                     compassEnabled = true,
-                    zoomControlsEnabled = true,
+                    zoomControlsEnabled = true
                 ),
                 properties = MapProperties(
                     mapStyleOptions = MapStyleOptions(
@@ -363,9 +382,15 @@ fun DrivingModeOnContent(
                             JsonMapStyle.DARK_MAP_STYLE
                         else
                             JsonMapStyle.LIGHT_MAP_STYLE
-                    ),
-                )
+                    )
+                ),
             ) {
+//                Polygon(
+//                    points = Coordinates.CebuIslandCoordinates,
+//                    strokeWidth = 2F,
+//                    strokeColor = Color.Blue,
+//                    fillColor = Color.Blue.copy(0.25f) // Blue with 25% opacity
+//                )
                 Marker(
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
@@ -384,6 +409,7 @@ fun DrivingModeOnContent(
         }
     }
 }
+
 @Composable
 fun DrivingModeOffContent(paddingValues: PaddingValues) {
     Surface {
