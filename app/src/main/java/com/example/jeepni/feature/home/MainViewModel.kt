@@ -229,7 +229,7 @@ class MainViewModel
         //TODO: these parameters may be recalibrated to optimize performance
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setWaitForAccurateLocation(false)
-//            .setMinUpdateDistanceMeters(50f)
+            .setMinUpdateDistanceMeters(10f) // prevents updates when driver is not moving. can save power
             .setMinUpdateIntervalMillis(500)
             .setMaxUpdateDelayMillis(3*1000)
             .build()
