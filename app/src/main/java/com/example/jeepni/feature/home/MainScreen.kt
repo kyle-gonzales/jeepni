@@ -432,12 +432,18 @@ fun TopActionBar(
                     Icon(Icons.Filled.LocationOn, contentDescription = null)
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
-                        text = distance
+                        text = distance,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
                     )
                     Icon(painterResource(R.drawable.white_timer_24), contentDescription = null)
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
-                        text = time
+                        text = time,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
                     )
                 }
             },
