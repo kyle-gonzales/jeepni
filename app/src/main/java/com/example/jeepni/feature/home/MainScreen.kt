@@ -69,14 +69,22 @@ fun MainScreen(
             permission = Manifest.permission.ACCESS_FINE_LOCATION,
             isGranted = isGranted
         )
+        if (isGranted) {
+            viewModel.onEvent(MainEvent.OnToggleDrivingMode(true))
+        }
     }
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        var isAllGranted = false
         permissions.keys.forEach { permission ->
             viewModel.onPermissionResult(
                 permission = permission,
                 isGranted = permissions[permission] == true
             )
+            isAllGranted = permissions[permission] == true
+        }
+        if (isAllGranted) {
+            viewModel.onEvent(MainEvent.OnToggleDrivingMode(true))
         }
     }
 
