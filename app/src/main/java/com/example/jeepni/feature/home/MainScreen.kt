@@ -175,7 +175,7 @@ fun MainScreen(
                                         paddingValues = it,
                                         cameraPositionState = viewModel.cameraPositionState,
                                         targetPosition = viewModel.targetPosition,
-                                        onMapLoaded = viewModel::onMapLoaded
+                                        onMapLoaded = {} //viewModel::onMapLoaded
                                     )
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)

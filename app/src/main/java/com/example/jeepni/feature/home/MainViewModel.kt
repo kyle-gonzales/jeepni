@@ -77,10 +77,9 @@ class MainViewModel
     var cameraPositionState by mutableStateOf(CameraPositionState(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
         private set
 
-    fun onMapLoaded() {
-        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
-
-    }
+//    fun onMapLoaded() {
+//        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
+//    }
     fun simulateLocationChange() {
         sendUiEvent(UiEvent.ShowToast("starting..."))
         viewModelScope.launch {
@@ -127,7 +126,6 @@ class MainViewModel
             is MainEvent.OnToggleDrivingMode -> {
                 drivingMode = event.isDrivingMode
                 requestNewLocationData()
-
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
                 deletedStat?.let {
