@@ -75,13 +75,13 @@ fun MainScreen(
     }
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        var isAllGranted = false
+        var isAllGranted = true
         permissions.keys.forEach { permission ->
             viewModel.onPermissionResult(
                 permission = permission,
                 isGranted = permissions[permission] == true
             )
-            isAllGranted = permissions[permission] == true
+            isAllGranted = permissions[permission] == true && isAllGranted
         }
         if (isAllGranted) {
             viewModel.onEvent(MainEvent.OnToggleDrivingMode(true))
