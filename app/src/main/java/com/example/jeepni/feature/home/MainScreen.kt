@@ -342,9 +342,16 @@ fun DrivingModeOnContent(
     onMapLoaded : () -> Unit,
 ) {
 
-    val cebuBounds = LatLngBounds(
-        LatLng(9.263293, 123.119609),
-        LatLng(11.476362, 125.494500)
+    val cebuBounds = LatLngBounds.Builder()
+        .include(LatLng(9.386076, 123.258371))
+        .include(LatLng(11.399790, 124.135218))
+        .build()
+
+    val holePoints = listOf(
+        cebuBounds.northeast,
+        LatLng(cebuBounds.northeast.latitude, cebuBounds.southwest.longitude),
+        cebuBounds.southwest,
+        LatLng(cebuBounds.southwest.latitude, cebuBounds.northeast.longitude)
     )
 
     Surface {
@@ -366,8 +373,8 @@ fun DrivingModeOnContent(
                         .zoom(10f)
                         .build()
                     GoogleMapOptions()
-                        .maxZoomPreference(18f)
-                        .minZoomPreference(10f)
+                        .maxZoomPreference(14.0f)
+                        .minZoomPreference(9.0f)
                         .latLngBoundsForCameraTarget(cebuBounds)
                         .camera(cameraPosition)
                 },
@@ -385,12 +392,26 @@ fun DrivingModeOnContent(
                     )
                 ),
             ) {
-//                Polygon(
-//                    points = Coordinates.CebuIslandCoordinates,
-//                    strokeWidth = 2F,
-//                    strokeColor = Color.Blue,
-//                    fillColor = Color.Blue.copy(0.25f) // Blue with 25% opacity
-//                )
+                Polygon(
+                    points = listOf(
+                        LatLng(85.0,90.0),
+                        LatLng(85.0,0.1),
+                        LatLng(85.0,-90.0),
+                        LatLng(85.0,-179.9),
+                        LatLng(0.0,-179.9),
+                        LatLng(-85.0,-179.9),
+                        LatLng(-85.0,-90.0),
+                        LatLng(-85.0,0.1),
+                        LatLng(-85.0,90.0),
+                        LatLng(-85.0,179.9),
+                        LatLng(0.0,179.9),
+                        LatLng(85.0,179.9),
+                    ),
+                    strokeWidth = 0F,
+                    fillColor = Color.White,
+                    holes = listOf(holePoints),
+                    zIndex = 10000.0f,
+                )
                 Marker(
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
@@ -404,7 +425,6 @@ fun DrivingModeOnContent(
                     .background(Color.LightGray),
                 horizontalArrangement = Arrangement.Center
             ) {
-
             }
         }
     }
