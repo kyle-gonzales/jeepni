@@ -213,7 +213,7 @@ fun MainScreen(
                             viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
                     )
                 }
-                val activity = LocalContext.current as MainActivity //TODO: find another solution. this is probably a memory leak..
+                val activity = LocalContext.current as MainActivity //apparently this is not a memory leak!
                 dialogQueue.reversed().forEach { permission ->
                     PermissionDialog(
                         permissionTextProvider = when (permission) {

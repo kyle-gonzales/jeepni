@@ -103,7 +103,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.4'
 
-
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10' // checks for memory leaks
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
