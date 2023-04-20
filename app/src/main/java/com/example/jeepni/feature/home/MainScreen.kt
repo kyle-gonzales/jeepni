@@ -397,29 +397,33 @@ fun DrivingModeOnContent(
                             JsonMapStyle.DARK_MAP_STYLE
                         else
                             JsonMapStyle.LIGHT_MAP_STYLE
-                    )
+                    ),
+                    latLngBoundsForCameraTarget = cebuBounds,
+                    isMyLocationEnabled = false, // set to true to turn on blue dot
+                    maxZoomPreference = 25.0f,
+                    minZoomPreference = 9.0f,
                 ),
             ) {
-                Polygon(
-                    points = listOf(
-                        LatLng(85.0,90.0),
-                        LatLng(85.0,0.1),
-                        LatLng(85.0,-90.0),
-                        LatLng(85.0,-179.9),
-                        LatLng(0.0,-179.9),
-                        LatLng(-85.0,-179.9),
-                        LatLng(-85.0,-90.0),
-                        LatLng(-85.0,0.1),
-                        LatLng(-85.0,90.0),
-                        LatLng(-85.0,179.9),
-                        LatLng(0.0,179.9),
-                        LatLng(85.0,179.9),
-                    ),
-                    strokeWidth = 0F,
-                    fillColor = Color.White,
-                    holes = listOf(holePoints),
-                    zIndex = 10000.0f,
-                )
+//                Polygon(
+//                    points = listOf(
+//                        LatLng(85.0,90.0),
+//                        LatLng(85.0,0.1),
+//                        LatLng(85.0,-90.0),
+//                        LatLng(85.0,-179.9),
+//                        LatLng(0.0,-179.9),
+//                        LatLng(-85.0,-179.9),
+//                        LatLng(-85.0,-90.0),
+//                        LatLng(-85.0,0.1),
+//                        LatLng(-85.0,90.0),
+//                        LatLng(-85.0,179.9),
+//                        LatLng(0.0,179.9),
+//                        LatLng(85.0,179.9),
+//                    ),
+//                    strokeWidth = 0F,
+//                    fillColor = Color.White,
+//                    holes = listOf(holePoints),
+//                    zIndex = 10000.0f,
+//                )
                 Marker(
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
