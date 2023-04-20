@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -76,9 +77,14 @@ dependencies {
     testImplementation "com.google.dagger:hilt-android-testing:$dagger_hilt_version"
     kaptTest "com.google.dagger:hilt-compiler:$dagger_hilt_version"
 
+    // Dependencies for Google Map
+    implementation "com.google.android.gms:play-services-maps:18.1.0"
+    implementation "com.google.android.gms:play-services-location:21.0.1" // for getting user location
 
-//    implementation "io.github.raamcosta.compose-destinations:core$compose_destination_version"
-//    ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destination_version"
+    implementation "com.google.maps.android:maps-compose:2.2.0" // compose support for google maps
+
+    implementation "com.google.maps.android:maps-ktx:3.2.1" // kotlin extensions for maps
+    implementation "com.google.maps.android:maps-utils-ktx:3.2.1"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -97,7 +103,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.4'
 
-
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10' // checks for memory leaks
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries

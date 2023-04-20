@@ -1,6 +1,14 @@
 package com.example.jeepni.feature.home
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,14 +33,26 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jeepni.MainActivity
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.JeepNiTextField
+import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
+import com.example.jeepni.util.LocationPermissionTextProvider
 import com.example.jeepni.util.UiEvent
+import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,12 +60,38 @@ fun MainScreen(
     onNavigate : (UiEvent.Navigate) -> Unit,
     viewModel : MainViewModel = hiltViewModel(),
 ) {
-//    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
     val context = LocalContext.current
+
+    val dialogQueue = viewModel.visiblePermissionDialogQueue
+    
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+        viewModel.onPermissionResult(
+            permission = Manifest.permission.ACCESS_FINE_LOCATION,
+            isGranted = isGranted
+        )
+        if (isGranted) {
+            viewModel.onEvent(MainEvent.OnToggleDrivingMode(true))
+        }
+    }
+    val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        var isAllGranted = true
+        permissions.keys.forEach { permission ->
+            viewModel.onPermissionResult(
+                permission = permission,
+                isGranted = permissions[permission] == true
+            )
+            isAllGranted = permissions[permission] == true && isAllGranted
+        }
+        if (isAllGranted) {
+            viewModel.onEvent(MainEvent.OnToggleDrivingMode(true))
+        }
+    }
+
     LaunchedEffect(key1 = true) {// don't subscribe to UI event flow every time the UI updates
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -99,7 +145,16 @@ fun MainScreen(
                             drawerState = drawerState,
                             drivingMode = viewModel.drivingMode,
                             scope = coroutineScope,
-                            toggleDrivingMode ={ viewModel.onEvent(MainEvent.OnToggleDrivingMode(it)) },
+                            toggleDrivingMode ={
+
+                                val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+
+                                if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                                    viewModel.onEvent(MainEvent.OnToggleDrivingMode(it))
+                                } else {
+                                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                                }
+                            },
                             distance = viewModel.distanceState,
                             time = viewModel.timeState,
                             onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
@@ -120,7 +175,12 @@ fun MainScreen(
                                     .fillMaxSize()
                             ) {
                                 if (viewModel.drivingMode) {
-                                    DrivingModeOnContent(paddingValues = it)
+                                    DrivingModeOnContent(
+                                        paddingValues = it,
+                                        cameraPositionState = viewModel.cameraPositionState,
+                                        targetPosition = viewModel.targetPosition,
+                                        onMapLoaded = {} //viewModel::onMapLoaded
+                                    )
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)
                                 }
@@ -132,7 +192,6 @@ fun MainScreen(
                                 ) {
                                     FloatingActionButton(
                                         onClick = {
-                                            /*TODO: Delete the current daily log*/
                                             viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
                                         },
                                         modifier = Modifier.padding(16.dp)
@@ -158,8 +217,37 @@ fun MainScreen(
                             viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
                     )
                 }
+                val activity = LocalContext.current as MainActivity //apparently this is not a memory leak!
+                dialogQueue.reversed().forEach { permission ->
+                    PermissionDialog(
+                        permissionTextProvider = when (permission) {
+                            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                                LocationPermissionTextProvider()
+                            }
+                            else -> {
+                                return@forEach
+                            }
+                        },
+                        isPermanentlyDeclined = ! shouldShowRequestPermissionRationale(activity, permission) ,
+                        onDismiss = viewModel::dismissDialog,
+                        onConfirm = {
+                            multiplePermissionResultLauncher.launch(
+                                arrayOf(permission)
+                            )
+                        },
+                        onGoToAppSettings = activity::openAppSettings
+                    )
+
+                }
             }
         }
+}
+
+fun Activity.openAppSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    ).also(::startActivity)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -255,22 +343,88 @@ fun LogDailyStatDialog(
 }
 
 @Composable
-fun DrivingModeOnContent(paddingValues : PaddingValues) {
+fun DrivingModeOnContent(
+    paddingValues : PaddingValues,
+    targetPosition : LatLng,
+    cameraPositionState: CameraPositionState,
+    onMapLoaded : () -> Unit,
+) {
+
+    val cebuBounds = LatLngBounds.Builder()
+        .include(LatLng(9.386076, 123.258371))
+        .include(LatLng(11.399790, 124.135218))
+        .build()
+
+    val holePoints = listOf(
+        cebuBounds.northeast,
+        LatLng(cebuBounds.northeast.latitude, cebuBounds.southwest.longitude),
+        cebuBounds.southwest,
+        LatLng(cebuBounds.southwest.latitude, cebuBounds.northeast.longitude)
+    )
+
     Surface {
         Column (
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
             ) {
-            Text(
+            GoogleMap(
                 modifier = Modifier
-                    .padding(8.dp)
                     .fillMaxWidth()
                     .weight(0.8f)
-                    .background(Color.Gray),
-                textAlign = TextAlign.Center,
-                text = "Map"
-            )
+                    .padding(8.dp),
+                cameraPositionState = cameraPositionState,
+                onMapLoaded = onMapLoaded,
+                googleMapOptionsFactory = {
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(LatLng(10.3157, 123.8854)) // set to a point within cebuBounds
+                        .zoom(10f)
+                        .build()
+                    GoogleMapOptions()
+                        .maxZoomPreference(14.0f)
+                        .minZoomPreference(9.0f)
+                        .latLngBoundsForCameraTarget(cebuBounds)
+                        .camera(cameraPosition)
+                },
+                uiSettings = MapUiSettings(
+                    myLocationButtonEnabled = true,
+                    compassEnabled = true,
+                    zoomControlsEnabled = true
+                ),
+                properties = MapProperties(
+                    mapStyleOptions = MapStyleOptions(
+                        if (isSystemInDarkTheme())
+                            JsonMapStyle.DARK_MAP_STYLE
+                        else
+                            JsonMapStyle.LIGHT_MAP_STYLE
+                    )
+                ),
+            ) {
+                Polygon(
+                    points = listOf(
+                        LatLng(85.0,90.0),
+                        LatLng(85.0,0.1),
+                        LatLng(85.0,-90.0),
+                        LatLng(85.0,-179.9),
+                        LatLng(0.0,-179.9),
+                        LatLng(-85.0,-179.9),
+                        LatLng(-85.0,-90.0),
+                        LatLng(-85.0,0.1),
+                        LatLng(-85.0,90.0),
+                        LatLng(-85.0,179.9),
+                        LatLng(0.0,179.9),
+                        LatLng(85.0,179.9),
+                    ),
+                    strokeWidth = 0F,
+                    fillColor = Color.White,
+                    holes = listOf(holePoints),
+                    zIndex = 10000.0f,
+                )
+                Marker(
+                    state = MarkerState(position = targetPosition),
+                    title = "You", //TODO: give the name of the driver?
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -279,11 +433,11 @@ fun DrivingModeOnContent(paddingValues : PaddingValues) {
                     .background(Color.LightGray),
                 horizontalArrangement = Arrangement.Center
             ) {
-
             }
         }
     }
 }
+
 @Composable
 fun DrivingModeOffContent(paddingValues: PaddingValues) {
     Surface {
@@ -324,12 +478,18 @@ fun TopActionBar(
                     Icon(Icons.Filled.LocationOn, contentDescription = null)
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
-                        text = distance
+                        text = distance,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
                     )
                     Icon(painterResource(R.drawable.white_timer_24), contentDescription = null)
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
-                        text = time
+                        text = time,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
                     )
                 }
             },
@@ -407,7 +567,7 @@ fun MenuContent(
                         )
                         Text(email?:"no email found", /* TODO: show user name instead */
                             modifier = Modifier
-                                .padding(12.dp,8.dp)
+                                .padding(12.dp, 8.dp)
                                 .clickable {
                                     onProfileClicked()
                                 },
@@ -456,6 +616,7 @@ fun Menu(
         modifier = Modifier.background(Color.Transparent),
         drawerState = drawerState,
         drawerContent = { MenuContent(email = email,  drawerState = drawerState, scope = scope, onProfileClicked = onProfileClicked, menuItems = menuItems) },
+        gesturesEnabled = drawerState.isOpen,
         content = content
     )
 }
