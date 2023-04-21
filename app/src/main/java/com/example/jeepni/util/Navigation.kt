@@ -105,6 +105,18 @@ fun Navigation (
                 }
             )
         }
+        composable(
+            route = Screen.InitialCheckupScreen.route,
+        ) {
+            InitialCheckupScreen(
+                onNavigate = {
+                    navController.navigate(it.route, popUp(it))
+                },
+                onPopBackStack = {
+                    navController.popBackStack()
+                }
+            )
+        }
         composable (
             route = Screen.ProfileScreen.route
         ) {
