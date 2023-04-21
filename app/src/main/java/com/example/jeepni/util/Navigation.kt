@@ -18,6 +18,7 @@ import com.example.jeepni.feature.authentication.SignUpScreen
 import com.example.jeepni.feature.authentication.Welcome2Screen
 import com.example.jeepni.feature.checkup.CheckUpScreen
 import com.example.jeepni.feature.home.MainScreen
+import com.example.jeepni.feature.initial_checkup.InitialCheckupScreen
 import com.example.jeepni.feature.profile.ProfileScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -42,7 +43,8 @@ fun Navigation (
         } else if (isIncompleteUserDetails(userDetails!!)) {
             Screen.AboutDriverScreen.route
         } else {
-            Screen.MainScreen.route
+            Screen.InitialCheckupScreen.route // temporary for ease of development
+            //Screen.MainScreen.route
         }
 
     AnimatedNavHost(
