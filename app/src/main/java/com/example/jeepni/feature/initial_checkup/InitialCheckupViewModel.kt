@@ -2,6 +2,7 @@ package com.example.jeepni.feature.initial_checkup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -22,6 +23,7 @@ class InitialCheckupViewModel @Inject constructor(
         when(event) {
             is InitialCheckupEvent.OnSaveClicked -> {
                 // TODO: save data to firestore
+                sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
             }
         }
     }
