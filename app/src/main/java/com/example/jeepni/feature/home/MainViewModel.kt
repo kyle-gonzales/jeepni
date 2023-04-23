@@ -19,11 +19,9 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,12 +58,12 @@ class MainViewModel
         private set
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
+
     private var distance by mutableStateOf(12382.9)
-
-    private var time by mutableStateOf(3999999L)
-
     var distanceState by mutableStateOf(convertDistanceToString(distance))
         private set
+
+    private var time by mutableStateOf(0L)
     var timeState by mutableStateOf(formatSecondsToTime(time))
         private set
 
@@ -125,7 +123,12 @@ class MainViewModel
             }
             is MainEvent.OnToggleDrivingMode -> {
                 drivingMode = event.isDrivingMode
-                requestNewLocationData()
+                if (drivingMode) {
+                    requestNewLocationData()
+                    viewModelScope.launch {
+                        trackTimeInDrivingMode()
+                    }
+                }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
                 deletedStat?.let {
@@ -182,6 +185,18 @@ class MainViewModel
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
+        }
+    }
+
+    private suspend fun trackTimeInDrivingMode() {
+        withContext(Dispatchers.Default) {
+            while(drivingMode) {
+                time++
+                delay(1000L)
+                timeState = formatSecondsToTime(time)
+//                Log.i("UPTIME", time.toString())
+//                Log.i("UPTIME", timeState)
+            }
         }
     }
 
