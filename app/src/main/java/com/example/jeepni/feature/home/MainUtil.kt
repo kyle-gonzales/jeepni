@@ -11,16 +11,17 @@ data class MenuItem(
     val title : String,
     val onClick : () -> Unit = {}
 )
-fun convertMillisToTime(timeInMillis: Long) : String {
+fun formatSecondsToTime(timeInSeconds: Long) : String {
 
-    val res = if (timeInMillis >= 3600000L) {
-        val hours = (timeInMillis / 3600000).toInt()
-        val rem : Int = timeInMillis.toInt() % 3600000
-        val minutes : Int = rem / 60000
+    val res = if (timeInSeconds >= 3600L) {
+        val hours = (timeInSeconds / 3600).toInt()
+        val rem : Int = timeInSeconds.toInt() % 3600
+        val minutes : Int = rem / 60
         "$hours hr $minutes min"
     } else {
-        val minutes : Int = timeInMillis.toInt() / 60000
-        "$minutes min"
+        val minutes : Int = timeInSeconds.toInt() / 60
+        val seconds : Int = timeInSeconds.toInt() % 60
+        "$minutes min $seconds s"
     }
     return res
 }

@@ -66,7 +66,7 @@ class MainViewModel
 
     var distanceState by mutableStateOf(convertDistanceToString(distance))
         private set
-    var timeState by mutableStateOf(convertMillisToTime(time))
+    var timeState by mutableStateOf(formatSecondsToTime(time))
         private set
 
     //cebu basic coords
