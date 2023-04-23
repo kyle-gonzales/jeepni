@@ -15,7 +15,6 @@ import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -149,13 +148,6 @@ class MainViewModel
             is MainEvent.OnFuelCostChange -> {
                 fuelCost = event.fuelCost
                 isValidFuelCost = isValidDecimal(fuelCost)
-            }
-            is MainEvent.OnDistanceChange -> {
-                distanceState = convertDistanceToString(distance)
-
-            }
-            is MainEvent.OnTimeChange -> {
-                timeState = convertMillisToTime(time)
             }
             is MainEvent.OnLogOutClick -> {
                 viewModelScope.launch {

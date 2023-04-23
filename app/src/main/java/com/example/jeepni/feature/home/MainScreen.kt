@@ -157,8 +157,6 @@ fun MainScreen(
                             },
                             distance = viewModel.distanceState,
                             time = viewModel.timeState,
-                            onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
-                            onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
                         ) },
 
                         floatingActionButton = {
@@ -466,8 +464,6 @@ fun TopActionBar(
     toggleDrivingMode : (Boolean) -> Unit,
     distance : String,
     time : String,
-    onDistanceChange: (String) -> Unit,
-    onTimeChange : (String) -> Unit
     ) {
     Surface(
         contentColor = Color.White,
