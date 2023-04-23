@@ -128,6 +128,9 @@ class MainViewModel
                     viewModelScope.launch {
                         trackTimeInDrivingMode()
                     }
+                } else {
+                    fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
+                    //TODO: update time and distance in driving mode to Firestore
                 }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
@@ -218,6 +221,7 @@ class MainViewModel
             latitude = lastLocation.latitude
             longitude = lastLocation.longitude
             targetPosition = LatLng(latitude, longitude)
+            //Log.i("LOCATION UPDATE", "$latitude, $longitude")
 
             viewModelScope.launch {
                 try {
