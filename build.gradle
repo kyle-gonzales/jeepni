@@ -29,6 +29,9 @@ plugins {
     id 'org.jetbrains.kotlin.kapt' version '1.8.0'
     id 'com.google.dagger.hilt.android' version "$dagger_hilt_version" apply false //hilt gradle plugin configuration with Plugins DSL
     id 'com.google.devtools.ksp' version '1.8.0-1.0.9' //ksp plugin for compose destinations
+
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false //for hiding map API key
+
 }
 
 allprojects {

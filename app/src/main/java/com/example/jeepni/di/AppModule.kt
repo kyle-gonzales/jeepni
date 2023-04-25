@@ -1,7 +1,9 @@
 package com.example.jeepni.di
 
 import android.app.Application
+import android.content.Context
 import com.example.jeepni.core.data.repository.*
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
@@ -11,6 +13,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -60,7 +63,11 @@ object AppModule {
 
     @Provides
     @Singleton
-
     fun provideFirebaseAuth () = Firebase.auth
 
+    @Provides
+    @Singleton
+    fun providesFusedLocationProviderClient (
+        @ApplicationContext context : Context
+    ) = LocationServices.getFusedLocationProviderClient(context)
 }

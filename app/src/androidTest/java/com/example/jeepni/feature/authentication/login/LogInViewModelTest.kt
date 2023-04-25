@@ -10,9 +10,9 @@ internal class LogInViewModelTest {
 
     @Test
     fun TestInvalidEmail() {
-        var BAD_EMAIL = "I'm not a real email"
+        val BAD_EMAIL = "I'm not a real email"
 
-        var viewModel = LogInViewModel(TestAuthRepositoryImpl(), TestUserDetailRepositoryImpl());
+        val viewModel = LogInViewModel(TestAuthRepositoryImpl(), TestUserDetailRepositoryImpl())
 
         viewModel.onEvent((LogInEvent.OnEmailChange(BAD_EMAIL)))
 
@@ -24,31 +24,31 @@ internal class LogInViewModelTest {
 
     @Test
     fun TestNullEmail() {
-        var BAD_EMAIL = ""
+        val BAD_EMAIL = ""
 
 
-        var viewModel = LogInViewModel(TestAuthRepositoryImpl(), TestUserDetailRepositoryImpl());
+        val viewModel = LogInViewModel(TestAuthRepositoryImpl(), TestUserDetailRepositoryImpl())
 
         viewModel.onEvent((LogInEvent.OnEmailChange(BAD_EMAIL)))
 
         assertTrue(viewModel.email == BAD_EMAIL)
         viewModel.onEvent((LogInEvent.OnLogInClicked))
-        // ViewModel detects invalid email after pressing LogIn button
+        // ViewModel detects null email after pressing LogIn button
         assertFalse(viewModel.validEmail)
     }
 
     @Test
     fun TestWorkingEmail() {
-        var GOOD_EMAIL = "test@email.com"
+        val GOOD_EMAIL = "test@email.com"
 
 
-        var viewModel = LogInViewModel(TestAuthRepositoryImpl(), TestUserDetailRepositoryImpl());
+        val viewModel = LogInViewModel(TestAuthRepositoryImpl(), TestUserDetailRepositoryImpl())
 
         viewModel.onEvent((LogInEvent.OnEmailChange(GOOD_EMAIL)))
 
         assertTrue(viewModel.email == GOOD_EMAIL)
         viewModel.onEvent((LogInEvent.OnLogInClicked))
-        // ViewModel detects invalid email after pressing LogIn button
+        // ViewModel detects valid email after pressing LogIn button
         assertTrue(viewModel.validEmail)
     }
 }

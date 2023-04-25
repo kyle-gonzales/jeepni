@@ -1,6 +1,9 @@
 package com.example.jeepni.feature.home
 
+import android.annotation.SuppressLint
+import android.os.Looper
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -10,8 +13,16 @@ import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,13 +32,12 @@ class MainViewModel
 @Inject constructor(
     private val repository: DailyAnalyticsRepository,
     private val authRepo: AuthRepository,
-    //savedStateHandle: SavedStateHandle //contains navigation arguments
+    private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
 
     var user by mutableStateOf(authRepo.getUser())
-//    init {
-//        user = savedStateHandle.get<String>("email") ?: ""
-//    }
+
+    val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     // create a sharedFlow for one-time events: events that you don't want to rerun on configuration changes
 
@@ -60,6 +70,34 @@ class MainViewModel
     var timeState by mutableStateOf(convertMillisToTime(time))
         private set
 
+    //cebu basic coords
+    private var latitude by mutableStateOf(10.3157)
+    private var longitude by mutableStateOf(123.8854)
+    var targetPosition by mutableStateOf(LatLng(latitude, longitude))
+        private set
+    var cameraPositionState by mutableStateOf(CameraPositionState(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
+        private set
+
+//    fun onMapLoaded() {
+//        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
+//    }
+    fun simulateLocationChange() {
+        sendUiEvent(UiEvent.ShowToast("starting..."))
+        viewModelScope.launch {
+            repeat(5) {
+                targetPosition = LatLng(longitude++, latitude++)
+                try {
+                    cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 10f)))
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    e.printStackTrace()
+                }
+                delay(1000)
+            }
+            sendUiEvent(UiEvent.ShowToast("ending..."))
+        }
+    }
+
 
     fun onEvent(event: MainEvent) {
         when (event) {
@@ -88,6 +126,7 @@ class MainViewModel
             }
             is MainEvent.OnToggleDrivingMode -> {
                 drivingMode = event.isDrivingMode
+                requestNewLocationData()
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
                 deletedStat?.let {
@@ -152,5 +191,48 @@ class MainViewModel
         viewModelScope.launch {
             _uiEvent.send(event)
         }
+    }
+
+    fun dismissDialog() {
+        visiblePermissionDialogQueue.removeFirst()
+    }
+
+    fun onPermissionResult(
+        permission: String,
+        isGranted : Boolean
+    ) {
+        if (!isGranted && !visiblePermissionDialogQueue.contains(permission)) {
+            visiblePermissionDialogQueue.add(permission)
+        }
+    }
+    private val locationCallBack = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val lastLocation = locationResult.lastLocation!!
+            latitude = lastLocation.latitude
+            longitude = lastLocation.longitude
+            targetPosition = LatLng(latitude, longitude)
+
+            viewModelScope.launch {
+                try {
+                    cameraPositionState.animate(CameraUpdateFactory.newLatLng(targetPosition))
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        //TODO: these parameters may be recalibrated to optimize performance
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
+            .setWaitForAccurateLocation(false)
+            .setMinUpdateDistanceMeters(10f) // prevents updates when driver is not moving. can save power
+            .setMinUpdateIntervalMillis(500)
+            .setMaxUpdateDelayMillis(3*1000)
+            .build()
+
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, Looper.myLooper())
     }
 }

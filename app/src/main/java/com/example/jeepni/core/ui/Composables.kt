@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.*
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
+import com.example.jeepni.util.PermissionTextProvider
 
 @Composable
 fun Gradient(
@@ -391,6 +392,56 @@ fun JeepNiAlertDialog(
             },
             icon = icon,
             text = content,
+        )
+
+    }
+
+}
+
+@Composable
+fun PermissionDialog(
+    permissionTextProvider: PermissionTextProvider,
+    isPermanentlyDeclined: Boolean,
+    onDismiss : () -> Unit,
+    onConfirm : () -> Unit,
+    onGoToAppSettings : () -> Unit, // action when permissions are "permanently declined" (user declines permissions more than two times)
+) {
+
+    Surface {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                TextButton(onClick = {
+                    onDismiss()
+                    if (isPermanentlyDeclined) {
+                        onGoToAppSettings()
+                    } else {
+                        onConfirm()
+                    }
+                }
+                ) {
+                    Text(text = if (isPermanentlyDeclined) {
+                        "Grant Permissions"
+                    } else {
+                        "OK"
+                    }, fontFamily = quicksandFontFamily)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDismiss,
+                ) {
+                    Text("Cancel", fontFamily = quicksandFontFamily)
+                }
+            },
+            title = {
+                Text("Permission Required", fontFamily = quicksandFontFamily)
+            },
+            text = {
+               Text(
+                   text = permissionTextProvider.getDescription(isPermanentlyDeclined)
+               )
+            },
         )
 
     }
