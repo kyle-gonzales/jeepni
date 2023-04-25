@@ -1,6 +1,7 @@
 package com.example.jeepni.feature.authentication.login
 
 import android.util.Log
+import android.util.Patterns.EMAIL_ADDRESS
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -38,7 +39,8 @@ class LogInViewModel @Inject constructor(
         private set
     var validNumber by mutableStateOf(true)
         private set
-
+    var validEmail by mutableStateOf(true)
+        private set
 
 
     fun onEvent(event : LogInEvent) {
@@ -53,6 +55,7 @@ class LogInViewModel @Inject constructor(
                 // TODO : forgot password
             }
             is LogInEvent.OnLogInClicked -> {
+                validEmail = EMAIL_ADDRESS.matcher(email).matches()
                 viewModelScope.launch {
                     var isInvalidUserDetails = false
                     val isLoggedIn = repository.logInWithEmail(  UserCredentials(email, password)  )
