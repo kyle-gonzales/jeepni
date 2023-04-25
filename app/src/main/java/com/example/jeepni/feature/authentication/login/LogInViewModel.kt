@@ -43,7 +43,7 @@ class LogInViewModel @Inject constructor(
         private set
 
 
-    fun onEvent(event : LogInEvent) {
+    fun onEvent(event: LogInEvent) {
         when (event) {
             is LogInEvent.OnEmailChange -> {
                 email = event.email
@@ -56,23 +56,27 @@ class LogInViewModel @Inject constructor(
             }
             is LogInEvent.OnLogInClicked -> {
                 validEmail = EMAIL_ADDRESS.matcher(email).matches()
-                viewModelScope.launch {
-                    var isInvalidUserDetails = false
-                    val isLoggedIn = repository.logInWithEmail(  UserCredentials(email, password)  )
-                    if (isLoggedIn) {
-                        isInvalidUserDetails = isIncompleteUserDetails(userDetailRepository.getUserDetails()?:UserDetails(null,null))
-                        Log.i("INVALID-USER", isInvalidUserDetails.toString())
-                    }
-                    withContext(Dispatchers.Main) {
-                        if (! isLoggedIn) {
-                            sendUiEvent(UiEvent.ShowToast("error"))
-                            return@withContext
+                var isInvalidUserDetails = validEmail && validPassword && validNumber
+                if (!isInvalidUserDetails) {
+                    viewModelScope.launch {
+                        val isLoggedIn = repository.logInWithEmail(UserCredentials(email, password))
+                        if (isLoggedIn) {
+                            isInvalidUserDetails = isIncompleteUserDetails(
+                                userDetailRepository.getUserDetails() ?: UserDetails(null, null)
+                            )
+                            Log.i("INVALID-USER", isInvalidUserDetails.toString())
                         }
-                        if (isInvalidUserDetails) {
-                            sendUiEvent(UiEvent.Navigate(Screen.AboutDriverScreen.route))
-                            return@withContext
+                        withContext(Dispatchers.Main) {
+                            if (!isLoggedIn) {
+                                sendUiEvent(UiEvent.ShowToast("error"))
+                                return@withContext
+                            }
+                            if (isInvalidUserDetails) {
+                                sendUiEvent(UiEvent.Navigate(Screen.AboutDriverScreen.route))
+                                return@withContext
+                            }
+                            sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
                         }
-                        sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
                     }
                 }
             }
