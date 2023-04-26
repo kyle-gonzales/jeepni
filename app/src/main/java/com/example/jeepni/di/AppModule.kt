@@ -33,25 +33,31 @@ object AppModule {
     @Singleton
     fun provideJeepsRepository(
         app: Application,
-        auth : FirebaseAuth,
-        db : FirebaseFirestore
-    ) : JeepsRepository = JeepsRepositoryImpl(app, auth, db)
+        auth: FirebaseAuth,
+        db: FirebaseFirestore,
+    ): JeepsRepository = JeepsRepositoryImpl(app, auth, db)
 
     @Provides
     @Singleton
     fun provideUserDetailRepository(
-        app : Application,
-        auth : FirebaseAuth,
-        db : FirebaseFirestore
-    ) : UserDetailRepository = UserDetailRepositoryImpl(app, auth, db)
+        app: Application,
+        auth: FirebaseAuth,
+        db: FirebaseFirestore,
+    ): UserDetailRepository = UserDetailRepositoryImpl(app, auth, db)
+
+    @Provides
+    @Singleton
+    fun provideNotificationsRepository(
+        db: FirebaseFirestore,
+    ): NotificationsRepository = NotificationsRepositoryImpl(db)
 
     @Provides
     @Singleton
     fun provideDailyAnalyticsRepository(
-        auth : FirebaseAuth,
-        usersRef : CollectionReference,
-        app: Application
-    ) : DailyAnalyticsRepository = DailyAnalyticsRepositoryImpl(auth, usersRef, app)
+        auth: FirebaseAuth,
+        usersRef: CollectionReference,
+        app: Application,
+    ): DailyAnalyticsRepository = DailyAnalyticsRepositoryImpl(auth, usersRef, app)
 
     @Provides
     @Singleton
