@@ -1,6 +1,6 @@
 package com.example.jeepni.feature.home
 
-import java.util.*
+import java.util.Calendar
 
 /*
 * helper functions
@@ -49,37 +49,3 @@ fun getCurrentDateString() : String {
 
     return "$month-$day-$year"
 }
-
-//fun logDailyStatUpdate(context: Context, salary : String, fuelCost : String) {
-//    val db = Firebase.firestore
-//
-//    val dat = hashMapOf(
-//        "salary" to (salary.ifBlank { "0" }),
-//        "fuelCost" to (fuelCost.ifBlank { "0" })
-//    )
-//    db.collection("users")
-//        .document("0") // TODO: change to firebase generated user ID
-//        .collection("analytics")
-//        .document(getCurrentDateString())
-//        .set(dat)
-//        .addOnSuccessListener {
-//            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
-//        }
-//        .addOnFailureListener {
-//            Toast.makeText(context, "Error making changes", Toast.LENGTH_SHORT).show()
-//        }
-//}
-//fun logDailyStatDelete(){
-//    val db = Firebase.firestore
-//
-//    db.collection("users")
-//        .document("0") // TODO: change to firebase generated user ID
-//        .collection("analytics")
-//        .document(getCurrentDateString())
-//        .delete()
-//        .addOnSuccessListener {
-//        }
-//        .addOnFailureListener {
-//        }
-//
-//}
