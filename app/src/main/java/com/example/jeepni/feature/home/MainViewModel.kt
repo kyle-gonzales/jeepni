@@ -15,7 +15,6 @@ import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -76,9 +75,8 @@ class MainViewModel
     var targetPosition by mutableStateOf(LatLng(latitude, longitude))
         private set
     var cameraPositionState by mutableStateOf(CameraPositionState(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
-        private set
 
-//    fun onMapLoaded() {
+    //    fun onMapLoaded() {
 //        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
 //    }
     fun simulateLocationChange() {
