@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jeepni.core.ui.DatePicker
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
@@ -55,6 +56,9 @@ fun InitialCheckupScreen(
             ) {
                 Text(text = "Select Jeepney parts in need for replacement or repair")
                 Column(modifier = Modifier.fillMaxWidth()) {
+                    DatePicker("Date of last oil change")
+                    DatePicker("Date of last LTFRB inspection")
+                    DatePicker("Date of last LTO inspection")
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
