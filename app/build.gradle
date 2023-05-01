@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.jeepni"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -55,8 +55,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.0'
-
-    //Compose Dependencies
+    // Compose Dependencies
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
@@ -76,7 +75,9 @@ dependencies {
     //local unit tests for dagger-hilt
     testImplementation "com.google.dagger:hilt-android-testing:$dagger_hilt_version"
     kaptTest "com.google.dagger:hilt-compiler:$dagger_hilt_version"
-
+    //Date Picker
+    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.6'
     // Dependencies for Google Map
     implementation "com.google.android.gms:play-services-maps:18.1.0"
     implementation "com.google.android.gms:play-services-location:21.0.1" // for getting user location
