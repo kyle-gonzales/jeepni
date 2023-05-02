@@ -501,7 +501,9 @@ fun DatePicker(
                     )
                 }
             }
-            Text(text = label,  fontFamily = quicksandFontFamily, modifier = Modifier.offset(x = 30.dp, y = -10.dp).background(Color.White))
+            Text(text = label,  fontFamily = quicksandFontFamily, modifier = Modifier
+                .offset(x = 30.dp, y = -10.dp)
+                .background(Color.White))
         }
     }
     MaterialDialog(
@@ -578,7 +580,7 @@ fun PartsList(
                         },
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text(
+                    JeepNiText(
                         text = part
                     )
                 }
@@ -598,7 +600,7 @@ fun PartsList(
                         },
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text(
+                    JeepNiText(
                         text = part
                     )
                 }

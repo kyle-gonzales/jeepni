@@ -54,7 +54,7 @@ class InitialCheckupViewModel @Inject constructor(
 
             }
             is InitialCheckupEvent.OnBackPressed -> {
-
+                sendUiEvent(UiEvent.PopBackStack)
             }
             is InitialCheckupEvent.OnCheckboxChange -> {
 

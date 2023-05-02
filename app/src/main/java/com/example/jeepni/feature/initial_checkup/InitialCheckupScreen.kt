@@ -12,8 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.core.ui.BackIconButton
+import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.PartsList
 //import com.example.jeepni.core.ui.DatePicker
 import com.example.jeepni.core.ui.SolidButton
@@ -75,7 +77,9 @@ fun InitialCheckupScreen(
                             .padding(paddingValues = PaddingValues(12.dp)),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Select Jeepney parts in need for replacement or repair")
+                        JeepNiText(
+                            text = "Select JeepNi parts in need for replacement or repair.",
+                            fontSize = 15.sp)
                         Column(modifier = Modifier.fillMaxWidth()) {
 //                    DatePicker("Date of last oil change")
 //                    DatePicker("Date of last LTFRB inspection")
@@ -87,10 +91,14 @@ fun InitialCheckupScreen(
                                 onCheckboxChangeLeft = { isCheckedLeft = it },
                                 onCheckboxChangeRight = { isCheckedRight = it }
                             ) }
+                    }
+                },
+                bottomBar = {
+                    Box(Modifier.padding(20.dp)) {
                         SolidButton(
                             onClick = {viewModel.onEvent(InitialCheckupEvent.OnSaveClicked)}
                         ) {
-                            Text("Save Checkup Info")
+                            JeepNiText("Save Checkup Info")
                         }
                     }
                 }
@@ -116,7 +124,7 @@ fun AppBar(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = titledesc)
+                    JeepNiText(text = titledesc)
                 }
             },
             navigationIcon = {
