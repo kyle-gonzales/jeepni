@@ -459,7 +459,8 @@ fun PermissionDialog(
 @Composable
 fun DatePicker(
     label:String,
-    pickedDate:LocalDate
+    pickedDate:LocalDate,
+    onClick: (LocalDate) -> Unit
 ) {
     val formattedDate by remember {
         derivedStateOf {
@@ -515,7 +516,7 @@ fun DatePicker(
                 it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
             }
         ) {
-            pickedDate = it
+            onClick
         }
     }
 }
