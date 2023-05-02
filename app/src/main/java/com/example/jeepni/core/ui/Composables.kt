@@ -1,6 +1,5 @@
 package com.example.jeepni.core.ui
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,7 +37,6 @@ import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 @Composable
 fun Gradient(
@@ -367,7 +365,6 @@ fun AnalyticsCard(
 @Composable
 fun JeepNiAlertDialog(
     modifier : Modifier = Modifier,
-    isOpen : Boolean,
     onDismiss : () -> Unit,
     onConfirm : () -> Unit,
     confirmText : String = "Confirm",
@@ -406,7 +403,6 @@ fun JeepNiAlertDialog(
     }
 
 }
-
 @Composable
 fun PermissionDialog(
     permissionTextProvider: PermissionTextProvider,
@@ -460,7 +456,7 @@ fun PermissionDialog(
 fun DatePicker(
     label:String,
     pickedDate:LocalDate,
-    onClick: (LocalDate) -> Unit
+    onChange: (LocalDate) -> Unit
 ) {
     val formattedDate by remember {
         derivedStateOf {
@@ -498,7 +494,9 @@ fun DatePicker(
                     )
                 }
             }
-            Text(text = label,  fontFamily = quicksandFontFamily, modifier = Modifier.offset(x = 30.dp, y = -10.dp).background(Color.White))
+            Text(text = label,  fontFamily = quicksandFontFamily, modifier = Modifier
+                .offset(x = 30.dp, y = -10.dp)
+                .background(Color.White))
         }
     }
     MaterialDialog(
@@ -516,10 +514,30 @@ fun DatePicker(
                 it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
             }
         ) {
-            onClick
+            onChange
         }
     }
 }
+
+@Composable
+fun JeepPartCheckBox(
+    jeepPart:String,
+    onCheckedChange: (Boolean) -> Unit,
+    isChecked:Boolean
+){
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = onCheckedChange,
+        )
+        Text(
+            text = jeepPart,
+        )
+    }
+}
+
 //@Composable
 //fun FilterIconButton(
 //    onClick : () -> Unit,
