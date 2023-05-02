@@ -5,6 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -567,3 +570,57 @@ fun JeepPartCheckBox(
 //    }
 //}
 
+@Composable
+fun PartsList(
+    parts: List<String>,
+    isCheckedLeft: List<Boolean>,
+    isCheckedRight: List<Boolean>,
+    onCheckboxChangeLeft: (List<Boolean>) -> Unit,
+    onCheckboxChangeRight: (List<Boolean>) -> Unit) {
+
+    val newListLeft = isCheckedLeft.toMutableList()
+    val newListRight = isCheckedRight.toMutableList()
+
+    Row {
+        Column(modifier = Modifier.weight(1f)) {
+            parts.subList(0, parts.size / 2).forEachIndexed {index, part ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Checkbox(
+                        checked = isCheckedLeft[index],
+                        onCheckedChange = {
+                            newListLeft[index] = it
+                            onCheckboxChangeLeft(newListLeft)
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    JeepNiText(
+                        text = part
+                    )
+                }
+            }
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            parts.subList(parts.size / 2, parts.size).forEachIndexed {index, part ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Checkbox(
+                        checked = isCheckedRight[index],
+                        onCheckedChange = {
+                            newListRight[index] = it
+                            onCheckboxChangeRight(newListRight)
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    JeepNiText(
+                        text = part
+                    )
+                }
+            }
+        }
+    }
+}

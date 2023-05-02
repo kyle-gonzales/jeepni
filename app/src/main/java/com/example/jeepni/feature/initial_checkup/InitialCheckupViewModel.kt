@@ -34,11 +34,11 @@ class InitialCheckupViewModel @Inject constructor(
 
     // Save everything between the stars ***********************
     var jeepParts : List<ToMaintain> by mutableStateOf(listOf(
-        ToMaintain("Tire", ),
-        ToMaintain("Side mirrors"),
-        ToMaintain("Wipers"),
+        ToMaintain("Tire"),
         ToMaintain("Engine"),
+        ToMaintain("Side Mirrors"),
         ToMaintain("Seatbelt"),
+        ToMaintain("Wipers"),
         ToMaintain("Battery"),
     ))
 
@@ -64,6 +64,18 @@ class InitialCheckupViewModel @Inject constructor(
 
             }
             is InitialCheckupEvent.OnJeepPartsChange -> {
+
+            }
+            is InitialCheckupEvent.OnBackPressed -> {
+                sendUiEvent(UiEvent.PopBackStack)
+            }
+            is InitialCheckupEvent.OnCheckboxChange -> {
+
+            }
+            is InitialCheckupEvent.OnLtfrbDateChange -> {
+
+            }
+            is InitialCheckupEvent.OnLtoDateChange -> {
 
             }
         }
