@@ -10,5 +10,5 @@ sealed class InitialCheckupEvent {
     data class OnOilChangeDateChange(val oilChangeDate: LocalDate) : InitialCheckupEvent()
     data class OnLtfrbDateChange(val ltfrbDate: LocalDate) : InitialCheckupEvent()
     data class OnLtoDateChange(val ltoDate: LocalDate) : InitialCheckupEvent()
-    data class OnJeepPartsChange(val jeepParts: List<ToMaintain>): InitialCheckupEvent()
+    data class OnCheckboxChange(val jeepParts: List<ToMaintain>): InitialCheckupEvent()
 }

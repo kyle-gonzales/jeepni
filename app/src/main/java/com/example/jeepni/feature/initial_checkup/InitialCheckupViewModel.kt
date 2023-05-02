@@ -33,11 +33,11 @@ class InitialCheckupViewModel @Inject constructor(
         private set
 
     var jeepParts : List<ToMaintain> by mutableStateOf(listOf(
-        ToMaintain("Tire", ),
-        ToMaintain("Side mirrors"),
-        ToMaintain("Wipers"),
+        ToMaintain("Tire"),
         ToMaintain("Engine"),
+        ToMaintain("Side Mirrors"),
         ToMaintain("Seatbelt"),
+        ToMaintain("Wipers"),
         ToMaintain("Battery"),
     ))
 
@@ -51,6 +51,18 @@ class InitialCheckupViewModel @Inject constructor(
                 // TODO: save data to firestore
             }
             is InitialCheckupEvent.OnOilChangeDateChange ->{
+
+            }
+            is InitialCheckupEvent.OnBackPress -> {
+
+            }
+            is InitialCheckupEvent.OnCheckboxChange -> {
+
+            }
+            is InitialCheckupEvent.OnLtfrbDateChange -> {
+
+            }
+            is InitialCheckupEvent.OnLtoDateChange -> {
 
             }
         }

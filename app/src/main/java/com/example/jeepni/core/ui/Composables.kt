@@ -6,6 +6,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -33,12 +36,12 @@ import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.PermissionTextProvider
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Date
+//import com.vanpra.composematerialdialogs.MaterialDialog
+//import com.vanpra.composematerialdialogs.datetime.date.datepicker
+//import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+//import java.time.LocalDate
+//import java.time.format.DateTimeFormatter
+//import java.util.Date
 
 @Composable
 fun Gradient(
@@ -456,69 +459,71 @@ fun PermissionDialog(
     }
 }
 
-@Composable
-fun DatePicker(
-    label:String,
-    pickedDate:LocalDate
-) {
-    val formattedDate by remember {
-        derivedStateOf {
-            DateTimeFormatter
-                .ofPattern("MM/dd/yyyy")
-                .format(pickedDate)
-        }
-    }
-    val dateDialogState = rememberMaterialDialogState()
 
-    Row(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Box(){
-            OutlinedButton(
-                onClick = {dateDialogState.show()},
-                border = BorderStroke(1.dp, Color.Black),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-            ) {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .padding(horizontal = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ){
-                    Text(text = formattedDate, color = Color.Black, fontFamily = quicksandFontFamily)
-                    Icon(
-                        painter = painterResource(R.drawable.ic_calendar),
-                        contentDescription = null
-                    )
-                }
-            }
-            Text(text = label,  fontFamily = quicksandFontFamily, modifier = Modifier.offset(x = 30.dp, y = -10.dp).background(Color.White))
-        }
-    }
-    MaterialDialog(
-        dialogState = dateDialogState,
-        buttons = {
-            positiveButton(text = "Ok") {
-            }
-            negativeButton(text = "Cancel")
-        }
-    ) {
-        datepicker(
-            initialDate = LocalDate.now(),
-            title = "Pick a date",
-            allowedDateValidator = {
-                it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
-            }
-        ) {
-            pickedDate = it
-        }
-    }
-}
+//@Composable
+//fun DatePicker(
+//    label:String,
+//    pickedDate:LocalDate
+//) {
+//    val formattedDate by remember {
+//        derivedStateOf {
+//            DateTimeFormatter
+//                .ofPattern("MM/dd/yyyy")
+//                .format(pickedDate)
+//        }
+//    }
+//    val dateDialogState = rememberMaterialDialogState()
+//
+//    Row(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        verticalAlignment = Alignment.CenterVertically,
+//        horizontalArrangement = Arrangement.Center
+//    ) {
+//        Box(){
+//            OutlinedButton(
+//                onClick = {dateDialogState.show()},
+//                border = BorderStroke(1.dp, Color.Black),
+//                colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+//            ) {
+//                Row(
+//                    Modifier
+//                        .fillMaxWidth()
+//                        .height(50.dp)
+//                        .padding(horizontal = 10.dp),
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.SpaceBetween,
+//                ){
+//                    Text(text = formattedDate, color = Color.Black, fontFamily = quicksandFontFamily)
+//                    Icon(
+//                        painter = painterResource(R.drawable.ic_calendar),
+//                        contentDescription = null
+//                    )
+//                }
+//            }
+//            Text(text = label,  fontFamily = quicksandFontFamily, modifier = Modifier.offset(x = 30.dp, y = -10.dp).background(Color.White))
+//        }
+//    }
+//    MaterialDialog(
+//        dialogState = dateDialogState,
+//        buttons = {
+//            positiveButton(text = "Ok") {
+//            }
+//            negativeButton(text = "Cancel")
+//        }
+//    ) {
+//        datepicker(
+//            initialDate = LocalDate.now(),
+//            title = "Pick a date",
+//            allowedDateValidator = {
+//                it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
+//            }
+//        ) {
+//            pickedDate = it
+//        }
+//    }
+//}
+
 //@Composable
 //fun FilterIconButton(
 //    onClick : () -> Unit,
@@ -548,3 +553,57 @@ fun DatePicker(
 //    }
 //}
 
+@Composable
+fun PartsList(
+    parts: List<String>,
+    isCheckedLeft: List<Boolean>,
+    isCheckedRight: List<Boolean>,
+    onCheckboxChangeLeft: (List<Boolean>) -> Unit,
+    onCheckboxChangeRight: (List<Boolean>) -> Unit) {
+
+    val newListLeft = isCheckedLeft.toMutableList()
+    val newListRight = isCheckedRight.toMutableList()
+
+    Row {
+        Column(modifier = Modifier.weight(1f)) {
+            parts.subList(0, parts.size / 2).forEachIndexed {index, part ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Checkbox(
+                        checked = isCheckedLeft[index],
+                        onCheckedChange = {
+                            newListLeft[index] = it
+                            onCheckboxChangeLeft(newListLeft)
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(
+                        text = part
+                    )
+                }
+            }
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            parts.subList(parts.size / 2, parts.size).forEachIndexed {index, part ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Checkbox(
+                        checked = isCheckedRight[index],
+                        onCheckedChange = {
+                            newListRight[index] = it
+                            onCheckboxChangeRight(newListRight)
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(
+                        text = part
+                    )
+                }
+            }
+        }
+    }
+}
