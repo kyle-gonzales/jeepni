@@ -18,6 +18,7 @@ import com.example.jeepni.core.ui.PartsList
 //import com.example.jeepni.core.ui.DatePicker
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.feature.analytics.AnalyticsEvent
 import com.example.jeepni.util.UiEvent
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
