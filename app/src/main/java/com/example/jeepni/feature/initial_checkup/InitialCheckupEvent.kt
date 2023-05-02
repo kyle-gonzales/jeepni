@@ -6,7 +6,7 @@ import java.time.LocalDate
 sealed class InitialCheckupEvent {
 
     object OnSaveClicked : InitialCheckupEvent()
-    object OnBackPress : InitialCheckupEvent()
+    object OnBackPressed : InitialCheckupEvent()
     data class OnOilChangeDateChange(val oilChangeDate: LocalDate) : InitialCheckupEvent()
     data class OnLtfrbDateChange(val ltfrbDate: LocalDate) : InitialCheckupEvent()
     data class OnLtoDateChange(val ltoDate: LocalDate) : InitialCheckupEvent()

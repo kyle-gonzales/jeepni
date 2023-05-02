@@ -53,7 +53,7 @@ class InitialCheckupViewModel @Inject constructor(
             is InitialCheckupEvent.OnOilChangeDateChange ->{
 
             }
-            is InitialCheckupEvent.OnBackPress -> {
+            is InitialCheckupEvent.OnBackPressed -> {
 
             }
             is InitialCheckupEvent.OnCheckboxChange -> {
