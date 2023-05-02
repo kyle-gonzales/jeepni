@@ -1,10 +1,6 @@
 package com.example.jeepni.core.data.model
 
-import android.os.Parcelable
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import com.example.jeepni.R
-import kotlinx.android.parcel.Parcelize
 import java.time.LocalDate
 
 data class ToMaintain(

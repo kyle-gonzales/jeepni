@@ -32,6 +32,7 @@ class InitialCheckupViewModel @Inject constructor(
     var ltoDate by mutableStateOf(LocalDate.now())
         private set
 
+    // Save everything between the stars ***********************
     var jeepParts : List<ToMaintain> by mutableStateOf(listOf(
         ToMaintain("Tire", ),
         ToMaintain("Side mirrors"),
@@ -44,13 +45,25 @@ class InitialCheckupViewModel @Inject constructor(
     var maintainOil by mutableStateOf(ToMaintain("Oil Change"))
     var maintainLTO by mutableStateOf(ToMaintain("LTO Inspection"))
     var maintainLTFRB by mutableStateOf(ToMaintain("LTFRB Inspection"))
-
+    //*****************
     fun onEvent(event: InitialCheckupEvent) {
         when(event) {
             is InitialCheckupEvent.OnSaveClicked -> {
                 // TODO: save data to firestore
             }
-            is InitialCheckupEvent.OnOilChangeDateChange ->{
+            is InitialCheckupEvent.OnOilChangeDateChange -> {
+                oilChangeDate = event.oilChangeDate
+            }
+            is InitialCheckupEvent.OnLtoDateChange -> {
+                ltoDate = event.ltoDate
+            }
+            is InitialCheckupEvent.OnLtfrbDateChange -> {
+                ltfrbDate = event.ltfrbDate
+            }
+            is InitialCheckupEvent.OnBackPress -> {
+
+            }
+            is InitialCheckupEvent.OnJeepPartsChange -> {
 
             }
         }

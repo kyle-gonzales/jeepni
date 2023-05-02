@@ -28,17 +28,20 @@ fun InitialCheckupScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        viewModel.uiEvent.collect {event ->
-            when(event) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
                 UiEvent.PopBackStack -> {
                     onPopBackStack()
                 }
+
                 is UiEvent.Navigate -> {
                     onNavigate(event)
                 }
+
                 is UiEvent.ShowSnackBar -> {
 
                 }
+
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
@@ -52,117 +55,138 @@ fun InitialCheckupScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Select Jeepney parts in need for replacement or repair")
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    DatePicker("Date of last oil change")
-                    DatePicker("Date of last LTFRB inspection")
-                    DatePicker("Date of last LTO inspection")
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Checkbox(
-                                checked = false,
-                                onCheckedChange = {}
-                            )
-                            Text(
-                                text = "Tire",
-                                modifier = Modifier.padding(start = 50.dp)
-                            )
-                        }
-                        Box(
-                            modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Checkbox(
-                                checked = false,
-                                onCheckedChange = {}
-                            )
-                            Text(
-                                text = "Engine",
-                                modifier = Modifier.padding(start = 50.dp)
-                            )
-                        }
+                DatePicker(
+                    label = "Date of last oil change",
+                    pickedDate = viewModel.oilChangeDate,
+                    onChange = {
+                        viewModel.onEvent(
+                            InitialCheckupEvent.OnOilChangeDateChange(it)
+                        )
                     }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Checkbox(
-                                checked = false,
-                                onCheckedChange = {}
-                            )
-                            Text(
-                                text = "Side Mirror",
-                                modifier = Modifier.padding(start = 50.dp)
-                            )
-                        }
-                        Box(
-                            modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Checkbox(
-                                checked = false,
-                                onCheckedChange = {}
-                            )
-                            Text(
-                                text = "Seat Belt",
-                                modifier = Modifier.padding(start = 50.dp)
-                            )
-                        }
+                )
+                DatePicker(
+                    label = "Date of last LTFRB inspection",
+                    pickedDate = viewModel.ltfrbDate,
+                    onChange = {
+                        viewModel.onEvent(
+                            InitialCheckupEvent.OnLtfrbDateChange(it)
+                        )
                     }
-                    Row(
+                )
+                DatePicker(
+                    label = "Date of last LTO inspection",
+                    pickedDate = viewModel.ltoDate,
+                    onChange = {
+                        viewModel.onEvent(
+                            InitialCheckupEvent.OnLtoDateChange(it)
+                        )
+                    }
+                )
+                Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
                     ) {
-                        Box(
-                            modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Checkbox(
-                                checked = false,
-                                onCheckedChange = {}
-                            )
-                            Text(
-                                text = "Wiper",
-                                modifier = Modifier.padding(start = 50.dp)
-                            )
-                        }
-                        Box(
-                            modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Checkbox(
-                                checked = false,
-                                onCheckedChange = {}
-                            )
-                            Text(
-                                text = "Battery",
-                                modifier = Modifier.padding(start = 50.dp)
-                            )
-                        }
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = {}
+                        )
+                        Text(
+                            text = "Tire",
+                            modifier = Modifier.padding(start = 50.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = {}
+                        )
+                        Text(
+                            text = "Engine",
+                            modifier = Modifier.padding(start = 50.dp)
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = {}
+                        )
+                        Text(
+                            text = "Side Mirror",
+                            modifier = Modifier.padding(start = 50.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = {}
+                        )
+                        Text(
+                            text = "Seat Belt",
+                            modifier = Modifier.padding(start = 50.dp)
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = {}
+                        )
+                        Text(
+                            text = "Wiper",
+                            modifier = Modifier.padding(start = 50.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = {}
+                        )
+                        Text(
+                            text = "Battery",
+                            modifier = Modifier.padding(start = 50.dp)
+                        )
                     }
                 }
                 SolidButton(
-                    onClick = {viewModel.onEvent(InitialCheckupEvent.OnSaveClicked)}
+                    onClick = { viewModel.onEvent(InitialCheckupEvent.OnSaveClicked) }
                 ) {
-                    Text("Save Checkup Info")
+                    Text("Save")
                 }
             }
         }
     }
 }
-
 @Preview
 @Composable
 fun ICPreview(){
