@@ -94,8 +94,12 @@ fun InitialCheckupScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = {}
+                            checked = viewModel.isTireEnabled,
+                            onCheckedChange = {
+                                viewModel.onEvent(
+                                    InitialCheckupEvent.OnTireClicked(it)
+                                )
+                            }
                         )
                         Text(
                             text = "Tire",
@@ -107,8 +111,12 @@ fun InitialCheckupScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = {}
+                            checked = viewModel.isEngineEnabled,
+                            onCheckedChange = {
+                                viewModel.onEvent(
+                                    InitialCheckupEvent.OnEngineClicked(it)
+                                )
+                            }
                         )
                         Text(
                             text = "Engine",
@@ -125,8 +133,12 @@ fun InitialCheckupScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = {}
+                            checked = viewModel.isMirrorsEnabled,
+                            onCheckedChange = {
+                                viewModel.onEvent(
+                                    InitialCheckupEvent.OnMirrorsClicked(it)
+                                )
+                            }
                         )
                         Text(
                             text = "Side Mirror",
@@ -138,8 +150,12 @@ fun InitialCheckupScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = {}
+                            checked = viewModel.isSeatbeltEnabled,
+                            onCheckedChange = {
+                                viewModel.onEvent(
+                                    InitialCheckupEvent.OnSeatbeltClicked(it)
+                                )
+                            }
                         )
                         Text(
                             text = "Seat Belt",
@@ -156,11 +172,15 @@ fun InitialCheckupScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = {}
+                            checked = viewModel.isWipersEnabled,
+                            onCheckedChange = {
+                                viewModel.onEvent(
+                                    InitialCheckupEvent.OnWipersClicked(it)
+                                )
+                            }
                         )
                         Text(
-                            text = "Wiper",
+                            text = "Wipers",
                             modifier = Modifier.padding(start = 50.dp)
                         )
                     }
@@ -169,8 +189,12 @@ fun InitialCheckupScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Checkbox(
-                            checked = false,
-                            onCheckedChange = {}
+                            checked = viewModel.isBatteryEnabled,
+                            onCheckedChange = {
+                                viewModel.onEvent(
+                                    InitialCheckupEvent.OnBatteryClicked(it)
+                                )
+                            }
                         )
                         Text(
                             text = "Battery",

@@ -31,16 +31,18 @@ class InitialCheckupViewModel @Inject constructor(
         private set
     var ltoDate by mutableStateOf(LocalDate.now())
         private set
-
-    // Save everything between the stars ***********************
-    var jeepParts : List<ToMaintain> by mutableStateOf(listOf(
-        ToMaintain("Tire"),
-        ToMaintain("Engine"),
-        ToMaintain("Side Mirrors"),
-        ToMaintain("Seatbelt"),
-        ToMaintain("Wipers"),
-        ToMaintain("Battery"),
-    ))
+    var isTireEnabled by mutableStateOf(false)
+        private set
+    var isEngineEnabled by mutableStateOf(false)
+        private set
+    var isMirrorsEnabled by mutableStateOf(false)
+        private set
+    var isSeatbeltEnabled by mutableStateOf(false)
+        private set
+    var isWipersEnabled by mutableStateOf(false)
+        private set
+    var isBatteryEnabled by mutableStateOf(false)
+        private set
 
     var maintainOil by mutableStateOf(ToMaintain("Oil Change"))
     var maintainLTO by mutableStateOf(ToMaintain("LTO Inspection"))
@@ -60,23 +62,26 @@ class InitialCheckupViewModel @Inject constructor(
             is InitialCheckupEvent.OnLtfrbDateChange -> {
                 ltfrbDate = event.ltfrbDate
             }
-            is InitialCheckupEvent.OnBackPress -> {
-
-            }
-            is InitialCheckupEvent.OnJeepPartsChange -> {
-
-            }
             is InitialCheckupEvent.OnBackPressed -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
-            is InitialCheckupEvent.OnCheckboxChange -> {
-
+            is InitialCheckupEvent.OnBatteryClicked ->{
+                isBatteryEnabled = !isBatteryEnabled
             }
-            is InitialCheckupEvent.OnLtfrbDateChange -> {
-
+            is InitialCheckupEvent.OnEngineClicked ->{
+                isEngineEnabled = !isEngineEnabled
             }
-            is InitialCheckupEvent.OnLtoDateChange -> {
-
+            is InitialCheckupEvent.OnMirrorsClicked ->{
+                isMirrorsEnabled = !isMirrorsEnabled
+            }
+            is InitialCheckupEvent.OnSeatbeltClicked ->{
+                isSeatbeltEnabled = !isSeatbeltEnabled
+            }
+            is InitialCheckupEvent.OnWipersClicked ->{
+                isWipersEnabled = !isWipersEnabled
+            }
+            is InitialCheckupEvent.OnTireClicked ->{
+                isTireEnabled = !isTireEnabled
             }
         }
     }
