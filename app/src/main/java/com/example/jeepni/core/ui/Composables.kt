@@ -461,22 +461,27 @@ fun DatePicker(
     pickedDate:LocalDate,
     onChange: (LocalDate) -> Unit
 ) {
+    var selectedDate by remember {
+        mutableStateOf(
+            pickedDate
+        )
+    }
+
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
                 .ofPattern("MM/dd/yyyy")
-                .format(pickedDate)
+                .format(selectedDate)
         }
     }
     val dateDialogState = rememberMaterialDialogState()
 
     Row(
-        modifier = Modifier
-            .fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
     ) {
-        Box(){
+        Box(
+            modifier = Modifier.padding(12.dp)
+        ){
             OutlinedButton(
                 onClick = {dateDialogState.show()},
                 border = BorderStroke(1.dp, Color.Black),
@@ -485,39 +490,45 @@ fun DatePicker(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
-                        .padding(horizontal = 10.dp),
+                        .padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ){
-                    Text(text = formattedDate, color = Color.Black, fontFamily = quicksandFontFamily)
+                    Text(
+                        text = formattedDate,
+                        color = Color.Black,
+                        fontFamily = quicksandFontFamily)
                     Icon(
                         painter = painterResource(R.drawable.ic_calendar),
                         contentDescription = null
                     )
                 }
             }
-            Text(text = label,  fontFamily = quicksandFontFamily, modifier = Modifier
-                .offset(x = 30.dp, y = -10.dp)
-                .background(Color.White))
+            Text(
+                text = label,
+                fontFamily = quicksandFontFamily,
+                modifier = Modifier
+                    .offset(x = 30.dp, y = -10.dp)
+                    .background(Color.White))
         }
     }
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
             positiveButton(text = "Ok") {
+                onChange(selectedDate)
             }
             negativeButton(text = "Cancel")
         }
     ) {
         datepicker(
-            initialDate = LocalDate.now(),
+            initialDate = selectedDate,
             title = "Pick a date",
             allowedDateValidator = {
                 it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
             }
         ) {
-            onChange
+            selectedDate = it
         }
     }
 }
@@ -596,7 +607,7 @@ fun PartsList(
                         },
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    JeepNiText(
+                    Text(
                         text = part
                     )
                 }
@@ -616,7 +627,7 @@ fun PartsList(
                         },
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    JeepNiText(
+                    Text(
                         text = part
                     )
                 }
