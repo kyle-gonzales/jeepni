@@ -5,7 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jeepni.core.data.model.ToMaintain
+import com.example.jeepni.core.data.model.AlarmContent
+import com.example.jeepni.core.data.model.NotificationContent
+import com.example.jeepni.util.AlarmScheduler
+import com.example.jeepni.util.Constants
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -17,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InitialCheckupViewModel @Inject constructor(
-
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     private var _uiEvent = Channel<UiEvent>()
