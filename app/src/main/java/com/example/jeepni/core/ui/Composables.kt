@@ -484,8 +484,7 @@ fun DatePicker(
         ){
             OutlinedButton(
                 onClick = {dateDialogState.show()},
-                border = BorderStroke(1.dp, Color.Black),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
             ) {
                 Row(
                     Modifier
@@ -496,11 +495,12 @@ fun DatePicker(
                 ){
                     Text(
                         text = formattedDate,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = quicksandFontFamily)
                     Icon(
                         painter = painterResource(R.drawable.ic_calendar),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -508,8 +508,8 @@ fun DatePicker(
                 text = label,
                 fontFamily = quicksandFontFamily,
                 modifier = Modifier
-                    .offset(x = 30.dp, y = -10.dp)
-                    .background(Color.White))
+                    .offset(x = 30.dp, y = -15.dp)
+                    .background(MaterialTheme.colorScheme.background))
         }
     }
     MaterialDialog(

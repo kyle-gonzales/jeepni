@@ -13,10 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.DatePicker
+import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
@@ -81,7 +84,7 @@ fun InitialCheckupScreen(
                             verticalArrangement = Arrangement.SpaceEvenly
                         ) {
                             DatePicker(
-                                label = "Date of last oil change",
+                                label = " Date of last oil change ",
                                 pickedDate = viewModel.oilChangeDate,
                                 onChange = {
                                     viewModel.onEvent(
@@ -90,7 +93,7 @@ fun InitialCheckupScreen(
                                 }
                             )
                             DatePicker(
-                                label = "Date of last LTFRB inspection",
+                                label = " Date of last LTFRB inspection ",
                                 pickedDate = viewModel.ltfrbDate,
                                 onChange = {
                                     viewModel.onEvent(
@@ -99,7 +102,7 @@ fun InitialCheckupScreen(
                                 }
                             )
                             DatePicker(
-                                label = "Date of last LTO inspection",
+                                label = " Date of last LTO inspection ",
                                 pickedDate = viewModel.ltoDate,
                                 onChange = {
                                     viewModel.onEvent(
@@ -109,7 +112,8 @@ fun InitialCheckupScreen(
                             )
                         }
                         Column(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = "Select Jeepney parts in need for replacement or repair")
+                            JeepNiText(
+                                text = "Select Jeepney parts in need for replacement or repair")
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
@@ -126,7 +130,7 @@ fun InitialCheckupScreen(
                                             )
                                         }
                                     )
-                                    Text(
+                                    JeepNiText(
                                         text = "Tire",
                                         modifier = Modifier.padding(start = 50.dp)
                                     )
@@ -143,7 +147,7 @@ fun InitialCheckupScreen(
                                             )
                                         }
                                     )
-                                    Text(
+                                    JeepNiText(
                                         text = "Engine",
                                         modifier = Modifier.padding(start = 50.dp)
                                     )
@@ -165,7 +169,7 @@ fun InitialCheckupScreen(
                                             )
                                         }
                                     )
-                                    Text(
+                                    JeepNiText(
                                         text = "Side Mirror",
                                         modifier = Modifier.padding(start = 50.dp)
                                     )
@@ -182,7 +186,7 @@ fun InitialCheckupScreen(
                                             )
                                         }
                                     )
-                                    Text(
+                                    JeepNiText(
                                         text = "Seat Belt",
                                         modifier = Modifier.padding(start = 50.dp)
                                     )
@@ -204,7 +208,7 @@ fun InitialCheckupScreen(
                                             )
                                         }
                                     )
-                                    Text(
+                                    JeepNiText(
                                         text = "Wipers",
                                         modifier = Modifier.padding(start = 50.dp)
                                     )
@@ -221,7 +225,7 @@ fun InitialCheckupScreen(
                                             )
                                         }
                                     )
-                                    Text(
+                                    JeepNiText(
                                         text = "Battery",
                                         modifier = Modifier.padding(start = 50.dp)
                                     )
@@ -231,7 +235,10 @@ fun InitialCheckupScreen(
                         SolidButton(
                             onClick = { viewModel.onEvent(InitialCheckupEvent.OnSaveClicked) }
                         ) {
-                            Text("Save")
+                            JeepNiText(
+                                text = "Save",
+                                fontSize = 16.sp,
+                                color = MaterialTheme.colorScheme.scrim)
                         }
                     }
                 }
@@ -256,7 +263,10 @@ fun AppBar(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = titledesc)
+                    JeepNiText(
+                        text = titledesc,
+                        fontSize = 18.sp
+                    )
                 }
             },
             navigationIcon = {
