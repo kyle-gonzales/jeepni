@@ -80,7 +80,6 @@ fun InitialCheckupScreen(
                         verticalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Column(
-                            modifier = Modifier.padding(bottom = 18.dp),
                             verticalArrangement = Arrangement.SpaceEvenly
                         ) {
                             DatePicker(
@@ -232,13 +231,16 @@ fun InitialCheckupScreen(
                                 }
                             }
                         }
-                        SolidButton(
-                            onClick = { viewModel.onEvent(InitialCheckupEvent.OnSaveClicked) }
-                        ) {
-                            JeepNiText(
-                                text = "Save",
-                                fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.scrim)
+                        Box(
+                            modifier = Modifier.padding(16.dp)){
+                            SolidButton(
+                                onClick = { viewModel.onEvent(InitialCheckupEvent.OnSaveClicked)}
+                            ) {
+                                JeepNiText(
+                                    text = "Save",
+                                    fontSize = 16.sp,
+                                    color = MaterialTheme.colorScheme.surface)
+                            }
                         }
                     }
                 }
