@@ -14,7 +14,6 @@ import androidx.navigation.NavHostController
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.core.ui.theme.JeepNiTheme
-import com.example.jeepni.feature.analytics.AnalyticsViewModel
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -35,17 +34,14 @@ class MainActivity : ComponentActivity() {
     }
     private lateinit var navController: NavHostController
     @Inject
-    lateinit var auth : AuthRepository // automatically injected. no need for initialization
+    private lateinit var auth : AuthRepository // automatically injected. no need for initialization
     @Inject
-    lateinit var userDetailsRepository : UserDetailRepository
-
-    private lateinit var analyticsViewModel : AnalyticsViewModel
-
-    //    private val signUpViewModel by viewModels<SignUpViewModel>()
+    private lateinit var userDetailsRepository : UserDetailRepository
+    //private val analyticsViewModel by viewModels<AnalyticsViewModel>()
+    //private val signUpViewModel by viewModels<SignUpViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        analyticsViewModel = ViewModelProvider(this)[AnalyticsViewModel::class.java]
-//        analyticsViewModel.logAnalytics()
+            //analyticsViewModel.logAnalytics()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             multiplePermissionsLauncher.launch(
                 arrayOf(
