@@ -5,9 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jeepni.core.data.model.Jeeps
 import com.example.jeepni.core.data.model.ToMaintain
-import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -65,22 +63,22 @@ class InitialCheckupViewModel @Inject constructor(
             is InitialCheckupEvent.OnBackPressed -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
-            is InitialCheckupEvent.OnBatteryClicked ->{
+            is InitialCheckupEvent.OnBatteryClicked -> {
                 isBatteryEnabled = !isBatteryEnabled
             }
-            is InitialCheckupEvent.OnEngineClicked ->{
+            is InitialCheckupEvent.OnEngineClicked -> {
                 isEngineEnabled = !isEngineEnabled
             }
-            is InitialCheckupEvent.OnMirrorsClicked ->{
+            is InitialCheckupEvent.OnMirrorsClicked -> {
                 isMirrorsEnabled = !isMirrorsEnabled
             }
-            is InitialCheckupEvent.OnSeatbeltClicked ->{
+            is InitialCheckupEvent.OnSeatbeltClicked -> {
                 isSeatbeltEnabled = !isSeatbeltEnabled
             }
-            is InitialCheckupEvent.OnWipersClicked ->{
+            is InitialCheckupEvent.OnWipersClicked -> {
                 isWipersEnabled = !isWipersEnabled
             }
-            is InitialCheckupEvent.OnTireClicked ->{
+            is InitialCheckupEvent.OnTireClicked -> {
                 isTireEnabled = !isTireEnabled
             }
         }
