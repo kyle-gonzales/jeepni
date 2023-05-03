@@ -16,7 +16,7 @@ class AlarmScheduler (
     fun schedule(alarm: AlarmContent, notification : NotificationContent) {
 
         val intent = Intent(context, AlarmBroadcastReceiver::class.java).apply {
-            putExtra("notification_object", notification) //TODO: this is currently a placeholder that will be updated;
+            putExtra(Constants.NOTIFICATION_OBJECT, notification)
         }
         alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,

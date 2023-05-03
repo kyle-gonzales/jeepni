@@ -16,6 +16,7 @@ object Constants {
     const val SEATBELT_REPAIR_NOTIFICATION = 8
     const val BATTERY_REPAIR_NOTIFICATION = 9
 
+    const val NOTIFICATION_OBJECT = "notification_object"
 
     const val FIRST_NOTIFICATION_ID = 999
 }
