@@ -41,8 +41,7 @@ import com.example.jeepni.R
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
-import com.example.jeepni.util.LocationPermissionTextProvider
-import com.example.jeepni.util.UiEvent
+import com.example.jeepni.util.*
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -114,6 +113,7 @@ fun MainScreen(
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+                else -> {}
             }
         }
 
