@@ -1,6 +1,5 @@
 package com.example.jeepni.feature.initial_checkup
 
-import com.example.jeepni.core.data.model.ToMaintain
 import java.time.LocalDate
 
 sealed class InitialCheckupEvent {
