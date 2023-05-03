@@ -42,10 +42,6 @@ class InitialCheckupViewModel @Inject constructor(
     var isBatteryEnabled by mutableStateOf(false)
         private set
 
-    var maintainOil by mutableStateOf(ToMaintain("Oil Change"))
-    var maintainLTO by mutableStateOf(ToMaintain("LTO Inspection"))
-    var maintainLTFRB by mutableStateOf(ToMaintain("LTFRB Inspection"))
-    //*****************
     fun onEvent(event: InitialCheckupEvent) {
         when(event) {
             is InitialCheckupEvent.OnSaveClicked -> {
