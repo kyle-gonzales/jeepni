@@ -7,11 +7,9 @@ import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.feature.home.getCurrentDateString
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
-
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-
 import kotlinx.coroutines.tasks.await
 
 class DailyAnalyticsRepositoryImpl(
@@ -30,10 +28,12 @@ class DailyAnalyticsRepositoryImpl(
         usersRef.document(auth.currentUser!!.uid)
             .collection("analytics")
             .document(dailyStat.date)
-            .set(hashMapOf(
-                "salary" to dailyStat.salary,
-                "fuelCost" to dailyStat.fuelCost
-            ))
+            .update(
+                mapOf(
+                    "salary" to dailyStat.salary,
+                    "fuelCost" to dailyStat.fuelCost,
+                )
+            )
 
             .addOnSuccessListener {
                 Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
@@ -44,6 +44,31 @@ class DailyAnalyticsRepositoryImpl(
     override suspend fun updateDailyStat(dailyStat: DailyAnalytics) {
         logDailyStat(dailyStat)
     }
+
+    override suspend fun saveTimer(dailyStat: DailyAnalytics) {
+        // ONLY SAVES ON THE TIMER FIELD
+        usersRef.document(auth.currentUser!!.uid)
+            .collection("analytics")
+            .document(dailyStat.date)
+            .update(
+                mapOf(
+                    "timer" to dailyStat.timer,
+                )
+            )
+    }
+
+    override suspend fun fetchTimer(date: String): String {
+        val timer = usersRef.document(auth.currentUser!!.uid)
+            .collection("analytics")
+            .document(date)
+            .get()
+            .await()
+            .get("timer")
+
+        return timer.toString()
+
+    }
+
 
     override suspend fun deleteDailyStat() {
         usersRef.document(auth.currentUser!!.uid)
