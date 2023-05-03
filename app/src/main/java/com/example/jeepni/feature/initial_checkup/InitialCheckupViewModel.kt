@@ -48,7 +48,120 @@ class InitialCheckupViewModel @Inject constructor(
     fun onEvent(event: InitialCheckupEvent) {
         when(event) {
             is InitialCheckupEvent.OnSaveClicked -> {
-                // TODO: save data to firestore
+                // TODO: save data to firestore?
+                alarmScheduler.schedule(
+                    AlarmContent(
+                        oilChangeDate.plusMonths(3).atTime(7, 0),
+                        90
+                    ),
+                    NotificationContent(
+                        notificationId = Constants.CHANGE_OIL_NOTIFICATION,
+                        title = "Change Your Oil Today",
+                        content = "It's been three months since your last known oil change, please check your vehicle's oil"
+                    )
+                )
+                alarmScheduler.schedule(
+                    AlarmContent(
+                        ltfrbDate.plusYears(1).minusDays(3).atTime(7,0),
+                        365
+                    ),
+                    NotificationContent(
+                        notificationId = Constants.LTFRB_INSPECTION_NOTIFICATION,
+                        title = "Prepare for LTFRB inspection",
+                        content ="It's been a while since the last known LTFRB inspection, please prepare for any possible upcoming inspections"
+                    )
+                )
+                alarmScheduler.schedule(
+                    AlarmContent(
+                        ltoDate.plusYears(1).minusDays(3).atTime(7,0),
+                        365
+                    ),
+                    NotificationContent(
+                        notificationId = Constants.LTO_INSPECTION_NOTIFICATION,
+                        title = "Prepare for LTO inspection",
+                        content ="It's been a while since the last known LTO inspection, please prepare for any possible upcoming inspections"
+                    )
+                )
+                if (isBatteryEnabled) {
+                    alarmScheduler.schedule(
+                        AlarmContent(
+                            LocalDate.now().plusDays(7).atTime(7, 0),
+                            365
+                        ),
+                        NotificationContent(
+                            notificationId = Constants.BATTERY_REPAIR_NOTIFICATION,
+                            title = "Replace Your Battery Today",
+                            content = "Your battery may be malfunctioning. Consider replacing it as soon as possible"
+                        )
+                    )
+                }
+                if (isEngineEnabled) {
+                    alarmScheduler.schedule(
+                        AlarmContent(
+                            LocalDate.now().plusDays(7).atTime(7, 0),
+                            365
+                        ),
+                        NotificationContent(
+                            notificationId = Constants.ENGINE_REPAIR_NOTIFICATION,
+                            title = "Repair Your Engine Today",
+                            content = "Your engine may be malfunctioning. Consider repairing it as soon as possible"
+                        )
+                    )
+                }
+                if (isMirrorsEnabled) {
+                    alarmScheduler.schedule(
+                        AlarmContent(
+                            LocalDate.now().plusDays(7).atTime(7, 0),
+                            365
+                        ),
+                        NotificationContent(
+                            notificationId = Constants.SIDE_MIRRORS_REPAIR_NOTIFICATION,
+                            title = "Repair Your Side Mirrors Today",
+                            content = "Your side mirrors may be in need of a repair. Consider repairing them as soon as possible"
+                        )
+                    )
+                }
+                if (isSeatbeltEnabled) {
+                    alarmScheduler.schedule(
+                        AlarmContent(
+                            LocalDate.now().plusDays(7).atTime(7, 0),
+                            365
+                        ),
+                        NotificationContent(
+                            notificationId = Constants.SEATBELT_REPAIR_NOTIFICATION,
+                            title = "Repair Your Seatbelt Today",
+                            content = "Your seatbelt may be in need of a repair. Consider repairing it as soon as possible"
+                        )
+                    )
+                }
+                if (isWipersEnabled) {
+                    alarmScheduler.schedule(
+                        AlarmContent(
+                            LocalDate.now().plusDays(7).atTime(7, 0),
+                            365
+                        ),
+                        NotificationContent(
+                            notificationId = Constants.WIPERS_REPAIR_NOTIFICATION,
+                            title = "Repair Your Wipers Today",
+                            content = "Your wipers may be in need of a repair. Consider repairing them as soon as possible"
+                        )
+                    )
+
+                }
+                if (isTireEnabled) {
+                    alarmScheduler.schedule(
+                        AlarmContent(
+                            LocalDate.now().plusDays(7).atTime(7, 0),
+                            365
+                        ),
+                        NotificationContent(
+                            notificationId = Constants.TIRE_CHANGE_NOTIFICATION,
+                            title = "Repair Your Tires Today",
+                            content = "Your tires may be in need of a repair. Consider repairing them as soon as possible"
+                        )
+                    )
+                }
+
             }
             is InitialCheckupEvent.OnOilChangeDateChange -> {
                 oilChangeDate = event.oilChangeDate
