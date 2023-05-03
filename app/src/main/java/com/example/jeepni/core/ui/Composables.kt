@@ -36,6 +36,7 @@ import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.PermissionTextProvider
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
@@ -524,6 +525,13 @@ fun DatePicker(
         datepicker(
             initialDate = selectedDate,
             title = "Pick a date",
+            colors = DatePickerDefaults.colors(
+                headerBackgroundColor = Color(0xFF006E14),
+                headerTextColor = Color.White,
+                calendarHeaderTextColor = Color.White,
+                dateActiveBackgroundColor = Color(0xFF006E14),
+                dateActiveTextColor = Color.Black
+            ),
             allowedDateValidator = {
                 it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
             }
