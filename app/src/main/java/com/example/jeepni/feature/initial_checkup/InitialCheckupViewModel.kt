@@ -9,6 +9,7 @@ import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.data.model.NotificationContent
 import com.example.jeepni.util.AlarmScheduler
 import com.example.jeepni.util.Constants
+import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -161,7 +162,7 @@ class InitialCheckupViewModel @Inject constructor(
                         )
                     )
                 }
-
+                sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
             }
             is InitialCheckupEvent.OnOilChangeDateChange -> {
                 oilChangeDate = event.oilChangeDate
