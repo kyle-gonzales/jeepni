@@ -136,6 +136,7 @@ fun AboutDriverScreen(
 
     if (viewModel.isDialogOpen) {
         JeepNiAlertDialog(
+            isOpen = viewModel.isDialogOpen,
             onDismiss = {
                 viewModel.onEvent(AboutDriverEvent.OnDialogDismissPress)
             }, onConfirm = {
