@@ -44,7 +44,7 @@ fun isValidDecimal(text: String) : Boolean {
 }
 
 fun getCurrentDateString(): String {
-    val sdf = SimpleDateFormat("M-dd-YYYY")
+    val sdf = SimpleDateFormat("M-d-YYYY")
     return sdf.format(Date())
 
 }

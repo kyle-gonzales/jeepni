@@ -59,6 +59,14 @@ class DailyAnalyticsRepositoryImpl(
             true
         } catch (e : Exception) {
             e.printStackTrace()
+            usersRef.document(auth.currentUser!!.uid)
+                .collection("analytics")
+                .document(dailyStat.date)
+                .set(
+                    mapOf(
+                        "timer" to dailyStat.timer,
+                    )
+                ).await()
             false
         }
     }
