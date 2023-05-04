@@ -82,6 +82,7 @@ class MainViewModel
     init {
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
+            timeState = formatSecondsToTime(time)
         }
     }
     fun simulateLocationChange() {
@@ -124,6 +125,8 @@ class MainViewModel
                 viewModelScope.launch {
 //                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
                     repository.deleteDailyStat()
+                    time = 0
+                    timeState = formatSecondsToTime(time)
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
@@ -149,7 +152,7 @@ class MainViewModel
                         }
                     }
                     fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
-                    //TODO: update time and distance in driving mode to Firestore
+                    //TODO: update distance in driving mode to Firestore
                 }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
