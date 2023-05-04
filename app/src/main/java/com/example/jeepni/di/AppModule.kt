@@ -1,8 +1,10 @@
 package com.example.jeepni.di
 
+import android.app.AlarmManager
 import android.app.Application
 import android.content.Context
 import com.example.jeepni.core.data.repository.*
+import com.example.jeepni.util.AlarmScheduler
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -70,4 +72,17 @@ object AppModule {
     fun providesFusedLocationProviderClient (
         @ApplicationContext context : Context
     ) = LocationServices.getFusedLocationProviderClient(context)
+
+    @Provides
+    @Singleton
+    fun providesAlarmManager (
+        @ApplicationContext context : Context
+    ) = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    @Provides
+    @Singleton
+    fun providesAlarmScheduler (
+        @ApplicationContext context : Context,
+        alarmManager: AlarmManager
+    ) = AlarmScheduler(context, alarmManager)
 }
