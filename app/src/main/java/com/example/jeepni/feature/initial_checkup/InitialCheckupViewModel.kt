@@ -174,7 +174,7 @@ class InitialCheckupViewModel @Inject constructor(
                 ltfrbDate = event.ltfrbDate
             }
             is InitialCheckupEvent.OnBackPressed -> {
-                sendUiEvent(UiEvent.PopBackStack)
+                sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
             }
             is InitialCheckupEvent.OnBatteryClicked -> {
                 isBatteryEnabled = !isBatteryEnabled
