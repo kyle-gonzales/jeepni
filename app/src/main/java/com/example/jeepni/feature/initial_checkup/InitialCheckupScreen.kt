@@ -28,16 +28,12 @@ import com.example.jeepni.util.UiEvent
 fun InitialCheckupScreen(
     viewModel: InitialCheckupViewModel = hiltViewModel(),
     onNavigate : (UiEvent.Navigate) -> Unit,
-    onPopBackStack : () -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                UiEvent.PopBackStack -> {
-                    onPopBackStack()
-                }
                 is UiEvent.Navigate -> {
                     onNavigate(event)
                 }
@@ -276,6 +272,5 @@ fun AppBar(
 @Preview
 @Composable
 fun ICPreview(){
-    InitialCheckupScreen(onNavigate = {}){
-    }
+    InitialCheckupScreen(onNavigate = {})
 }

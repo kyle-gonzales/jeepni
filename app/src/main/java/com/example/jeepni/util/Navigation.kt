@@ -18,6 +18,7 @@ import com.example.jeepni.feature.authentication.Welcome2Screen
 import com.example.jeepni.feature.authentication.loading.LoadingScreen
 import com.example.jeepni.feature.checkup.CheckUpScreen
 import com.example.jeepni.feature.home.MainScreen
+import com.example.jeepni.feature.initial_checkup.InitialCheckupScreen
 import com.example.jeepni.feature.profile.ProfileScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -96,6 +97,15 @@ fun Navigation (
                 },
                 onPopBackStack = {
                     navController.popBackStack()
+                }
+            )
+        }
+        composable (
+            route = Screen.InitialCheckupScreen.route
+        ) {
+            InitialCheckupScreen(
+                onNavigate = {
+                    navController.navigate(it.route, popUp(it))
                 }
             )
         }
