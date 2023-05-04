@@ -45,16 +45,22 @@ class DailyAnalyticsRepositoryImpl(
         logDailyStat(dailyStat)
     }
 
-    override suspend fun saveTimer(dailyStat: DailyAnalytics) {
+    override suspend fun saveTimer(dailyStat: DailyAnalytics) : Boolean {
         // ONLY SAVES ON THE TIMER FIELD
-        usersRef.document(auth.currentUser!!.uid)
-            .collection("analytics")
-            .document(dailyStat.date)
-            .update(
-                mapOf(
-                    "timer" to dailyStat.timer,
-                )
-            )
+        return try {
+            usersRef.document(auth.currentUser!!.uid)
+                .collection("analytics")
+                .document(dailyStat.date)
+                .update(
+                    mapOf(
+                        "timer" to dailyStat.timer,
+                    )
+                ).await()
+            true
+        } catch (e : Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 
     override suspend fun fetchTimer(date: String): String {
@@ -64,6 +70,10 @@ class DailyAnalyticsRepositoryImpl(
             .get()
             .await()
             .get("timer")
+
+        if (timer == null) {
+            return "0"
+        }
 
         return timer.toString()
 

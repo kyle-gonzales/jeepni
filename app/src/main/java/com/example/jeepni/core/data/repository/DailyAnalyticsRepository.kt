@@ -10,7 +10,7 @@ interface DailyAnalyticsRepository {
 
     suspend fun updateDailyStat(dailyStat: DailyAnalytics)
 
-    suspend fun saveTimer(dailyStat: DailyAnalytics)
+    suspend fun saveTimer(dailyStat: DailyAnalytics) : Boolean
 
     suspend fun fetchTimer(date: String = getCurrentDateString()): String
 
