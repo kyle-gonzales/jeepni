@@ -21,6 +21,8 @@ class LoadingViewModel @Inject constructor(
     userDetailRepository: UserDetailRepository
 ) : ViewModel() {
 
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
     init {
         viewModelScope.launch {
             val userDetails = async (Dispatchers.Default) {
@@ -37,15 +39,9 @@ class LoadingViewModel @Inject constructor(
             sendUiEvent(UiEvent.Navigate(nextScreen, "0"))
         }
     }
-
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
-
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
         }
     }
-
-
 }
