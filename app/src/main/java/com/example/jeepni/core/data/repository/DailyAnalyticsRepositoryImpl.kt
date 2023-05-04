@@ -91,11 +91,7 @@ class DailyAnalyticsRepositoryImpl(
             .document(date)
             .get()
             .await()
-            .get("timer")
-
-        if (timer == null) {
-            return "0"
-        }
+            .get("timer") ?: return "0"
 
         return timer.toString()
 
