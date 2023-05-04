@@ -73,7 +73,7 @@ class AboutDriverViewModel
                     withContext(Dispatchers.Main) {
                         if (isUserDetailsUpdated && !isInvalidDetails) {
                             sendUiEvent(UiEvent.ShowToast("sign up process complete!"))
-                            sendUiEvent(UiEvent.Navigate(Screen.InitialCheckupScreen.route, "0")) //
+                            sendUiEvent(UiEvent.Navigate(Screen.InitialCheckupScreen.route, "0"))
                             //sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
                         } else {
                             sendUiEvent(UiEvent.ShowToast("please complete the missing fields..."))
