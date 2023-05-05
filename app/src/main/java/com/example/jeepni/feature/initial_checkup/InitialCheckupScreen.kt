@@ -54,8 +54,8 @@ fun InitialCheckupScreen(
             Scaffold(
                 topBar = {
                     AppBar(
-                        titledesc = "Initial Checkup",
-                        onPopBackStack = { viewModel.onEvent(InitialCheckupEvent.OnBackPressed) }
+                        title = "Initial Checkup",
+                        onSkipPressed = { viewModel.onEvent(InitialCheckupEvent.OnSkipPressed) }
                     )
                 },
                 content = {
@@ -245,8 +245,8 @@ fun InitialCheckupScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    titledesc: String,
-    onPopBackStack: () -> Unit,
+    title: String,
+    onSkipPressed: () -> Unit,
 ) {
     Surface(
         contentColor = Color.White,
@@ -259,8 +259,9 @@ fun AppBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     JeepNiText(
-                        text = titledesc,
-                        fontSize = 18.sp
+                        text = title,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             },
