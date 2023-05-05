@@ -173,7 +173,7 @@ class InitialCheckupViewModel @Inject constructor(
             is InitialCheckupEvent.OnLtfrbDateChange -> {
                 ltfrbDate = event.ltfrbDate
             }
-            is InitialCheckupEvent.OnBackPressed -> {
+            is InitialCheckupEvent.OnSkipPressed -> {
                 sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
             }
             is InitialCheckupEvent.OnBatteryClicked -> {

@@ -11,11 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.jeepni.core.ui.BackIconButton
+import com.example.jeepni.R
 import com.example.jeepni.core.ui.DatePicker
 import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.SolidButton
@@ -262,8 +264,10 @@ fun AppBar(
                     )
                 }
             },
-            navigationIcon = {
-                BackIconButton(onClick = onPopBackStack)
+            actions = {
+                IconButton(onClick = onSkipPressed) {
+                    Icon(painterResource(id = R.drawable.black_skip_next_24), "Skip Initial Checkup")
+                }
             }
         )
     }
