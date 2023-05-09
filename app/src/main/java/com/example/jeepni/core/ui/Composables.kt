@@ -678,9 +678,7 @@ fun ComponentCard(
         }
         Column(modifier = Modifier.padding(8.dp)) {
             JeepNiText(
-                text = component,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                text = component
             )
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Icon(
@@ -690,6 +688,7 @@ fun ComponentCard(
                 )
                 JeepNiText(
                     text = date,
+                    fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp))
             }
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
@@ -700,6 +699,7 @@ fun ComponentCard(
                 )
                 JeepNiText(
                     text = alarm,
+                    fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp))
             }
         }
