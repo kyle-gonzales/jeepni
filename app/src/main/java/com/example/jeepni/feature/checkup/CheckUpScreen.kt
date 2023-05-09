@@ -1,10 +1,7 @@
 package com.example.jeepni.feature.checkup
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,9 +9,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jeepni.R
+import com.example.jeepni.core.ui.ComponentCard
 import com.example.jeepni.core.ui.JeepNiText
+import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
 
 @Composable
@@ -47,22 +49,49 @@ fun CheckUpScreen (
         }
     }
 
-    Surface {
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
+    JeepNiTheme() {
+        Surface {
             Column (
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                JeepNiText("CheckUp Screen")
+                Column (
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    JeepNiText("CheckUp Screen")
+                    //try, will change this to lazygrid
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .wrapContentHeight(),
+                        horizontalArrangement = Arrangement.SpaceEvenly) {
+                        Column() {
+                            ComponentCard("LTFRB Inspection", "mm/dd/yyyy", "3 months", icon = painterResource(
+                                R.drawable.tire_repair)
+                            )
+                        }
+                        Column() {
+                            ComponentCard("LTFRB Inspection", "mm/dd/yyyy", "3 months", icon = painterResource(
+                                R.drawable.tire_repair)
+                            )
+                        }
+                    }
+                }
+
             }
 
         }
-
     }
 
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun Preview(){
+    CheckUpScreen(onNavigate = {}) {
+        
+    }
 }

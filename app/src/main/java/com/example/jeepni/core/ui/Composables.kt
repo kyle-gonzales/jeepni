@@ -1,9 +1,6 @@
 package com.example.jeepni.core.ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,12 +12,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -651,4 +650,64 @@ fun PartsList(
             }
         }
     }
+}
+
+@Composable
+fun ComponentCard(
+    component: String,
+    date: String,
+    alarm: String,
+    icon: Painter
+){
+    Row(
+        modifier = Modifier
+            .border( //will change this
+                border = BorderStroke(2.dp, color = Color.Black),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .background(color = Color.White),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ){
+        Column(modifier = Modifier.padding(8.dp)) {
+            Icon(
+                painter = icon,
+                contentDescription = null,
+                modifier = Modifier.size(45.dp)
+            )
+        }
+        Column(modifier = Modifier.padding(8.dp)) {
+            JeepNiText(
+                text = component,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                JeepNiText(
+                    text = date,
+                    modifier = Modifier.padding(start = 4.dp))
+            }
+            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                JeepNiText(
+                    text = alarm,
+                    modifier = Modifier.padding(start = 4.dp))
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Preview(){
+    ComponentCard("LTFRB Inspection", "mm/dd/yyyy", "3 months", icon = painterResource(R.drawable.tire_repair))
 }
