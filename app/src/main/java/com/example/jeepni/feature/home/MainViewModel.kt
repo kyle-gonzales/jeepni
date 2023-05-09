@@ -15,16 +15,13 @@ import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,13 +58,13 @@ class MainViewModel
         private set
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
+
     private var distance by mutableStateOf(12382.9)
-
-    private var time by mutableStateOf(3999999L)
-
     var distanceState by mutableStateOf(convertDistanceToString(distance))
         private set
-    var timeState by mutableStateOf(convertMillisToTime(time))
+
+    private var time by mutableStateOf(0L)
+    var timeState by mutableStateOf(formatSecondsToTime(time))
         private set
 
     //cebu basic coords
@@ -126,7 +123,15 @@ class MainViewModel
             }
             is MainEvent.OnToggleDrivingMode -> {
                 drivingMode = event.isDrivingMode
-                requestNewLocationData()
+                if (drivingMode) {
+                    requestNewLocationData()
+                    viewModelScope.launch {
+                        trackTimeInDrivingMode()
+                    }
+                } else {
+                    fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
+                    //TODO: update time and distance in driving mode to Firestore
+                }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
                 deletedStat?.let {
@@ -149,13 +154,6 @@ class MainViewModel
             is MainEvent.OnFuelCostChange -> {
                 fuelCost = event.fuelCost
                 isValidFuelCost = isValidDecimal(fuelCost)
-            }
-            is MainEvent.OnDistanceChange -> {
-                distanceState = convertDistanceToString(distance)
-
-            }
-            is MainEvent.OnTimeChange -> {
-                timeState = convertMillisToTime(time)
             }
             is MainEvent.OnLogOutClick -> {
                 viewModelScope.launch {
@@ -193,6 +191,18 @@ class MainViewModel
         }
     }
 
+    private suspend fun trackTimeInDrivingMode() {
+        withContext(Dispatchers.Default) {
+            while(drivingMode) {
+                time++
+                delay(1000L)
+                timeState = formatSecondsToTime(time)
+//                Log.i("UPTIME", time.toString())
+//                Log.i("UPTIME", timeState)
+            }
+        }
+    }
+
     fun dismissDialog() {
         visiblePermissionDialogQueue.removeFirst()
     }
@@ -211,6 +221,7 @@ class MainViewModel
             latitude = lastLocation.latitude
             longitude = lastLocation.longitude
             targetPosition = LatLng(latitude, longitude)
+            //Log.i("LOCATION UPDATE", "$latitude, $longitude")
 
             viewModelScope.launch {
                 try {

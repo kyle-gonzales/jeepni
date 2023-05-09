@@ -11,8 +11,6 @@ sealed class MainEvent {
     object OnUndoDeleteClick : MainEvent()
     data class OnSalaryChange(val salary: String) : MainEvent()
     data class OnFuelCostChange(val fuelCost: String) : MainEvent()
-    data class OnDistanceChange(val distance : String) : MainEvent()
-    data class OnTimeChange(val distance : String) : MainEvent()
     object OnProfileClicked: MainEvent()
     object OnChartsClicked : MainEvent()
     object OnCheckUpClicked : MainEvent()
