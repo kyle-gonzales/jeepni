@@ -1,6 +1,7 @@
 package com.example.jeepni.feature.home
 
-import java.util.*
+import java.text.SimpleDateFormat
+import java.util.Date
 
 /*
 * helper functions
@@ -42,11 +43,13 @@ fun isValidDecimal(text: String) : Boolean {
     return regex.matches(text)
 }
 
-fun getCurrentDateString() : String {
-    val c = Calendar.getInstance()
-    val year = c.get(Calendar.YEAR)
-    val month = ((c.get(Calendar.MONTH))+1).toString()
-    val day = c.get(Calendar.DAY_OF_MONTH)
+fun getCurrentDateString(): String {
+    val sdf = SimpleDateFormat("M-d-YYYY")
+    return sdf.format(Date())
 
-    return "$month-$day-$year"
+}
+
+fun getCurrentTimeString(): String {
+    val sdf = SimpleDateFormat("hh:mm:ss")
+    return sdf.format(Date())
 }

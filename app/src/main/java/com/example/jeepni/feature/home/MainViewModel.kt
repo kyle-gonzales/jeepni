@@ -78,6 +78,13 @@ class MainViewModel
 //    fun onMapLoaded() {
 //        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
 //    }
+
+    init {
+        viewModelScope.launch {
+            time = repository.fetchTimer().toLong()
+            timeState = formatSecondsToTime(time)
+        }
+    }
     fun simulateLocationChange() {
         sendUiEvent(UiEvent.ShowToast("starting..."))
         viewModelScope.launch {
@@ -118,6 +125,8 @@ class MainViewModel
                 viewModelScope.launch {
 //                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
                     repository.deleteDailyStat()
+                    time = 0
+                    timeState = formatSecondsToTime(time)
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
@@ -129,8 +138,21 @@ class MainViewModel
                         trackTimeInDrivingMode()
                     }
                 } else {
+                    viewModelScope.launch {
+                        val result = repository.saveTimer(
+                            DailyAnalytics(
+                                timer = time
+                            )
+                        )
+                        if (result) {
+                            sendUiEvent(UiEvent.ShowToast("saved timer"))
+                        } else {
+                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer"))
+
+                        }
+                    }
                     fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
-                    //TODO: update time and distance in driving mode to Firestore
+                    //TODO: update distance in driving mode to Firestore
                 }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
