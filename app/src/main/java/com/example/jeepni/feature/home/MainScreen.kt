@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -42,6 +43,7 @@ import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.LocationPermissionTextProvider
+import com.example.jeepni.util.TestTags.TestTags
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
@@ -162,10 +164,18 @@ fun MainScreen(
                         ) },
 
                         floatingActionButton = {
-                            FloatingActionButton(onClick = {
-                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
-                            }) {
-                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+                            FloatingActionButton(
+                                onClick = {
+                                    viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+                                },
+                                modifier = Modifier
+                                    .testTag(TestTags.LOG_DAILY_ANALYTICS)
+
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.black_dollar_24),
+                                    contentDescription = null
+                                )
                             }
                         },
                         floatingActionButtonPosition = FabPosition.End,
@@ -194,7 +204,9 @@ fun MainScreen(
                                         onClick = {
                                             viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
                                         },
-                                        modifier = Modifier.padding(16.dp)
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .testTag(TestTags.DELETE_DAILY_STATS)
                                     ) {
                                         Icon(Icons.Filled.Delete, null)
                                     }
