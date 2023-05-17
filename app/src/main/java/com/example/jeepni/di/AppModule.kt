@@ -49,6 +49,13 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideMapsRepository(
+        auth : FirebaseAuth,
+        db : FirebaseFirestore
+    ) : MapsRepository = MapsRepositoryImpl(auth, db)
+
+    @Provides
+    @Singleton
     fun provideDailyAnalyticsRepository(
         auth : FirebaseAuth,
         usersRef : CollectionReference,
