@@ -42,8 +42,10 @@ import com.example.jeepni.R
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
+import com.example.jeepni.feature.home.nullstrings.NullReplacements
 import com.example.jeepni.util.LocationPermissionTextProvider
 import com.example.jeepni.util.TestTags.TestTags
+import com.example.jeepni.util.TestTags.TestTags.CONTENT_MAP
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
@@ -139,7 +141,7 @@ fun MainScreen(
                         viewModel.onEvent(MainEvent.OnProfileClicked)
                     },
                     scope = coroutineScope,
-                    menuItems = menuItems
+                    menuItems = menuItems,
                 ) {
                     Scaffold (
                         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -169,7 +171,7 @@ fun MainScreen(
                                     viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
                                 },
                                 modifier = Modifier
-                                    .testTag(TestTags.LOG_DAILY_ANALYTICS)
+                                    .testTag(TestTags.BUTTON_LOG_DAILY_ANALYTICS)
 
                             ) {
                                 Icon(
@@ -206,7 +208,7 @@ fun MainScreen(
                                         },
                                         modifier = Modifier
                                             .padding(16.dp)
-                                            .testTag(TestTags.DELETE_DAILY_STATS)
+                                            .testTag(TestTags.BUTTON_DELETE_DAILY_STATS)
                                     ) {
                                         Icon(Icons.Filled.Delete, null)
                                     }
@@ -375,11 +377,12 @@ fun DrivingModeOnContent(
     )
 
     Surface {
-        Column (
+        Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize(),
-            ) {
+                .fillMaxSize()
+                .testTag(CONTENT_MAP),
+        ) {
             GoogleMap(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -512,7 +515,11 @@ fun TopActionBar(
             modifier = Modifier,
             navigationIcon = {
                 IconButton(
-                    onClick = {    scope.launch { scope.launch { drawerState.open() } }    }
+                    onClick = {
+                        scope.launch { scope.launch { drawerState.open() } }
+                    },
+                    modifier = Modifier
+                        .testTag(TestTags.BUTTON_MAIN_DRAWER)
                 ) {
                     Icon(Icons.Filled.Menu, contentDescription = null)
                 }
@@ -522,6 +529,8 @@ fun TopActionBar(
                     Switch(
                         checked = drivingMode,
                         onCheckedChange = { toggleDrivingMode(it) },
+                        modifier = Modifier
+                            .testTag(TestTags.BUTTON_DRIVING_MODE),
                         enabled = true,
                         colors = SwitchDefaults.colors()
                     )
@@ -543,6 +552,7 @@ fun MenuContent(
     ModalDrawerSheet(
         modifier = Modifier
             .padding(0.dp, 0.dp, 60.dp, 0.dp)
+            .testTag(TestTags.CONTENT_DRAWER)
             .fillMaxHeight(),
     ) {
         Surface {
@@ -581,9 +591,12 @@ fun MenuContent(
                                 },
                             contentScale = ContentScale.Crop
                         )
-                        Text(email?:"no email found", /* TODO: show user name instead */
+                        Text(
+                            email
+                                ?: NullReplacements.TEXT_EMAIL_NOT_FOUND, /* TODO: show user name instead */
                             modifier = Modifier
                                 .padding(12.dp, 8.dp)
+                                .testTag(TestTags.CONTENT_DRAWER_EMAIL)
                                 .clickable {
                                     onProfileClicked()
                                 },
