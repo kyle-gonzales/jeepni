@@ -1,5 +1,7 @@
 package com.example.jeepni.feature.checkup
 
-sealed class CheckUpEvent {
+import com.example.jeepni.feature.analytics.AnalyticsEvent
 
+sealed class CheckUpEvent {
+    object OnBackPressed : CheckUpEvent()
 }

@@ -17,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -661,11 +662,12 @@ fun ComponentCard(
 ){
     Row(
         modifier = Modifier
-            .border( //will change this
-                border = BorderStroke(2.dp, color = Color.Black),
+            .border(
+                border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.outlineVariant),
                 shape = RoundedCornerShape(10.dp)
             )
-            .background(color = Color.White),
+            .clip(RoundedCornerShape(15.dp))
+            .background(MaterialTheme.colorScheme.outlineVariant),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ){
@@ -678,9 +680,7 @@ fun ComponentCard(
         }
         Column(modifier = Modifier.padding(8.dp)) {
             JeepNiText(
-                text = component,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                text = component
             )
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Icon(
@@ -690,6 +690,7 @@ fun ComponentCard(
                 )
                 JeepNiText(
                     text = date,
+                    fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp))
             }
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
@@ -700,6 +701,7 @@ fun ComponentCard(
                 )
                 JeepNiText(
                     text = alarm,
+                    fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp))
             }
         }
