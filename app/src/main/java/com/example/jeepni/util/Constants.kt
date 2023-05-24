@@ -1,5 +1,7 @@
 package com.example.jeepni.util
 
+import com.example.jeepni.R
+
 object Constants {
     const val CHANNEL_ID = "jeepni_by_algofirst_notification_channel_id"
     //shown in user settings
@@ -19,4 +21,26 @@ object Constants {
     const val NOTIFICATION_OBJECT = "notification_object"
 
     const val FIRST_NOTIFICATION_ID = 999
+    val COMPONENTS = listOf(
+        "Tires",
+        "Side Mirrors",
+        "Wipers",
+        "Engine",
+        "Seatbelt",
+        "Battery",
+        "Oil Change",
+        "LTFRB Inspection",
+        "LTO Inspection"
+    )
+    val ICON_MAP = mapOf<String, Int>(
+        "Tires" to R.drawable.tire,
+        "Oil Change" to R.drawable.oil,
+        "Side Mirrors" to R.drawable.mirror,
+        "LTFRB Inspection" to R.drawable.inspection,
+        "LTO Inspection" to R.drawable.inspection,
+        "Wipers" to R.drawable.wiper,
+        "Engine" to R.drawable.car_engine,
+        "Seatbelt" to R.drawable.safety_belt,
+        "Battery" to R.drawable.battery,
+    ).withDefault { R.drawable.samplelogo }
 }
