@@ -23,8 +23,9 @@ class CheckUpViewModel @Inject constructor(
 
     fun onEvent(event: CheckUpEvent) {
         when (event) {
-
-            else -> {}
+            is CheckUpEvent.OnBackPressed -> {
+                sendUiEvent(UiEvent.PopBackStack)
+            }
         }
     }
 
