@@ -707,9 +707,3 @@ fun ComponentCard(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun Preview(){
-    ComponentCard("LTFRB Inspection", "mm/dd/yyyy", "3 months", icon = painterResource(R.drawable.tire_repair))
-}

@@ -29,15 +29,15 @@ object Constants {
         "Seatbelt",
         "Battery",
         "Oil Change",
-        "LTFRB Inspection",
-        "LTO Inspection"
+        "LTFRB Check",
+        "LTO Check"
     )
     val ICON_MAP = mapOf<String, Int>(
         "Tires" to R.drawable.tire,
         "Oil Change" to R.drawable.oil,
         "Side Mirrors" to R.drawable.mirror,
-        "LTFRB Inspection" to R.drawable.inspection,
-        "LTO Inspection" to R.drawable.inspection,
+        "LTFRB Check" to R.drawable.inspection,
+        "LTO Check" to R.drawable.inspection,
         "Wipers" to R.drawable.wiper,
         "Engine" to R.drawable.car_engine,
         "Seatbelt" to R.drawable.safety_belt,
