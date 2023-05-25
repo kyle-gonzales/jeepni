@@ -119,10 +119,10 @@ class MainViewModel
             }
             .on(Socket.EVENT_CONNECT) {
                 socket.emit(Constants.JOIN_ROOM, route)
-//                Log.i("JEEPNI_SOCKET", "SUCCESSFULLY CONNECTED")
+                Log.i("JEEPNI_SOCKET", "SUCCESSFULLY CONNECTED")
             }
             .on(Socket.EVENT_CONNECT_ERROR) {
-//                Log.i("JEEPNI_SOCKET", "error connecting to socket")
+                Log.i("JEEPNI_SOCKET", "error connecting to socket")
             }
             .on(Constants.JOIN_ROOM) {
             }
@@ -292,7 +292,7 @@ class MainViewModel
         //TODO: these parameters may be recalibrated to optimize performance
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setWaitForAccurateLocation(false)
-            .setMinUpdateDistanceMeters(10f) // prevents updates when driver is not moving. can save power
+//            .setMinUpdateDistanceMeters(10f) // prevents updates when driver is not moving. can save power // ! commented out to receive location updates more frequently; esp for testing sockets
             .setMinUpdateIntervalMillis(500)
             .setMaxUpdateDelayMillis(3*1000)
             .build()
