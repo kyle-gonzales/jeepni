@@ -2,6 +2,7 @@ package com.example.jeepni.feature.home
 
 import android.annotation.SuppressLint
 import android.os.Looper
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -9,19 +10,25 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.DailyAnalytics
+import com.example.jeepni.core.data.model.LocationUpdate
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
+import com.example.jeepni.core.data.repository.UserDetailRepository
+import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
 import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.socket.client.Socket
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +36,8 @@ class MainViewModel
 @Inject constructor(
     private val repository: DailyAnalyticsRepository,
     private val authRepo: AuthRepository,
-    private val fusedLocationProviderClient: FusedLocationProviderClient
+    private val fusedLocationProviderClient: FusedLocationProviderClient,
+    private val userDetailRepository: UserDetailRepository,
 ) : ViewModel() {
 
     var user by mutableStateOf(authRepo.getUser())
@@ -45,6 +53,9 @@ class MainViewModel
     // event class -> events from the screen to the ViewModel when there is a user interaction
 
     private var deletedStat: DailyAnalytics? = null // user can undo deleted stat
+
+    var driverId = ""
+    var route = ""
 
     var salary by mutableStateOf("100")
         private set
@@ -83,25 +94,42 @@ class MainViewModel
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
             timeState = formatSecondsToTime(time)
+
+            driverId = user!!.email.toString()
+            route = userDetailRepository.getUserDetails()?.route ?: "000"
         }
-    }
-    fun simulateLocationChange() {
-        sendUiEvent(UiEvent.ShowToast("starting..."))
-        viewModelScope.launch {
-            repeat(5) {
-                targetPosition = LatLng(longitude++, latitude++)
-                try {
-                    cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 10f)))
-                } catch (e: Exception) {
-                    if (e is CancellationException) throw e
-                    e.printStackTrace()
+
+        SocketHandler.setSocket()
+        SocketHandler.establishConnection()
+
+        socket = SocketHandler.getSocket()
+
+        socket
+            .on(Constants.UPDATE_LOCATION) { args ->
+                val json = (args[0] as JSONObject).toString()
+                val data = parseJsonToLocationUpdate(json)
+
+                val index = otherDrivers.toList().indexOfFirst{it.driver_id == data.driver_id}
+                if (index != -1) {
+                    val newLocation = otherDrivers[index].copy(latitude = data.latitude, longitude = data.longitude)
+                    otherDrivers[index] = newLocation
+                } else {
+                    otherDrivers.add(data)
                 }
-                delay(1000)
+                Log.i("JEEPNI_SOCKET", "show: ${otherDrivers.toList()}")
+            }
+            .on(Socket.EVENT_CONNECT) {
+                socket.emit(Constants.JOIN_ROOM, route)
+//                Log.i("JEEPNI_SOCKET", "SUCCESSFULLY CONNECTED")
+            }
+            .on(Socket.EVENT_CONNECT_ERROR) {
+//                Log.i("JEEPNI_SOCKET", "error connecting to socket")
+            }
+            .on(Constants.JOIN_ROOM) {
             }
             sendUiEvent(UiEvent.ShowToast("ending..."))
         }
     }
-
 
     fun onEvent(event: MainEvent) {
         when (event) {
