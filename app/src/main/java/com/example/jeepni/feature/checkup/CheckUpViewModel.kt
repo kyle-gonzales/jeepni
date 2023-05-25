@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.checkup
 
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.geometry.Size
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.core.data.repository.JeepsRepository
 import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.feature.about.AboutDriverEvent
+import com.example.jeepni.util.Alarm
 import com.example.jeepni.util.Constants.COMPONENTS
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,13 +29,20 @@ class CheckUpViewModel
     private val jeepsRepository: JeepsRepository,
     private val userDetailRepository: UserDetailRepository,
 ) : ViewModel() {
+    var alarmToEdit by mutableStateOf(Alarm(""))
     var nextAlarm by mutableStateOf(LocalDate.now())
+    var value by mutableStateOf("")
     var isRepeated by mutableStateOf(false)
     var isNameDropdownClicked by mutableStateOf(false)
         private set
     var nameDropdownSize by mutableStateOf(Size.Zero)
         private set
     var name by mutableStateOf("")
+    var duration by mutableStateOf("")
+    val isError by derivedStateOf {
+        if(value.toInt() > 100 || value.toInt() < 1){true}
+        else{false}
+    }
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
     var isAddComponentDialogOpen by mutableStateOf(false)
@@ -42,6 +51,18 @@ class CheckUpViewModel
         private set
     fun onEvent(event: CheckUpEvent) {
         when (event) {
+            is CheckUpEvent.OnAddClicked -> {
+                isAddComponentDialogOpen = true
+            }
+            is CheckUpEvent.OnSaveClicked -> {
+
+            }
+            is CheckUpEvent.OnDeleteClicked -> {
+
+            }
+            is CheckUpEvent.OnValueChange -> {
+                value = event.value
+            }
             is CheckUpEvent.OnNextAlarmChange -> {
                 nextAlarm = event.nextAlarm
             }
@@ -52,21 +73,21 @@ class CheckUpViewModel
                 sendUiEvent(UiEvent.PopBackStack)
             }
             is CheckUpEvent.OnAddComponentClicked -> {
-                isAddComponentDialogOpen = event.value
+                isAddComponentDialogOpen = true
             }
-            is CheckUpEvent.OnLTFRBCheckClicked -> {
+           /* is CheckUpEvent.OnLTFRBCheckClicked -> {
 
             }
             is CheckUpEvent.OnLTOCheckClicked -> {
 
-            }
+            }*/
             is CheckUpEvent.OnOilChangeClicked -> {
-
+                isEditDeleteDialogOpen = true
             }
             is CheckUpEvent.OnTiresClicked -> {
-
+                isEditDeleteDialogOpen = true
             }
-            is CheckUpEvent.OnSideMirrorsClicked -> {
+           /* is CheckUpEvent.OnSideMirrorsClicked -> {
 
             }
             is CheckUpEvent.OnWipersClicked -> {
@@ -80,7 +101,7 @@ class CheckUpViewModel
             }
             is CheckUpEvent.OnBatteryClicked -> {
 
-            }
+            }*/
             is CheckUpEvent.OnNameChange -> {
                 name = COMPONENTS[event.name]
             }

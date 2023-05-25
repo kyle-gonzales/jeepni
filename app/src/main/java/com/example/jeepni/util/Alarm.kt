@@ -1,5 +1,6 @@
 package com.example.jeepni.util
 
+import com.example.jeepni.util.Constants.ICON_MAP
 import java.time.LocalDate
 
 class Alarm(
@@ -14,11 +15,5 @@ class Alarm(
     var isRepeatable = isRepeatable
     var magnitude = magnitude
     var interval = interval
-
-    fun edit(
-        nextAlarm:LocalDate,
-
-    ){
-
-    }
+    var iconID = ICON_MAP[name]
 }

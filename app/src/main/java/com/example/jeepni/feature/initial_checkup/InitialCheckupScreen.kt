@@ -23,6 +23,7 @@ import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
+import java.time.LocalDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,6 +83,9 @@ fun InitialCheckupScreen(
                                     viewModel.onEvent(
                                         InitialCheckupEvent.OnOilChangeDateChange(it)
                                     )
+                                },
+                                dateValidator = {
+                                    it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
                                 }
                             )
                             DatePicker(
@@ -91,6 +95,9 @@ fun InitialCheckupScreen(
                                     viewModel.onEvent(
                                         InitialCheckupEvent.OnLtfrbDateChange(it)
                                     )
+                                },
+                                dateValidator = {
+                                    it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
                                 }
                             )
                             DatePicker(
@@ -100,6 +107,9 @@ fun InitialCheckupScreen(
                                     viewModel.onEvent(
                                         InitialCheckupEvent.OnLtoDateChange(it)
                                     )
+                                },
+                                dateValidator = {
+                                    it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
                                 }
                             )
                         }

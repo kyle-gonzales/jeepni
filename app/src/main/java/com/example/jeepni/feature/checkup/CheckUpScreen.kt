@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,12 +28,15 @@ import com.example.jeepni.R
 import com.example.jeepni.core.ui.AddDialog
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.ComponentCard
+import com.example.jeepni.core.ui.EditDeleteDialog
 import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.feature.initial_checkup.InitialCheckupEvent
+import com.example.jeepni.util.Alarm
 import com.example.jeepni.util.UiEvent
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Constants.ICON_MAP
+import java.time.LocalDate
 
 @Composable
 fun CheckUpScreen (
@@ -43,20 +47,25 @@ fun CheckUpScreen (
 
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val componentsList = Constants.COMPONENTS
+    var componentsList = remember {
+        mutableListOf<Alarm>(
+            Alarm(name = "Tires"),
+            Alarm(name = "Oil Change", isRepeatable = true, magnitude = 3, interval = "day")
+        )
+    }
 
     val viewmodel = mapOf<String, CheckUpEvent>(
     "Tires" to CheckUpEvent.OnTiresClicked,
-    "Oil Change" to CheckUpEvent.OnOilChangeClicked,
+    "Oil Change" to CheckUpEvent.OnOilChangeClicked/*,
     "Side Mirrors" to CheckUpEvent.OnSideMirrorsClicked,
     "LTFRB Check" to CheckUpEvent.OnLTFRBCheckClicked,
     "LTO Check" to CheckUpEvent.OnLTOCheckClicked,
     "Wipers" to CheckUpEvent.OnWipersClicked,
     "Engine" to CheckUpEvent.OnEngineClicked,
     "Seatbelt" to CheckUpEvent.OnSeatbeltClicked,
-    "Battery" to CheckUpEvent.OnBatteryClicked,
+    "Battery" to CheckUpEvent.OnBatteryClicked,*/
     )
-
+/*
     val interval =  mapOf<String, String>(
         "Tires" to "3 months",
         "Oil Change" to "3 months",
@@ -67,7 +76,7 @@ fun CheckUpScreen (
         "Engine" to "1 year",
         "Seatbelt" to "1 year",
         "Battery" to "1 year",
-    )
+    )*/
 
 
     LaunchedEffect(key1 = true) {
@@ -106,32 +115,55 @@ fun CheckUpScreen (
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(2),
                             contentPadding = paddingValues,
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(10.dp)
                         ) {
                             item {
-                                Box(modifier = Modifier
-                                    .padding(8.dp)
-                                    .clickable { }) {
-                                    Row(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(10.dp))
-                                            .background(MaterialTheme.colorScheme.outlineVariant)
-                                            .requiredWidth(164.5.dp),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        Column(modifier = Modifier.padding(20.dp)) {
-                                            Icon(
-                                                painter = painterResource(R.drawable.add_48px),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(45.dp)
-                                            )
-                                        }
-                                    }
+                                Button(
+                                    onClick = {viewModel.onEvent(
+                                        CheckUpEvent.OnAddClicked
+                                    )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.outlineVariant,
+                                        contentColor = MaterialTheme.colorScheme.onSurface
+                                    )
+                                ){
+                                    Icon(
+                                        painter = painterResource(R.drawable.add_48px),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(45.dp)
+                                    )
                                 }
                             }
-                            items(componentsList) {
+                            items(componentsList) {alarm ->
+                                Button(
+                                    onClick =  {
+                                        viewModel.alarmToEdit = alarm
+                                        viewModel.onEvent(
+                                            viewmodel[alarm.name]!!
+                                        )
+                                               },
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.outlineVariant,
+                                        contentColor = MaterialTheme.colorScheme.onSurface
+                                    )
+                                ){
+                                        ComponentCard(alarm)
+                                }
+                            }
+                            /*items(componentsList) {
                                     components ->
                                 Box(modifier = Modifier
                                     .padding(8.dp)
@@ -145,36 +177,99 @@ fun CheckUpScreen (
                                         icon = painterResource(ICON_MAP[components]!!)
                                     )
                                 }
-                            }
+                            }*/
+                            /*item{
+                                Button(
+
+                                ){
+                                    ComponentCard(
+                                        component = ,
+                                        date = LocalDate.now(),
+                                        alarm = interval[components]!!,
+                                        icon = painterResource(ICON_MAP[components]!!)
+                                    )
+                                }
+                            }*/
                         }
                     }
-                    if(viewModel.isAddComponentDialogOpen){
-                        AddDialog(
-                            onDismiss = { /*TODO*/ },
-                            pickedDate = viewModel.nextAlarm,
-                            onDateChange = {viewModel.onEvent(
-                                CheckUpEvent.OnNextAlarmChange(it)
-                            )},
-                            isRepeated = viewModel.isRepeated,
-                            onRepeatabilityChange = {viewModel.onEvent(
-                                CheckUpEvent.OnRepeatabilityChange(it)
-                            )},
-                            value = ,
-                            onValueChange = ,
-                            duration = ,
-                            onDurationChange = ,
-                            onCancelClick = { /*TODO*/ },
-                            onSaveClick = { /*TODO*/ },
-                            isNameDropdownClicked = ,
-                            name = ,
-                            nameDropdownSize = ,
-                            onNameSizeChange = ,
-                            onNameDropDownClicked = ,
-                            onNameChange = ,
-                            isError =
-                        )
-                    }
                 })
+            }
+            if(viewModel.isAddComponentDialogOpen){
+                AddDialog(
+                    onDismiss = {viewModel.onEvent(
+                        CheckUpEvent.OnDismissAdd
+                    )},
+                    pickedDate = viewModel.nextAlarm,
+                    onDateChange = {viewModel.onEvent(
+                        CheckUpEvent.OnNextAlarmChange(it)
+                    )},
+                    isRepeated = viewModel.isRepeated,
+                    onRepeatabilityChange = {viewModel.onEvent(
+                        CheckUpEvent.OnRepeatabilityChange(it)
+                    )},
+                    value = viewModel.value,
+                    onValueChange = {viewModel.onEvent(
+                        CheckUpEvent.OnValueChange(it)
+                    )},
+                    duration = viewModel.duration,
+                    onDurationChange = {viewModel.onEvent(
+                        CheckUpEvent.OnDurationChange(it)
+                    )
+                    },
+                    onCancelClick = {viewModel.onEvent(
+                        CheckUpEvent.OnDismissAdd
+                    )
+                    },
+                    onSaveClick = {viewModel.onEvent(
+                        CheckUpEvent.OnSaveClicked
+                    )},
+                    isNameDropdownClicked = viewModel.isNameDropdownClicked,
+                    name = viewModel.name,
+                    nameDropdownSize = viewModel.nameDropdownSize,
+                    onNameSizeChange = {viewModel.onEvent(
+                        CheckUpEvent.OnNameSizeChange(it)
+                    )},
+                    onNameDropDownClicked = {viewModel.onEvent(
+                        CheckUpEvent.OnNameDropDownClick(it)
+                    )},
+                    onNameChange = {viewModel.onEvent(
+                        CheckUpEvent.OnNameChange(it)
+                    )},
+                    isError = viewModel.isError
+                )
+            }
+            if(viewModel.isEditDeleteDialogOpen){
+                EditDeleteDialog(
+                    alarmName = viewModel.alarmToEdit.name,
+                    onDismiss = {viewModel.onEvent(
+                        CheckUpEvent.OnDismissEdit
+                    )
+                    },
+                    pickedDate = viewModel.nextAlarm,
+                    onDateChange = {viewModel.onEvent(
+                        CheckUpEvent.OnNextAlarmChange(it)
+                    )},
+                    isRepeated = viewModel.isRepeated,
+                    onRepeatabilityChange = {viewModel.onEvent(
+                        CheckUpEvent.OnRepeatabilityChange(it)
+                    )},
+                    value = viewModel.value,
+                    onValueChange = {viewModel.onEvent(
+                        CheckUpEvent.OnValueChange(it)
+                    )},
+                    duration = viewModel.duration,
+                    onDurationChange = {viewModel.onEvent(
+                        CheckUpEvent.OnDurationChange(it)
+                    )
+                    },
+                    onDeleteClick = {viewModel.onEvent(
+                        CheckUpEvent.OnDeleteClicked
+                    )},
+                    onSaveClick = {viewModel.onEvent(
+                        CheckUpEvent.OnSaveClicked
+                    )},
+                    isError = viewModel.isError
+                )
             }
         }
     }

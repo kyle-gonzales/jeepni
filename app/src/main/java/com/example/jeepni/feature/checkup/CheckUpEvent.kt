@@ -8,13 +8,14 @@ sealed class CheckUpEvent {
     object OnBackPressed : CheckUpEvent()
     data class OnConfirmDelete(val toDelete: MutableList<AlarmContent>) : CheckUpEvent()
 
-    // shared by add and edit alarm
-    object OnDismiss : CheckUpEvent() // also used in delete alarm
+    object OnDismissAdd : CheckUpEvent()
+    object OnDismissEdit : CheckUpEvent()
     object OnSaveClicked : CheckUpEvent()
+    object OnDeleteClicked : CheckUpEvent()
+    object OnAddClicked : CheckUpEvent()
     data class OnNextAlarmChange(val nextAlarm: LocalDate) : CheckUpEvent()
     data class OnRepeatabilityChange(val isRepeated: Boolean) : CheckUpEvent()
-    data class OnNumberChange(val num: Int) :
-        CheckUpEvent() // the enter number textfield (see Figma)
+    data class OnValueChange(val value: String) : CheckUpEvent() // the enter number textfield (see Figma)
 
     data class OnDurationChange(val duration: String) : CheckUpEvent() // day? month? year?
 

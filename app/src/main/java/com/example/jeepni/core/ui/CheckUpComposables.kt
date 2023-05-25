@@ -122,7 +122,8 @@ fun EditDeleteDialog(
                 DatePicker(
                     label = "Date of next alarm",
                     pickedDate = pickedDate,
-                    onChange = onDateChange
+                    onChange = onDateChange,
+                    dateValidator = {it.isAfter(LocalDate.now())}
                 )
                 Spacer(Modifier.height(10.dp))
                 Row(
@@ -278,7 +279,8 @@ fun AddDialog(
                 DatePicker(
                     label = "Date of next alarm",
                     pickedDate = pickedDate,
-                    onChange = onDateChange
+                    onChange = onDateChange,
+                    dateValidator = {it.isAfter(LocalDate.now())}
                 )
                 Spacer(Modifier.height(10.dp))
                 Row(
