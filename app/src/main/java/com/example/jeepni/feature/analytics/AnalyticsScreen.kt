@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.core.ui.AnalyticsCard
+import com.example.jeepni.core.ui.AppBar
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
@@ -77,37 +78,3 @@ fun AnalyticsScreen(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppBar(
-    titledesc: String,
-    onPopBackStack: () -> Unit,
-//    onMenuItems: () -> Unit
-) {
-    val menuItems = listOf(
-        "Revenue",
-        "Fuel Expenses",
-        "Time Travelled",
-        "Distance Travelled"
-    )
-
-    Surface(
-        contentColor = Color.White,
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 8.dp,
-    ) {
-        TopAppBar(
-            title = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = titledesc)
-                }
-            },
-            navigationIcon = {
-                BackIconButton(onClick = onPopBackStack)
-            }
-        )
-    }
-}

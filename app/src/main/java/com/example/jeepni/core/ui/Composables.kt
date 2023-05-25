@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
@@ -650,5 +651,33 @@ fun PartsList(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppBar(
+    titledesc: String,
+    onPopBackStack: () -> Unit,
+) {
+    Surface(
+        contentColor = Color.White,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 8.dp,
+    ) {
+        TopAppBar(
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    JeepNiText(text = titledesc,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp)
+                }
+            },
+            navigationIcon = {
+                BackIconButton(onClick = onPopBackStack)
+            }
+        )
     }
 }
