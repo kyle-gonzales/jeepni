@@ -148,32 +148,32 @@ fun CheckUpScreen (
                             }
                         }
                     }
-                    if(viewModel.isAddComponentDialogOpen){
-                        AddDialog(
-                            onDismiss = { /*TODO*/ },
-                            pickedDate = viewModel.nextAlarm,
-                            onDateChange = {viewModel.onEvent(
-                                CheckUpEvent.OnNextAlarmChange(it)
-                            )},
-                            isRepeated = viewModel.isRepeated,
-                            onRepeatabilityChange = {viewModel.onEvent(
-                                CheckUpEvent.OnRepeatabilityChange(it)
-                            )},
-                            value = ,
-                            onValueChange = ,
-                            duration = ,
-                            onDurationChange = ,
-                            onCancelClick = { /*TODO*/ },
-                            onSaveClick = { /*TODO*/ },
-                            isNameDropdownClicked = ,
-                            name = ,
-                            nameDropdownSize = ,
-                            onNameSizeChange = ,
-                            onNameDropDownClicked = ,
-                            onNameChange = ,
-                            isError =
-                        )
-                    }
+//                    if(viewModel.isAddComponentDialogOpen){
+//                        AddDialog(
+//                            onDismiss = { /*TODO*/ },
+//                            pickedDate = viewModel.nextAlarm,
+//                            onDateChange = {viewModel.onEvent(
+//                                CheckUpEvent.OnNextAlarmChange(it)
+//                            )},
+//                            isRepeated = viewModel.isRepeated,
+//                            onRepeatabilityChange = {viewModel.onEvent(
+//                                CheckUpEvent.OnRepeatabilityChange(it)
+//                            )},
+//                            value = ,
+//                            onValueChange = ,
+//                            duration = ,
+//                            onDurationChange = ,
+//                            onCancelClick = { /*TODO*/ },
+//                            onSaveClick = { /*TODO*/ },
+//                            isNameDropdownClicked = ,
+//                            name = ,
+//                            nameDropdownSize = ,
+//                            onNameSizeChange = ,
+//                            onNameDropDownClicked = ,
+//                            onNameChange = ,
+//                            isError =
+//                        )
+//                    }
                 })
             }
         }
