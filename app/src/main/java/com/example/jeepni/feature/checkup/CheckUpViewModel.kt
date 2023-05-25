@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.checkup
 
+import androidx.compose.ui.geometry.Size
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +27,8 @@ class CheckUpViewModel
     private val jeepsRepository: JeepsRepository,
     private val userDetailRepository: UserDetailRepository,
 ) : ViewModel() {
+    var nextAlarm by mutableStateOf(LocalDate.now())
+    var isRepeated by mutableStateOf(false)
     var isNameDropdownClicked by mutableStateOf(false)
         private set
     var nameDropdownSize by mutableStateOf(Size.Zero)
@@ -34,9 +38,16 @@ class CheckUpViewModel
     val uiEvent = _uiEvent.receiveAsFlow()
     var isAddComponentDialogOpen by mutableStateOf(false)
         private set
-
+    var isEditDeleteDialogOpen by mutableStateOf(false)
+        private set
     fun onEvent(event: CheckUpEvent) {
         when (event) {
+            is CheckUpEvent.OnNextAlarmChange -> {
+                nextAlarm = event.nextAlarm
+            }
+            is CheckUpEvent.OnRepeatabilityChange -> {
+                isRepeated = event.isRepeated
+            }
             is CheckUpEvent.OnBackPressed -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
@@ -88,5 +99,9 @@ class CheckUpViewModel
             _uiEvent.send(event)
         }
     }
+
+    /*fun dismissDialog() {
+        visiblePermissionDialogQueue.removeFirst()
+    }*/
 
 }

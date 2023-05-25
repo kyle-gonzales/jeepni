@@ -6,20 +6,30 @@ import java.time.LocalDate
 
 sealed class CheckUpEvent {
     object OnBackPressed : CheckUpEvent()
-    data class OnConfirmDelete ( val toDelete: MutableList<AlarmContent>): CheckUpEvent()
+    data class OnConfirmDelete(val toDelete: MutableList<AlarmContent>) : CheckUpEvent()
 
     // shared by add and edit alarm
-    object OnDismiss: CheckUpEvent() // also used in delete alarm
-    object OnSaveClicked: CheckUpEvent()
-    data class OnNextAlarmChange ( val nextAlarm: LocalDate ): CheckUpEvent()
-    data class OnRepeatabilityChange ( val isRepeated: Boolean ): CheckUpEvent()
-    data class OnNumberChange ( val num: Int ): CheckUpEvent() // the enter number textfield (see Figma)
-    data class OnDurationChange ( val duration: String ): CheckUpEvent() // day? month? year?
+    object OnDismiss : CheckUpEvent() // also used in delete alarm
+    object OnSaveClicked : CheckUpEvent()
+    data class OnNextAlarmChange(val nextAlarm: LocalDate) : CheckUpEvent()
+    data class OnRepeatabilityChange(val isRepeated: Boolean) : CheckUpEvent()
+    data class OnNumberChange(val num: Int) :
+        CheckUpEvent() // the enter number textfield (see Figma)
+
+    data class OnDurationChange(val duration: String) : CheckUpEvent() // day? month? year?
 
     // used by add alarm only
-    data class OnNameDropDownClick ( val isNameDropdownClicked:Boolean): CheckUpEvent()
-    data class OnNameSizeChange( val nameDropdownSize: Size): CheckUpEvent()
-    data class OnNameChange ( val name: Int): CheckUpEvent()
-
-
+    data class OnNameDropDownClick(val isNameDropdownClicked: Boolean) : CheckUpEvent()
+    data class OnNameSizeChange(val nameDropdownSize: Size) : CheckUpEvent()
+    data class OnNameChange(val name: Int) : CheckUpEvent()
+    data class OnAddComponentClicked(val value: Boolean) : CheckUpEvent()
+    object OnTiresClicked : CheckUpEvent()
+    object OnSideMirrorsClicked : CheckUpEvent()
+    object OnWipersClicked : CheckUpEvent()
+    object OnEngineClicked : CheckUpEvent()
+    object OnSeatbeltClicked : CheckUpEvent()
+    object OnBatteryClicked : CheckUpEvent()
+    object OnOilChangeClicked : CheckUpEvent()
+    object OnLTFRBCheckClicked : CheckUpEvent()
+    object OnLTOCheckClicked : CheckUpEvent()
 }

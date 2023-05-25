@@ -67,6 +67,7 @@ import com.example.jeepni.R
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.Alarm
 import com.example.jeepni.util.Constants
+import com.example.jeepni.util.Constants.COMPONENTS
 import java.time.LocalDate
 
 @SuppressLint("UnrememberedMutableState")
@@ -214,7 +215,6 @@ fun EditDeleteDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddDialog(
-    alarmList:List<Alarm>,
     onDismiss: () -> Unit,
     pickedDate: LocalDate,
     onDateChange:(LocalDate)->Unit,
@@ -273,7 +273,7 @@ fun AddDialog(
                     onSizeChange = onNameSizeChange,
                     onSelected = onNameChange,
                     size = nameDropdownSize,
-                    items = alarmList
+                    items = COMPONENTS
                 )
                 DatePicker(
                     label = "Date of next alarm",
@@ -472,7 +472,7 @@ fun AlarmNameDropDown(
     onSizeChange: (Size) -> Unit,
     onSelected: (Int) -> Unit,
     size: Size,
-    items: List<Alarm>
+    items: List<String>
 ) {
     val icon = if (expanded) {
         Icons.Filled.KeyboardArrowUp
@@ -520,8 +520,8 @@ fun AlarmNameDropDown(
             ) {
                 items.forEachIndexed { index, s ->
                     DropdownMenuItem(
-                        leadingIcon = { Icon(painter = painterResource(id = Constants.ICON_MAP[s.name]!!), contentDescription = null)},
-                        text = { Text(text = s.name) },
+                        leadingIcon = { Icon(painter = painterResource(id = Constants.ICON_MAP[s]!!), contentDescription = null)},
+                        text = { Text(text = s) },
                         onClick = {
                             onSelected(index)
                             onClickIcon(false)

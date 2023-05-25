@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
+import com.example.jeepni.core.ui.AddDialog
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.ComponentCard
 import com.example.jeepni.core.ui.JeepNiText
@@ -146,6 +147,32 @@ fun CheckUpScreen (
                                 }
                             }
                         }
+                    }
+                    if(viewModel.isAddComponentDialogOpen){
+                        AddDialog(
+                            onDismiss = { /*TODO*/ },
+                            pickedDate = viewModel.nextAlarm,
+                            onDateChange = {viewModel.onEvent(
+                                CheckUpEvent.OnNextAlarmChange(it)
+                            )},
+                            isRepeated = viewModel.isRepeated,
+                            onRepeatabilityChange = {viewModel.onEvent(
+                                CheckUpEvent.OnRepeatabilityChange(it)
+                            )},
+                            value = ,
+                            onValueChange = ,
+                            duration = ,
+                            onDurationChange = ,
+                            onCancelClick = { /*TODO*/ },
+                            onSaveClick = { /*TODO*/ },
+                            isNameDropdownClicked = ,
+                            name = ,
+                            nameDropdownSize = ,
+                            onNameSizeChange = ,
+                            onNameDropDownClicked = ,
+                            onNameChange = ,
+                            isError =
+                        )
                     }
                 })
             }
