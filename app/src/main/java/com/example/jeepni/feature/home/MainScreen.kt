@@ -38,6 +38,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
+import com.example.jeepni.core.data.model.LocationUpdate
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
@@ -63,6 +64,8 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+
+    val otherDrivers = viewModel.otherDrivers
 
     val dialogQueue = viewModel.visiblePermissionDialogQueue
     
@@ -177,7 +180,8 @@ fun MainScreen(
                                         paddingValues = it,
                                         cameraPositionState = viewModel.cameraPositionState,
                                         targetPosition = viewModel.targetPosition,
-                                        onMapLoaded = {} //viewModel::onMapLoaded
+                                        onMapLoaded = {}, //viewModel::onMapLoaded
+                                        otherDrivers = otherDrivers
                                     )
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)
@@ -346,6 +350,7 @@ fun DrivingModeOnContent(
     targetPosition : LatLng,
     cameraPositionState: CameraPositionState,
     onMapLoaded : () -> Unit,
+    otherDrivers : List<LocationUpdate>
 ) {
 
     val cebuBounds = LatLngBounds.Builder()
@@ -426,6 +431,13 @@ fun DrivingModeOnContent(
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
                 )
+
+                for (driver in otherDrivers) {
+                    Marker(
+                        state = MarkerState(position = LatLng(driver.latitude, driver.longitude)),
+                        title = driver.driver_id
+                    )
+                }
             }
             Row(
                 modifier = Modifier
