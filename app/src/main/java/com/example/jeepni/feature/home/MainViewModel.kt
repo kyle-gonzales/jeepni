@@ -296,4 +296,13 @@ class MainViewModel
 
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, Looper.myLooper())
     }
+    private fun parseLocationUpdateToJson(data: LocationUpdate) : String {
+        val gson = Gson()
+        return gson.toJson(data).toString()
+
+    }
+    private fun parseJsonToLocationUpdate(data : String) : LocationUpdate {
+        val gson = Gson()
+        return gson.fromJson(data, LocationUpdate::class.java)
+    }
 }
