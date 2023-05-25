@@ -19,11 +19,9 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,13 +58,13 @@ class MainViewModel
         private set
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
+
     private var distance by mutableStateOf(12382.9)
-
-    private var time by mutableStateOf(3999999L)
-
     var distanceState by mutableStateOf(convertDistanceToString(distance))
         private set
-    var timeState by mutableStateOf(convertMillisToTime(time))
+
+    private var time by mutableStateOf(0L)
+    var timeState by mutableStateOf(formatSecondsToTime(time))
         private set
 
     //cebu basic coords
@@ -79,6 +77,13 @@ class MainViewModel
     //    fun onMapLoaded() {
 //        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
 //    }
+
+    init {
+        viewModelScope.launch {
+            time = repository.fetchTimer().toLong()
+            timeState = formatSecondsToTime(time)
+        }
+    }
     fun simulateLocationChange() {
         sendUiEvent(UiEvent.ShowToast("starting..."))
         viewModelScope.launch {
@@ -119,12 +124,35 @@ class MainViewModel
                 viewModelScope.launch {
 //                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
                     repository.deleteDailyStat()
+                    time = 0
+                    timeState = formatSecondsToTime(time)
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
             is MainEvent.OnToggleDrivingMode -> {
                 drivingMode = event.isDrivingMode
-                requestNewLocationData()
+                if (drivingMode) {
+                    requestNewLocationData()
+                    viewModelScope.launch {
+                        trackTimeInDrivingMode()
+                    }
+                } else {
+                    viewModelScope.launch {
+                        val result = repository.saveTimer(
+                            DailyAnalytics(
+                                timer = time
+                            )
+                        )
+                        if (result) {
+                            sendUiEvent(UiEvent.ShowToast("saved timer"))
+                        } else {
+                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer"))
+
+                        }
+                    }
+                    fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
+                    //TODO: update distance in driving mode to Firestore
+                }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
                 deletedStat?.let {
@@ -147,13 +175,6 @@ class MainViewModel
             is MainEvent.OnFuelCostChange -> {
                 fuelCost = event.fuelCost
                 isValidFuelCost = isValidDecimal(fuelCost)
-            }
-            is MainEvent.OnDistanceChange -> {
-                distanceState = convertDistanceToString(distance)
-
-            }
-            is MainEvent.OnTimeChange -> {
-                timeState = convertMillisToTime(time)
             }
             is MainEvent.OnLogOutClick -> {
                 viewModelScope.launch {
@@ -191,6 +212,18 @@ class MainViewModel
         }
     }
 
+    private suspend fun trackTimeInDrivingMode() {
+        withContext(Dispatchers.Default) {
+            while(drivingMode) {
+                time++
+                delay(1000L)
+                timeState = formatSecondsToTime(time)
+//                Log.i("UPTIME", time.toString())
+//                Log.i("UPTIME", timeState)
+            }
+        }
+    }
+
     fun dismissDialog() {
         visiblePermissionDialogQueue.removeFirst()
     }
@@ -209,6 +242,7 @@ class MainViewModel
             latitude = lastLocation.latitude
             longitude = lastLocation.longitude
             targetPosition = LatLng(latitude, longitude)
+            //Log.i("LOCATION UPDATE", "$latitude, $longitude")
 
             viewModelScope.launch {
                 try {

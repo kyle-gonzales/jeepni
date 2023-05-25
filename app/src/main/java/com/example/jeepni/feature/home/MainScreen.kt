@@ -43,6 +43,7 @@ import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.feature.home.nullstrings.NullReplacements
+import com.example.jeepni.util.*
 import com.example.jeepni.util.LocationPermissionTextProvider
 import com.example.jeepni.util.TestTags.TestTags
 import com.example.jeepni.util.TestTags.TestTags.CONTENT_MAP
@@ -118,6 +119,7 @@ fun MainScreen(
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+                else -> {}
             }
         }
 
@@ -160,9 +162,7 @@ fun MainScreen(
                                 }
                             },
                             distance = viewModel.distanceState,
-                            time = viewModel.timeState,
-                            onDistanceChange = {viewModel.onEvent(MainEvent.OnDistanceChange(it)) },
-                            onTimeChange = {viewModel.onEvent(MainEvent.OnTimeChange(it))}
+                            time = viewModel.timeState
                         ) },
 
                         floatingActionButton = {
@@ -481,8 +481,6 @@ fun TopActionBar(
     toggleDrivingMode : (Boolean) -> Unit,
     distance : String,
     time : String,
-    onDistanceChange: (String) -> Unit,
-    onTimeChange : (String) -> Unit
     ) {
     Surface(
         contentColor = Color.White,
