@@ -86,10 +86,9 @@ class MainViewModel
     var cameraPositionState by mutableStateOf(CameraPositionState(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
         private set
 
-//    fun onMapLoaded() {
-//        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
-//    }
+    val otherDrivers = mutableStateListOf<LocationUpdate>()
 
+    var socket : Socket
     init {
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
@@ -127,8 +126,8 @@ class MainViewModel
             }
             .on(Constants.JOIN_ROOM) {
             }
-            sendUiEvent(UiEvent.ShowToast("ending..."))
-        }
+            .on(Constants.LEAVE_ROOM) {
+            }
     }
 
     fun onEvent(event: MainEvent) {
@@ -162,10 +161,12 @@ class MainViewModel
                 drivingMode = event.isDrivingMode
                 if (drivingMode) {
                     requestNewLocationData()
+                    socket.emit(Constants.JOIN_ROOM, route)
                     viewModelScope.launch {
                         trackTimeInDrivingMode()
                     }
                 } else {
+                    socket.emit(Constants.LEAVE_ROOM)
                     viewModelScope.launch {
                         val result = repository.saveTimer(
                             DailyAnalytics(
@@ -271,7 +272,9 @@ class MainViewModel
             latitude = lastLocation.latitude
             longitude = lastLocation.longitude
             targetPosition = LatLng(latitude, longitude)
-            //Log.i("LOCATION UPDATE", "$latitude, $longitude")
+            val data = JSONObject(parseLocationUpdateToJson(LocationUpdate(driverId, latitude, longitude)))
+//            Log.i("JEEPNI_SOCKET", data.toString())
+            socket.emit(Constants.UPDATE_LOCATION, data)
 
             viewModelScope.launch {
                 try {
