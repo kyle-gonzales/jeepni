@@ -28,6 +28,7 @@ import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.ComponentCard
 import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.feature.initial_checkup.InitialCheckupEvent
 import com.example.jeepni.util.UiEvent
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Constants.ICON_MAP
@@ -42,6 +43,17 @@ fun CheckUpScreen (
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val componentsList = Constants.COMPONENTS
+    val viewmodel = mapOf<String, CheckUpEvent>(
+    "Tires" to CheckUpEvent.OnTiresClicked,
+    "Oil Change" to CheckUpEvent.OnOilChangeClicked,
+    "Side Mirrors" to CheckUpEvent.OnSideMirrorsClicked,
+    "LTFRB Check" to CheckUpEvent.OnLTFRBCheckClicked,
+    "LTO Check" to CheckUpEvent.OnLTOCheckClicked,
+    "Wipers" to CheckUpEvent.OnWipersClicked,
+    "Engine" to CheckUpEvent.OnEngineClicked,
+    "Seatbelt" to CheckUpEvent.OnSeatbeltClicked,
+    "Battery" to CheckUpEvent.OnBatteryClicked,
+    )
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -108,7 +120,9 @@ fun CheckUpScreen (
                                     components ->
                                 Box(modifier = Modifier
                                     .padding(8.dp)
-                                    .clickable {  }){
+                                    .clickable {
+                                        viewModel.onEvent(viewmodel[components]!!)
+                                    }){
                                     ComponentCard(
                                         component = components,
                                         date = "mm/dd/yyyy",
