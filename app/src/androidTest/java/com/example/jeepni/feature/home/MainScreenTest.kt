@@ -52,6 +52,8 @@ class MainScreenTest {
         button.performClick()
 
         // TODO: assert that toast or some visual thing appears
+//        composeTestRule.onNodeWithText("saved", substring = true, ignoreCase = true)
+//            .assertIsDisplayed()
 
     }
 
@@ -83,6 +85,21 @@ class MainScreenTest {
 //        onView(withText("saved"))
 //            .inRoot(ToastMatchers.isToast())
 //            .check(ViewAssertions.matches(isDisplayed()))
+
+
+        val button2 = composeTestRule.onNodeWithTag(TestTags.BUTTON_MAIN_DRAWER)
+        // Click on button
+        button2.performClick()
+
+        // Assert that side drawer can be seen
+        composeTestRule.onNodeWithTag(TestTags.CONTENT_DRAWER).assertIsDisplayed()
+
+        // Select Charts
+        composeTestRule.onNodeWithText("Charts").performClick()
+
+        // see if was added
+        composeTestRule.onNodeWithText(getCurrentDateString()).assertIsDisplayed()
+
     }
 
     @Test
@@ -124,5 +141,7 @@ class MainScreenTest {
                 .toString() == NullReplacements.TEXT_EMAIL_NOT_FOUND
         )
     }
+
+
 }
 
