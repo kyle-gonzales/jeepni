@@ -7,6 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
+import com.example.jeepni.core.data.repository.JeepsRepository
+import com.example.jeepni.core.data.repository.UserDetailRepository
+import com.example.jeepni.feature.about.AboutDriverEvent
+import com.example.jeepni.util.Constants.COMPONENTS
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -15,11 +19,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CheckUpViewModel @Inject constructor(
-    repository: DailyAnalyticsRepository,
-    auth : AuthRepository
+class CheckUpViewModel
+@Inject constructor(
+    private val auth : AuthRepository,
+    private val jeepsRepository: JeepsRepository,
+    private val userDetailRepository: UserDetailRepository,
 ) : ViewModel() {
-
+    var isNameDropdownClicked by mutableStateOf(false)
+        private set
+    var nameDropdownSize by mutableStateOf(Size.Zero)
+        private set
+    var name by mutableStateOf("")
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
     var isAddComponentDialogOpen by mutableStateOf(false)
@@ -59,6 +69,15 @@ class CheckUpViewModel @Inject constructor(
             }
             is CheckUpEvent.OnBatteryClicked -> {
 
+            }
+            is CheckUpEvent.OnNameChange -> {
+                name = COMPONENTS[event.name]
+            }
+            is CheckUpEvent.OnNameSizeChange -> {
+                nameDropdownSize = event.nameDropdownSize
+            }
+            is CheckUpEvent.OnNameDropDownClick -> {
+                isNameDropdownClicked = event.isNameDropdownClicked
             }
             else -> {}
         }
