@@ -12,7 +12,9 @@ object SocketHandler {
     @Synchronized
     fun setSocket() {
         try {
-            mSocket = IO.socket("http://192.168.1.25:1234/")
+            val uri = "http://192.168.1.8:1234" // kyle's laptop
+            //val uri = "http://192.168.1.25:1234/" // kyle's computer
+            mSocket = IO.socket(uri)
         } catch (e: URISyntaxException) {
             e.printStackTrace()
         }
