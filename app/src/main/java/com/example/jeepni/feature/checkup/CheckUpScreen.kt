@@ -43,6 +43,7 @@ fun CheckUpScreen (
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val componentsList = Constants.COMPONENTS
+
     val viewmodel = mapOf<String, CheckUpEvent>(
     "Tires" to CheckUpEvent.OnTiresClicked,
     "Oil Change" to CheckUpEvent.OnOilChangeClicked,
@@ -54,6 +55,19 @@ fun CheckUpScreen (
     "Seatbelt" to CheckUpEvent.OnSeatbeltClicked,
     "Battery" to CheckUpEvent.OnBatteryClicked,
     )
+
+    val interval =  mapOf<String, String>(
+        "Tires" to "3 months",
+        "Oil Change" to "3 months",
+        "Side Mirrors" to "1 year",
+        "LTFRB Check" to "1 year",
+        "LTO Check" to "1 year",
+        "Wipers" to "1 year",
+        "Engine" to "1 year",
+        "Seatbelt" to "1 year",
+        "Battery" to "1 year",
+    )
+
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -126,7 +140,7 @@ fun CheckUpScreen (
                                     ComponentCard(
                                         component = components,
                                         date = "mm/dd/yyyy",
-                                        alarm = "3 months",
+                                        alarm = interval[components]!!,
                                         icon = painterResource(ICON_MAP[components]!!)
                                     )
                                 }
