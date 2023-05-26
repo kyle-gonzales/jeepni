@@ -128,6 +128,13 @@ class MainViewModel
             }
             .on(Constants.LEAVE_ROOM) {
             }
+            .on(Constants.REMOVE_PIN) {args ->
+                Log.i("JEEPNI_SOCKET", args[0].toString())
+
+                val removedDriver = otherDrivers.toList().find { it.driver_id == args[0].toString() }
+                removedDriver?.let { otherDrivers.remove(it) }
+
+            }
     }
 
     fun onEvent(event: MainEvent) {
@@ -166,7 +173,7 @@ class MainViewModel
                         trackTimeInDrivingMode()
                     }
                 } else {
-                    socket.emit(Constants.LEAVE_ROOM)
+                    socket.emit(Constants.LEAVE_ROOM, driverId)
                     viewModelScope.launch {
                         val result = repository.saveTimer(
                             DailyAnalytics(
