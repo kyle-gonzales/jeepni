@@ -318,4 +318,10 @@ class MainViewModel
         val gson = Gson()
         return gson.fromJson(data, LocationUpdate::class.java)
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        onEvent(MainEvent.OnToggleDrivingMode(false))
+        Log.i("JEEPNI_SOCKET", "on Cleared is called")
+    }
 }
