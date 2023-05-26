@@ -169,6 +169,9 @@ class MainViewModel
                 if (drivingMode) {
                     requestNewLocationData()
                     socket.emit(Constants.JOIN_ROOM, route)
+                    val data = JSONObject(parseLocationUpdateToJson(LocationUpdate(driverId, latitude, longitude)))
+                    //Log.i("JEEPNI_SOCKET", data.toString())
+                    socket.emit(Constants.UPDATE_LOCATION, data)
                     viewModelScope.launch {
                         trackTimeInDrivingMode()
                     }
