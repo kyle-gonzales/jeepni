@@ -9,9 +9,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.Container
+import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.Logo
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.Black
@@ -39,22 +42,23 @@ fun Welcome2Screen(
 
             Container(0.6f){
                 Logo()
-                Text(
+                JeepNiText(
                     stringResource(R.string.welcome1, Color.White),
-                    Modifier.fillMaxWidth(0.6f)
+                    Modifier.fillMaxWidth(0.6f),
+                    fontSize = 16.sp
                 )
                 Column{
                     SolidButton(
                         onClick = {viewModel.onEvent(Welcome2Event.OnSignUpClicked)}
                     ) {
-                        Text(stringResource(R.string.sign_up))
+                        JeepNiText(stringResource(R.string.sign_up), fontSize = 16.sp)
                     }
                     SolidButton(
-                        bgColor = Black,
                         contentColor = White,
+                        bgColor = Black,
                         onClick = { viewModel.onEvent(Welcome2Event.OnLogInClicked) }
                     ) {
-                        Text(stringResource(R.string.log_in))
+                        JeepNiText(stringResource(R.string.log_in), fontSize = 16.sp, color = Color.White)
                     }
                 }
             }
