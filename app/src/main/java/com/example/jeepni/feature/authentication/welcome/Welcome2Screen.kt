@@ -51,14 +51,18 @@ fun Welcome2Screen(
                     SolidButton(
                         onClick = {viewModel.onEvent(Welcome2Event.OnSignUpClicked)}
                     ) {
-                        JeepNiText(stringResource(R.string.sign_up), fontSize = 16.sp)
+                        JeepNiText(stringResource(R.string.sign_up),
+                            fontSize = 16.sp,
+                            color = Color.Black)
                     }
                     SolidButton(
                         contentColor = White,
                         bgColor = Black,
                         onClick = { viewModel.onEvent(Welcome2Event.OnLogInClicked) }
                     ) {
-                        JeepNiText(stringResource(R.string.log_in), fontSize = 16.sp, color = Color.White)
+                        JeepNiText(stringResource(R.string.log_in),
+                            fontSize = 16.sp,
+                            color = Color.White)
                     }
                 }
             }

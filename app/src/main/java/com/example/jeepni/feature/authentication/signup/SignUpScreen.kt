@@ -12,16 +12,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.Container
+import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.JeepNiTheme
@@ -57,9 +60,10 @@ fun SignUpScreen(
                 BackIconButton {
                     viewModel.onEvent(SignUpEvent.OnBackClicked)
                 }
-                Text(
+                JeepNiText(
                     stringResource(R.string.sign_up_welcome2),
-                    Modifier.fillMaxWidth(0.6f)
+                    Modifier.fillMaxWidth(0.6f),
+                    fontSize = 16.sp,
                 )
                 Column {
                     OutlinedTextField(
@@ -97,14 +101,15 @@ fun SignUpScreen(
                         checked = viewModel.isAgreeToTerms,
                         onCheckedChange = { viewModel.onEvent(SignUpEvent.OnAgreeTerms(it)) }
                     )
-                    Text(stringResource(R.string.agree))
+                    JeepNiText(stringResource(R.string.agree))
                     TextButton(
                         onClick = {
                             //TODO : open terms and conditions dialog
                             viewModel.onEvent(SignUpEvent.OnShowTermsAndConditions)
                         }
                     ) {
-                        Text(stringResource(R.string.terms))
+                        JeepNiText(stringResource(R.string.terms),
+                            color = MaterialTheme.colorScheme.primary)
                     }
                 }
                 Column {
@@ -113,7 +118,9 @@ fun SignUpScreen(
                             viewModel.onEvent(SignUpEvent.OnCreateAccountClicked)
                         }
                     ) {
-                        Text(stringResource(R.string.create))
+                        JeepNiText(stringResource(R.string.create),
+                            fontSize = 16.sp,
+                            color = Color.Black)
                     }
                     SolidButton(
                         Black, White,
@@ -122,13 +129,16 @@ fun SignUpScreen(
                             viewModel.onEvent(SignUpEvent.OnCreateAccountWithGoogleClicked)
                         }
                     ) {
-                        Text(stringResource(R.string.create_google))
+                        JeepNiText(stringResource(R.string.create_google),
+                            fontSize = 16.sp,
+                            color = Color.White)
                     }
                 }
                 Row (modifier = Modifier,
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    Text(stringResource(R.string.has_account))
+                    JeepNiText(stringResource(R.string.has_account),
+                        fontSize = 16.sp)
                     TextButton(
                         modifier = Modifier
                             .padding(0.dp),
@@ -136,7 +146,9 @@ fun SignUpScreen(
                             viewModel.onEvent(SignUpEvent.OnLogInClicked)
                         }
                     ) {
-                        Text(stringResource(R.string.log_in))
+                        JeepNiText(stringResource(R.string.log_in),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -153,17 +165,20 @@ fun TermsAndConditions(
         IconButton(onClick = onClick) {
 
         }
-        Text(
+        JeepNiText(
             stringResource(R.string.terms),
-            Modifier.fillMaxWidth(0.6f)
+            Modifier.fillMaxWidth(0.6f),
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.primary
         )
-        Text(
+        JeepNiText(
             text = stringResource(R.string.terms1),
             modifier = Modifier
                 .fillMaxHeight(0.6f)
                 .verticalScroll(
                     rememberScrollState()
-                )
+                ),
+            fontSize = 16.sp
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -172,14 +187,14 @@ fun TermsAndConditions(
                 onClick = {}) {
                 Row{
                     JeepNiIcons.Close
-                    Text(stringResource(R.string.decline))
+                    Text(stringResource(R.string.decline), fontSize = 16.sp)
                 }
             }
             SolidButton(width = 0.82f,
                 onClick = {}) {
                 Row{
                     JeepNiIcons.Check
-                    Text(stringResource(R.string.accept))
+                    Text(stringResource(R.string.accept), fontSize = 16.sp)
                 }
             }
         }
