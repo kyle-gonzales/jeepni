@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.home
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -11,6 +12,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.example.jeepni.MainActivity
 import com.example.jeepni.feature.home.nullstrings.NullReplacements
 import com.example.jeepni.util.TestTags.TestTags
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Before
@@ -18,21 +20,42 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class MainScreenTest {
+//    @get:Rule(order = 0)
+//    val hiltRule = HiltAndroidRule(this)
 
-    @get:Rule
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
 
+    @ExperimentalAnimationApi
     @Before
     fun setUp() {
-//        composeTestRule.setContent {
+//        hiltRule.inject()
+//        composeTestRule.activity.setContent {
+//            val navController = rememberAnimatedNavController()
+//            val initialState = navController.currentBackStackEntry?.destination?.route // Screen.MainScreen.route
 //            JeepNiTheme {
-//
+//                AnimatedNavHost(
+//                    navController = navController,
+//                    startDestination = initialState ?: Screen.MainScreen.route,
+//                    enterTransition = { EnterTransition.None},
+//                    exitTransition = { ExitTransition.None},
+//                ){
+//                    composable (
+//                        route = Screen.MainScreen.route // for multiple arguments "/{arg1}/{arg2}?name={optionalName}"
+//                    ) {
+//                        MainScreen(
+//                            onNavigate = {
+//                                navController.navigate(it.route, popUp(it))
+//                            },
+//                        )
+//                    }
+//                }
 //            }
 //        }
-// Apparently not needed? IDK
     }
 
     @Test
@@ -54,6 +77,19 @@ class MainScreenTest {
         // TODO: assert that toast or some visual thing appears
 //        composeTestRule.onNodeWithText("saved", substring = true, ignoreCase = true)
 //            .assertIsDisplayed()
+
+        val button2 = composeTestRule.onNodeWithTag(TestTags.BUTTON_MAIN_DRAWER)
+        // Click on button
+        button2.performClick()
+
+        // Assert that side drawer can be seen
+        composeTestRule.onNodeWithTag(TestTags.CONTENT_DRAWER).assertIsDisplayed()
+
+        // Select Charts
+        composeTestRule.onNodeWithText("Charts").performClick()
+
+        // see if the daily analytics for today does not exist
+        composeTestRule.onNodeWithText(getCurrentDateString()).assertDoesNotExist()
 
     }
 
