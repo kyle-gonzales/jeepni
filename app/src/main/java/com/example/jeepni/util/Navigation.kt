@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
-import com.example.jeepni.core.data.model.UserDetails
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.feature.about.AboutDriverScreen
@@ -16,12 +15,13 @@ import com.example.jeepni.feature.analytics.AnalyticsScreen
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.feature.authentication.SignUpScreen
 import com.example.jeepni.feature.authentication.Welcome2Screen
+import com.example.jeepni.feature.authentication.loading.LoadingScreen
 import com.example.jeepni.feature.checkup.CheckUpScreen
 import com.example.jeepni.feature.home.MainScreen
+import com.example.jeepni.feature.initial_checkup.InitialCheckupScreen
 import com.example.jeepni.feature.profile.ProfileScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -30,24 +30,10 @@ fun Navigation (
     auth: AuthRepository,
     userDetailRepository: UserDetailRepository,
 ) {
-    var userDetails : UserDetails? = null
-    runBlocking {
-        // kinda blocked the main thread... on purpose... but in a normal coroutine, initialState won't wait for userDetails to finish initializing. That's why, previously, initialState would always be in WelcomeScreen (userDetails is null) even if the user was signed in...
-        userDetails = userDetailRepository.getUserDetails()
-    }
-
-    val initialState =
-        if (userDetails == null) { // user is not signed in // TODO: revise this functionality.
-            Screen.WelcomeScreen.route
-        } else if (isIncompleteUserDetails(userDetails!!)) {
-            Screen.AboutDriverScreen.route
-        } else {
-            Screen.MainScreen.route
-        }
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = initialState,
+        startDestination = Screen.LoadingScreen.route,
         enterTransition = { EnterTransition.None},
         exitTransition = {ExitTransition.None},
     ) {
@@ -59,6 +45,15 @@ fun Navigation (
                 onNavigate = {
                     navController.navigate(it.route, popUp(it))
                 },
+            )
+        }
+        composable(
+            route = Screen.LoadingScreen.route
+        ) {
+            LoadingScreen(
+                onNavigate =  {
+                    navController.navigate(it.route, popUp(it))
+                }
             )
         }
         composable (
@@ -106,6 +101,15 @@ fun Navigation (
             )
         }
         composable (
+            route = Screen.InitialCheckupScreen.route
+        ) {
+            InitialCheckupScreen(
+                onNavigate = {
+                    navController.navigate(it.route, popUp(it))
+                }
+            )
+        }
+        composable (
             route = Screen.ProfileScreen.route
         ) {
             ProfileScreen(
@@ -149,21 +153,21 @@ fun Navigation (
  *  clears the screen back stack if popUp
  *
  */
-    fun popUp(screen : UiEvent.Navigate) : NavOptions? {
-        if (screen.popUp == null) { // do not pop the backstack when navigating to new screen
-            return null
+fun popUp(screen : UiEvent.Navigate) : NavOptions? {
+    if (screen.popUp == null) { // do not pop the backstack when navigating to new screen
+        return null
+    }
+    return if (screen.popUp!! == "0") { // clear the entire backstack when navigating to new screen
+        navOptions {
+            popUpTo(0) {
+                inclusive = true
+            }
         }
-        return if (screen.popUp!! == "0") { // clear the entire backstack when navigating to new screen
-            navOptions {
-                popUpTo(0) {
-                    inclusive = true
-                }
-            }
-        } else {
-            navOptions { // pop back stack until a specific screen when navigating to a new screen, not inclusive
-                popUpTo(screen.popUp!!)
-            }
+    } else {
+        navOptions { // pop back stack until a specific screen when navigating to a new screen, not inclusive
+            popUpTo(screen.popUp!!)
         }
     }
+}
 
 // https://github.com/FirebaseExtended/make-it-so-android/blob/firebase-compose-codelab-start/app/src/main/java/com/example/makeitso/MakeItSoApp.kt
