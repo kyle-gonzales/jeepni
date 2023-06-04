@@ -2,9 +2,6 @@ package com.example.jeepni.core.ui
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,15 +9,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -29,11 +23,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
+import com.example.jeepni.util.Constants.ICON_MAP
 import com.example.jeepni.util.PermissionTextProvider
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
@@ -121,20 +115,26 @@ fun JeepNiText(
 
 @Composable
 fun SolidButton(
+    isEnabled: Boolean = true,
     bgColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    bgColorDisabled: Color = Color.LightGray,
+    contentColorDisabled: Color = Color.DarkGray,
     width: Float = 1f,
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
     Button(
+        enabled = isEnabled,
         onClick = onClick,
         modifier = Modifier
             .height(75.dp)
             .fillMaxWidth(width)
             .padding(vertical = 10.dp),
-        shape = RoundedCornerShape(36),
-        colors = ButtonDefaults.buttonColors(bgColor, contentColor)
+        shape = RoundedCornerShape(20),
+        colors = ButtonDefaults.buttonColors(
+            bgColor, contentColor, bgColorDisabled, contentColorDisabled
+        )
     ) {
         content()
     }
@@ -155,19 +155,19 @@ fun JeepNiTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     keyboardActions: KeyboardActions = KeyboardActions(),
     singleLine: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    textAlign:TextAlign = TextAlign.Start
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
     ) {
         OutlinedTextField(
             modifier = modifier,
             value = value,
             onValueChange = onValueChange,
-            label = { Text(text = label, fontFamily = quicksandFontFamily) },
+            label = { Text(text = label, fontFamily = quicksandFontFamily, textAlign = textAlign) },
             isError = isError,
-            shape = RoundedCornerShape(36),
+            shape = RoundedCornerShape(20),
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             textStyle = TextStyle(fontFamily = quicksandFontFamily),
@@ -198,57 +198,6 @@ fun BackIconButton(
         Icon(Icons.Filled.ArrowBack, contentDescription = null)
     }
 }
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun T() {
-
-    var text by remember {
-        mutableStateOf("")
-    }
-    var width = 10.dp
-
-    var isValid by remember {
-        mutableStateOf(false)
-    }
-
-    var icon = null
-    JeepNiTheme {
-        Surface(
-            modifier = Modifier
-                .padding(16.dp) //remove this after
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = text,
-                    onValueChange = { text = it },
-                    label = { Text(text = "label", fontFamily = quicksandFontFamily) },
-                    isError = isValid,
-                    leadingIcon = null,
-                    shape = RoundedCornerShape(36),
-                    textStyle = TextStyle(fontFamily = quicksandFontFamily),
-                    supportingText = {
-                        if (isValid) {
-                            Text(
-                                text = "Invalid Phone Number", //! convert to state
-                                color = MaterialTheme.colorScheme.error,
-                                fontFamily = quicksandFontFamily,
-                            )
-                        }
-                    }
-                )
-            }
-        }
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -466,14 +415,14 @@ fun PermissionDialog(
 fun DatePicker(
     label: String,
     pickedDate: LocalDate,
-    onChange: (LocalDate) -> Unit
+    onChange: (LocalDate) -> Unit,
+    dateValidator: (LocalDate) -> Boolean
 ) {
     var selectedDate by remember {
         mutableStateOf(
             pickedDate
         )
     }
-
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
@@ -485,12 +434,13 @@ fun DatePicker(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier.padding(12.dp)
-        ) {
+        Box() {
             OutlinedButton(
                 onClick = { dateDialogState.show() },
+                modifier = Modifier.height(50.dp),
+                shape = RoundedCornerShape(20),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
             ) {
                 Row(
@@ -500,24 +450,30 @@ fun DatePicker(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
+                        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                         text = formattedDate,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = quicksandFontFamily
                     )
                     Icon(
                         painter = painterResource(R.drawable.ic_calendar),
+                        modifier = Modifier.size(20.dp),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
-            Text(
-                text = label,
-                fontFamily = quicksandFontFamily,
-                modifier = Modifier
-                    .offset(x = 30.dp, y = -15.dp)
-                    .background(MaterialTheme.colorScheme.background)
-            )
+            Box(
+                /*modifier = Modifier.padding(horizontal = 10.dp)
+                    .background( MaterialTheme.colorScheme.background)*/
+            ){
+                Text(
+                    text = label,
+                    fontFamily = quicksandFontFamily,
+                    modifier = Modifier
+                        .offset(x = 20.dp, y = -10.dp)
+                )
+            }
         }
     }
     MaterialDialog(
@@ -540,9 +496,7 @@ fun DatePicker(
                 dateActiveTextColor = Color.Black,
 
             ),
-            allowedDateValidator = {
-                it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
-            }
+            allowedDateValidator = dateValidator
         ) {
             selectedDate = it
         }
@@ -550,160 +504,63 @@ fun DatePicker(
 }
 
 @Composable
-fun JeepPartCheckBox(
-    jeepPart: String,
-    onCheckedChange: (Boolean) -> Unit,
-    isChecked: Boolean
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = onCheckedChange,
-        )
-        Text(
-            text = jeepPart,
-        )
-    }
-}
-
-//@Composable
-//fun FilterIconButton(
-//    onClick : () -> Unit,
-//    menuItems: List<String>,
-//    onMenuItemClick: (String) -> Unit
-//){
-//    var expanded by remember { mutableStateOf(false) }
-//
-//    IconButton(onClick = { expanded = true })
-//    {
-//        Icon(Icons.Filled.Menu, contentDescription = "Menu")
-//    }
-
-//    DropdownMenu(
-//        expanded = expanded,
-//        onDismissRequest = { expanded = false })
-//    {
-//        menuItems.forEach{ item ->
-//            DropdownMenuItem(
-//               onClick = {
-//                   onMenuItemClick(item)
-//                   expanded = false
-//               }){
-//                Text(item)
-//            }
-//        }
-//    }
-//}
-
-@Composable
-fun PartsList(
-    parts: List<String>,
-    isCheckedLeft: List<Boolean>,
-    isCheckedRight: List<Boolean>,
-    onCheckboxChangeLeft: (List<Boolean>) -> Unit,
-    onCheckboxChangeRight: (List<Boolean>) -> Unit
-) {
-
-    val newListLeft = isCheckedLeft.toMutableList()
-    val newListRight = isCheckedRight.toMutableList()
-
-    Row {
-        Column(modifier = Modifier.weight(1f)) {
-            parts.subList(0, parts.size / 2).forEachIndexed { index, part ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) {
-                    Checkbox(
-                        checked = isCheckedLeft[index],
-                        onCheckedChange = {
-                            newListLeft[index] = it
-                            onCheckboxChangeLeft(newListLeft)
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = part
-                    )
-                }
-            }
-        }
-        Column(modifier = Modifier.weight(1f)) {
-            parts.subList(parts.size / 2, parts.size).forEachIndexed { index, part ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) {
-                    Checkbox(
-                        checked = isCheckedRight[index],
-                        onCheckedChange = {
-                            newListRight[index] = it
-                            onCheckboxChangeRight(newListRight)
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = part
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun ComponentCard(
-    component: String,
-    date: String,
-    alarm: String,
-    icon: Painter
+    alarm:AlarmContent
 ){
+    val formattedDate by remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern("MM/dd/yyyy")
+                .format(alarm.nextAlarmDate)
+        }
+    }
     Row(
-        modifier = Modifier
-            .border(
-                border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.outlineVariant),
-                shape = RoundedCornerShape(10.dp)
-            )
-            .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colorScheme.outlineVariant),
+        modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ){
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(8.dp), ) {
             Icon(
-                painter = icon,
+                painter = painterResource(ICON_MAP[alarm.name]!!),
                 contentDescription = null,
-                modifier = Modifier.size(45.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
         Column(modifier = Modifier.padding(8.dp)) {
             JeepNiText(
-                text = component
+                text = alarm.name
             )
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Icon(
-                    painter = icon,
+                    painter = painterResource(R.drawable.hourglass_top),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
                 JeepNiText(
-                    text = date,
+                    text = formattedDate,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp))
             }
+            val repeatability by remember{
+                derivedStateOf {
+                    if(alarm.isRepeatable){
+                        alarm.interval.first.toString()+" "+alarm.interval.second
+                    }
+                    else{"Off"}
+                }
+            }
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Icon(
-                    painter = icon,
+                    painter = painterResource(R.drawable.alarm),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
                 JeepNiText(
-                    text = alarm,
+                    text = repeatability,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp))
             }
         }
     }
 }
+

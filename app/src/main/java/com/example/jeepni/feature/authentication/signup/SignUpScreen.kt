@@ -116,7 +116,8 @@ fun SignUpScreen(
                         Text(stringResource(R.string.create))
                     }
                     SolidButton(
-                        Black, White,
+                        bgColor = Black,
+                        contentColor =  White,
                         onClick = {
                             /*TODO: sign up with GOOGLE ACCOUNT */
                             viewModel.onEvent(SignUpEvent.OnCreateAccountWithGoogleClicked)

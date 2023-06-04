@@ -4,20 +4,18 @@ package com.example.jeepni.feature.checkup
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -25,18 +23,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
+import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.ui.AddDialog
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.ComponentCard
 import com.example.jeepni.core.ui.EditDeleteDialog
 import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.theme.JeepNiTheme
-import com.example.jeepni.feature.initial_checkup.InitialCheckupEvent
-import com.example.jeepni.util.Alarm
 import com.example.jeepni.util.UiEvent
-import com.example.jeepni.util.Constants
-import com.example.jeepni.util.Constants.ICON_MAP
-import java.time.LocalDate
 
 @Composable
 fun CheckUpScreen (
@@ -44,40 +38,7 @@ fun CheckUpScreen (
     onNavigate: (UiEvent.Navigate) -> Unit,
     onPopBackStack : () -> Unit,
 ) {
-
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    var componentsList = remember {
-        mutableListOf<Alarm>(
-            Alarm(name = "Tires"),
-            Alarm(name = "Oil Change", isRepeatable = true, magnitude = 3, interval = "day")
-        )
-    }
-
-    val viewmodel = mapOf<String, CheckUpEvent>(
-    "Tires" to CheckUpEvent.OnTiresClicked,
-    "Oil Change" to CheckUpEvent.OnOilChangeClicked/*,
-    "Side Mirrors" to CheckUpEvent.OnSideMirrorsClicked,
-    "LTFRB Check" to CheckUpEvent.OnLTFRBCheckClicked,
-    "LTO Check" to CheckUpEvent.OnLTOCheckClicked,
-    "Wipers" to CheckUpEvent.OnWipersClicked,
-    "Engine" to CheckUpEvent.OnEngineClicked,
-    "Seatbelt" to CheckUpEvent.OnSeatbeltClicked,
-    "Battery" to CheckUpEvent.OnBatteryClicked,*/
-    )
-/*
-    val interval =  mapOf<String, String>(
-        "Tires" to "3 months",
-        "Oil Change" to "3 months",
-        "Side Mirrors" to "1 year",
-        "LTFRB Check" to "1 year",
-        "LTO Check" to "1 year",
-        "Wipers" to "1 year",
-        "Engine" to "1 year",
-        "Seatbelt" to "1 year",
-        "Battery" to "1 year",
-    )*/
-
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -123,9 +84,8 @@ fun CheckUpScreen (
                         ) {
                             item {
                                 Button(
-                                    onClick = {viewModel.onEvent(
-                                        CheckUpEvent.OnAddClicked
-                                    )
+                                    onClick = {
+                                        viewModel.isAddComponentDialogOpen = true
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -143,14 +103,11 @@ fun CheckUpScreen (
                                     )
                                 }
                             }
-                            items(componentsList) {alarm ->
+                            items(viewModel.alarmList) {alarm ->
                                 Button(
                                     onClick =  {
-                                        viewModel.alarmToEdit = alarm
-                                        viewModel.onEvent(
-                                            viewmodel[alarm.name]!!
-                                        )
-                                               },
+                                        viewModel.isEditDeleteDialogOpen = true
+                                    },
                                     shape = RoundedCornerShape(10.dp),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -163,33 +120,6 @@ fun CheckUpScreen (
                                         ComponentCard(alarm)
                                 }
                             }
-                            /*items(componentsList) {
-                                    components ->
-                                Box(modifier = Modifier
-                                    .padding(8.dp)
-                                    .clickable {
-                                        viewModel.onEvent(viewmodel[components]!!)
-                                    }){
-                                    ComponentCard(
-                                        component = components,
-                                        date = "mm/dd/yyyy",
-                                        alarm = interval[components]!!,
-                                        icon = painterResource(ICON_MAP[components]!!)
-                                    )
-                                }
-                            }*/
-                            /*item{
-                                Button(
-
-                                ){
-                                    ComponentCard(
-                                        component = ,
-                                        date = LocalDate.now(),
-                                        alarm = interval[components]!!,
-                                        icon = painterResource(ICON_MAP[components]!!)
-                                    )
-                                }
-                            }*/
                         }
                     }
                 })
@@ -221,30 +151,25 @@ fun CheckUpScreen (
                     )
                     },
                     onSaveClick = {viewModel.onEvent(
-                        CheckUpEvent.OnSaveClicked
+                        CheckUpEvent.OnSaveAddClicked
                     )},
-                    isNameDropdownClicked = viewModel.isNameDropdownClicked,
                     name = viewModel.name,
-                    nameDropdownSize = viewModel.nameDropdownSize,
-                    onNameSizeChange = {viewModel.onEvent(
-                        CheckUpEvent.OnNameSizeChange(it)
-                    )},
-                    onNameDropDownClicked = {viewModel.onEvent(
-                        CheckUpEvent.OnNameDropDownClick(it)
-                    )},
                     onNameChange = {viewModel.onEvent(
                         CheckUpEvent.OnNameChange(it)
+                    )},
+                    onNameChange1 = {viewModel.onEvent(
+                        CheckUpEvent.OnNameChange1
                     )},
                     isError = viewModel.isError
                 )
             }
             if(viewModel.isEditDeleteDialogOpen){
                 EditDeleteDialog(
-                    alarmName = viewModel.alarmToEdit.name,
+                    alarmName = viewModel.alarmList[viewModel.alarmToEditIndex].name,
                     onDismiss = {viewModel.onEvent(
                         CheckUpEvent.OnDismissEdit
                     )
-                    },
+                                },
                     pickedDate = viewModel.nextAlarm,
                     onDateChange = {viewModel.onEvent(
                         CheckUpEvent.OnNextAlarmChange(it)
@@ -266,7 +191,7 @@ fun CheckUpScreen (
                         CheckUpEvent.OnDeleteClicked
                     )},
                     onSaveClick = {viewModel.onEvent(
-                        CheckUpEvent.OnSaveClicked
+                        CheckUpEvent.OnSaveEditClicked
                     )},
                     isError = viewModel.isError
                 )

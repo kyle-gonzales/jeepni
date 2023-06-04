@@ -95,7 +95,8 @@ fun LogInScreen(
                         Text("Log In", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                     SolidButton(
-                        Black, White,
+                        bgColor = Black,
+                        contentColor =  White,
                     onClick = {
                         //TODO: implement login with GOOGLE ACCOUNT
                         viewModel.onEvent(LogInEvent.OnLogInWithGoogle)

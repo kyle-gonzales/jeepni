@@ -11,7 +11,7 @@ import java.time.ZoneId
 
 class AlarmScheduler (
     private val context : Context,
-    private val alarmManager : AlarmManager
+    private val alarmManager : AlarmManager,
 ) {
     fun schedule(alarm: AlarmContent, notification : NotificationContent) {
 

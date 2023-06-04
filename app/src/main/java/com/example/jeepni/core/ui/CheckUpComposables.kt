@@ -9,21 +9,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.AlertDialogDefaults.containerColor
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,15 +33,12 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -58,14 +56,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Dialog
 import com.example.jeepni.R
+import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
-import com.example.jeepni.util.Alarm
+import com.example.jeepni.feature.checkup.CheckUpEvent
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Constants.COMPONENTS
 import java.time.LocalDate
@@ -88,6 +86,7 @@ fun EditDeleteDialog(
     onSaveClick: () -> Unit,
     isError:Boolean,
 ) {
+
     val state by remember{
         derivedStateOf {
             if(isRepeated){"On"}
@@ -227,12 +226,9 @@ fun AddDialog(
     onDurationChange: (String) -> Unit,
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
-    isNameDropdownClicked: Boolean,
     name:String,
-    nameDropdownSize: Size,
-    onNameSizeChange: (Size) -> Unit,
-    onNameDropDownClicked: (Boolean) -> Unit,
-    onNameChange: (Int)-> Unit,
+    onNameChange: (String)-> Unit,
+    onNameChange1: () -> Unit,
     isError:Boolean
 ) {
     val state by remember{
@@ -266,16 +262,7 @@ fun AddDialog(
                     )
                 }
                 Spacer(Modifier.height(20.dp))
-                AlarmNameDropDown(
-                    label = "Alarm name",
-                    expanded = isNameDropdownClicked,
-                    value = name,
-                    onClickIcon = onNameDropDownClicked,
-                    onSizeChange = onNameSizeChange,
-                    onSelected = onNameChange,
-                    size = nameDropdownSize,
-                    items = COMPONENTS
-                )
+                AlarmName(name, onNameChange, onNameChange1)
                 DatePicker(
                     label = "Date of next alarm",
                     pickedDate = pickedDate,
@@ -355,7 +342,7 @@ fun AddDialog(
                         bgColor = MaterialTheme.colorScheme.error,
                         width = 0.5f
                     ){
-                        Text(text = "Delete", fontFamily = quicksandFontFamily)
+                        Text(text = "Cancel", fontFamily = quicksandFontFamily)
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     SolidButton(
@@ -369,6 +356,217 @@ fun AddDialog(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlarmName(
+    selectedOption: String,
+    onSelectedChange: (String) -> Unit,
+    onSelectedChange1: () -> Unit,
+){
+    var customEnabled by remember {
+        mutableStateOf(true)
+    }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(4),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+    ){
+        items(COMPONENTS){
+            if(selectedOption == it){
+                OutlinedButton(
+                    modifier = Modifier
+                        .selectable(
+                            selected = (it == selectedOption),
+                            onClick ={}
+                        )
+                        .fillMaxWidth()
+                        .height(60.dp),
+                    onClick = {},
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                    contentPadding = PaddingValues(3.dp)
+                ){
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Icon(
+                            painter = painterResource(Constants.ICON_MAP[it]!!),
+                            contentDescription = null,
+                            modifier = Modifier.height(25.dp)
+                        )
+                        Text(
+                            text = it,
+                            fontFamily = quicksandFontFamily,
+                            maxLines = 2,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
+            else{
+                OutlinedButton(
+                    modifier = Modifier
+                        .selectable(
+                            selected = (it == selectedOption),
+                            onClick = {
+                                onSelectedChange
+                                customEnabled = false
+                            }
+                        )
+                        .fillMaxWidth()
+                        .height(60.dp),
+                    onClick = {
+                        onSelectedChange
+                        customEnabled = false
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                    contentPadding = PaddingValues(3.dp)
+                ){
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Icon(
+                            painter = painterResource(Constants.ICON_MAP[it]!!),
+                            contentDescription = null,
+                            modifier = Modifier.height(25.dp)
+                        )
+                        Text(
+                            text = it,
+                            fontFamily = quicksandFontFamily,
+                            maxLines = 2,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
+        }
+        item{
+            if(selectedOption in COMPONENTS){
+                OutlinedButton(
+                    modifier = Modifier
+                        .selectable(
+                            selected = !(selectedOption in COMPONENTS),
+                            onClick = {
+                                customEnabled = true
+                                onSelectedChange1
+                            }
+                        )
+                        .fillMaxWidth()
+                        .height(60.dp),
+                    onClick = {
+                        customEnabled = true
+                        onSelectedChange1
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                    contentPadding = PaddingValues(3.dp)
+                ){
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Icon(
+                            painter = painterResource(R.drawable.samplelogo),
+                            contentDescription = null,
+                            modifier = Modifier.height(25.dp)
+                        )
+                        Text(
+                            text = "Add Custom",
+                            fontFamily = quicksandFontFamily,
+                            maxLines = 2,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
+            else{
+                OutlinedButton(
+                    modifier = Modifier
+                        .selectable(
+                            selected = !(selectedOption in COMPONENTS),
+                            onClick = {
+                                customEnabled = true
+
+                            }
+                        )
+                        .fillMaxWidth()
+                        .height(60.dp),
+                    onClick = {customEnabled = true},
+                    shape = RoundedCornerShape(20),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                    contentPadding = PaddingValues(3.dp)
+                ){
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Icon(
+                            painter = painterResource(R.drawable.samplelogo),
+                            contentDescription = null,
+                            modifier = Modifier.height(25.dp)
+                        )
+                        Text(
+                            text = "Add Custom",
+                            fontFamily = quicksandFontFamily,
+                            maxLines = 2,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
+        }
+        item(span = { GridItemSpan(2) }){
+            if(customEnabled){
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp),
+                    value = selectedOption,
+                    onValueChange = {onSelectedChange},
+                    label = {
+                        Text(
+                            text = "Custom Alarm Name",
+                            fontFamily = quicksandFontFamily,
+                            textAlign = TextAlign.Start,
+                            fontSize =12.sp
+                        )
+                    },
+                    shape = RoundedCornerShape(20),
+                    textStyle = TextStyle(
+                        fontFamily = quicksandFontFamily,
+                        fontSize = 12.sp
+                    )
+                )
+            }
+        }
+    }
+}
 @Composable
 fun DurationButton(
     isEnabled: Boolean,
@@ -522,7 +720,14 @@ fun AlarmNameDropDown(
             ) {
                 items.forEachIndexed { index, s ->
                     DropdownMenuItem(
-                        leadingIcon = { Icon(painter = painterResource(id = Constants.ICON_MAP[s]!!), contentDescription = null)},
+                        modifier = Modifier.height(50.dp),
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = Constants.ICON_MAP[s]!!),
+                                contentDescription = null,
+                                modifier = Modifier.height(20.dp)
+                            )
+                                      },
                         text = { Text(text = s) },
                         onClick = {
                             onSelected(index)

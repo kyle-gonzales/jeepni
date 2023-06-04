@@ -23,24 +23,24 @@ object Constants {
     const val FIRST_NOTIFICATION_ID = 999
     val COMPONENTS = listOf(
         "Tires",
-        "Side Mirrors",
+        "Mirrors",
         "Wipers",
         "Engine",
         "Seatbelt",
         "Battery",
         "Oil Change",
-        "LTFRB Check",
-        "LTO Check"
+        "LTFRB Inspection",
+        "LTO Inspection"
     )
     val ICON_MAP = mapOf<String, Int>(
         "Tires" to R.drawable.tire,
         "Oil Change" to R.drawable.oil,
-        "Side Mirrors" to R.drawable.mirror,
+        "Mirrors" to R.drawable.mirror,
         "LTFRB Check" to R.drawable.inspection,
         "LTO Check" to R.drawable.inspection,
+        "Seatbelt" to R.drawable.safety_belt,
         "Wipers" to R.drawable.wiper,
         "Engine" to R.drawable.car_engine,
-        "Seatbelt" to R.drawable.safety_belt,
         "Battery" to R.drawable.battery,
     ).withDefault { R.drawable.samplelogo }
 }

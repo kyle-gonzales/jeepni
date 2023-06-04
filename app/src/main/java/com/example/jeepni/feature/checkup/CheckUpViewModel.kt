@@ -4,15 +4,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.geometry.Size
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.data.repository.AuthRepository
-import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.core.data.repository.JeepsRepository
 import com.example.jeepni.core.data.repository.UserDetailRepository
-import com.example.jeepni.feature.about.AboutDriverEvent
-import com.example.jeepni.util.Alarm
 import com.example.jeepni.util.Constants.COMPONENTS
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,39 +28,60 @@ class CheckUpViewModel
     private val jeepsRepository: JeepsRepository,
     private val userDetailRepository: UserDetailRepository,
 ) : ViewModel() {
-    var alarmToEdit by mutableStateOf(Alarm(""))
+    var alarmList by mutableStateOf(
+        mutableListOf<AlarmContent>(
+            AlarmContent(name = "Tires"),
+            AlarmContent(name = "Oil Change", isRepeatable = true, interval = Pair(3, "day"))
+        )
+    )
+    var alarmToEditIndex by mutableStateOf(-1)
     var nextAlarm by mutableStateOf(LocalDate.now())
     var value by mutableStateOf("")
     var isRepeated by mutableStateOf(false)
-    var isNameDropdownClicked by mutableStateOf(false)
-        private set
-    var nameDropdownSize by mutableStateOf(Size.Zero)
-        private set
-    var name by mutableStateOf("")
+    var name by mutableStateOf("--")
     var duration by mutableStateOf("")
+    var isNameDropdownClicked by mutableStateOf(false)
+    var nameDropdownSize by mutableStateOf(Size.Zero)
     val isError by derivedStateOf {
-        if(value.toInt() > 100 || value.toInt() < 1){true}
+        if((value.toLong() > 100 || value.toInt() < 1) && value.all { char -> char.isDigit() }){true}
         else{false}
     }
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
     var isAddComponentDialogOpen by mutableStateOf(false)
-        private set
     var isEditDeleteDialogOpen by mutableStateOf(false)
-        private set
+    fun resetVariables(){
+        alarmToEditIndex = -1
+        nextAlarm = LocalDate.now()
+        value = ""
+        isRepeated = false
+        name = ""
+        duration = ""
+    }
     fun onEvent(event: CheckUpEvent) {
         when (event) {
-            is CheckUpEvent.OnAddClicked -> {
-                isAddComponentDialogOpen = true
+            is CheckUpEvent.OnNameChange -> {
+                name = event.name
             }
-            is CheckUpEvent.OnSaveClicked -> {
-
+            is CheckUpEvent.OnNameChange1 -> {
+                name = ""
+            }
+            is CheckUpEvent.OnSaveAddClicked -> {
+                alarmList += AlarmContent(name, isRepeated, Pair(value.toLong(), duration), nextAlarm)
+                resetVariables()
+            }
+            is CheckUpEvent.OnSaveEditClicked -> {
+                alarmList[alarmToEditIndex] = AlarmContent(name, isRepeated, Pair(value.toLong(), duration), nextAlarm)
+                resetVariables()
             }
             is CheckUpEvent.OnDeleteClicked -> {
+                alarmList.removeAt(alarmToEditIndex)
+            }
+            is CheckUpEvent.OnDismissAdd -> {
 
             }
-            is CheckUpEvent.OnValueChange -> {
-                value = event.value
+            is CheckUpEvent.OnDismissEdit -> {
+
             }
             is CheckUpEvent.OnNextAlarmChange -> {
                 nextAlarm = event.nextAlarm
@@ -69,49 +89,15 @@ class CheckUpViewModel
             is CheckUpEvent.OnRepeatabilityChange -> {
                 isRepeated = event.isRepeated
             }
+            is CheckUpEvent.OnDurationChange -> {
+                duration = event.duration
+            }
+            is CheckUpEvent.OnValueChange -> {
+                value = event.value
+            }
             is CheckUpEvent.OnBackPressed -> {
                 sendUiEvent(UiEvent.PopBackStack)
             }
-            is CheckUpEvent.OnAddComponentClicked -> {
-                isAddComponentDialogOpen = true
-            }
-           /* is CheckUpEvent.OnLTFRBCheckClicked -> {
-
-            }
-            is CheckUpEvent.OnLTOCheckClicked -> {
-
-            }*/
-            is CheckUpEvent.OnOilChangeClicked -> {
-                isEditDeleteDialogOpen = true
-            }
-            is CheckUpEvent.OnTiresClicked -> {
-                isEditDeleteDialogOpen = true
-            }
-           /* is CheckUpEvent.OnSideMirrorsClicked -> {
-
-            }
-            is CheckUpEvent.OnWipersClicked -> {
-
-            }
-            is CheckUpEvent.OnEngineClicked -> {
-
-            }
-            is CheckUpEvent.OnSeatbeltClicked -> {
-
-            }
-            is CheckUpEvent.OnBatteryClicked -> {
-
-            }*/
-            is CheckUpEvent.OnNameChange -> {
-                name = COMPONENTS[event.name]
-            }
-            is CheckUpEvent.OnNameSizeChange -> {
-                nameDropdownSize = event.nameDropdownSize
-            }
-            is CheckUpEvent.OnNameDropDownClick -> {
-                isNameDropdownClicked = event.isNameDropdownClicked
-            }
-            else -> {}
         }
     }
 
