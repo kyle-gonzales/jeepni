@@ -39,7 +39,10 @@ class DailyAnalyticsRepositoryImpl(
             .addOnSuccessListener {
                 Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
             } // not sure if this works
-            .addOnFailureListener {}
+            .addOnFailureListener {
+                Toast.makeText(context, "failed to save...", Toast.LENGTH_SHORT).show()
+
+            }
     }
 
     override suspend fun updateDailyStat(dailyStat: DailyAnalytics) {
