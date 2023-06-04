@@ -125,11 +125,12 @@ class MainViewModel
                 Log.i("JEEPNI_SOCKET", "error connecting to socket")
             }
             .on(Constants.JOIN_ROOM) {
+                Log.i("JEEPNI_SOCKET", "joined room")
             }
             .on(Constants.LEAVE_ROOM) {
             }
             .on(Constants.REMOVE_PIN) {args ->
-                Log.i("JEEPNI_SOCKET", args[0].toString())
+                Log.i("JEEPNI_SOCKET", "${args[0]} left the room")
 
                 val removedDriver = otherDrivers.toList().find { it.driver_id == args[0].toString() }
                 removedDriver?.let { otherDrivers.remove(it) }
