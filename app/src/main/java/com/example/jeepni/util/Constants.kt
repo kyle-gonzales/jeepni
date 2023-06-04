@@ -36,11 +36,11 @@ object Constants {
         "Tires" to R.drawable.tire,
         "Oil Change" to R.drawable.oil,
         "Mirrors" to R.drawable.mirror,
-        "LTFRB Check" to R.drawable.search_check_48px,
-        "LTO Check" to R.drawable.search_check_48px,
+        "LTFRB Check" to R.drawable.inspection,
+        "LTO Check" to R.drawable.inspection,
         "Seatbelt" to R.drawable.safety_belt,
         "Wipers" to R.drawable.wiper,
         "Engine" to R.drawable.car_engine,
-        "Battery" to R.drawable.car_battery,
+        "Battery" to R.drawable.battery,
     ).withDefault { R.drawable.samplelogo }
 }
