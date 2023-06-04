@@ -23,9 +23,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.AlarmContent
+import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.Constants.ICON_MAP
 import com.example.jeepni.util.PermissionTextProvider
@@ -185,6 +187,7 @@ fun JeepNiTextField(
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
+            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
         )
     }
 }
@@ -244,6 +247,7 @@ fun CustomDropDown(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(65.dp)
                     .onGloballyPositioned {
                         onSizeChange(it.size.toSize())
                     }
@@ -257,15 +261,20 @@ fun CustomDropDown(
                             size.width.toDp()
                         }
                     )
-                    .requiredHeight(230.dp)
+                    .requiredHeight(270.dp)
             ) {
                 items.forEachIndexed { index, s ->
                     DropdownMenuItem(
-                        text = { Text(text = s) },
+                        text = { Text(
+                            text = s,
+                            fontFamily = quicksandFontFamily,
+                            fontSize = 16.sp
+                        ) },
                         onClick = {
                             onSelected(index)
                             onClickIcon(false)
-                        }
+                        },
+                        contentPadding = PaddingValues(start = 15.dp)
                     )
                     Divider(Modifier.padding(4.dp, 0.dp))
                 }
@@ -509,7 +518,7 @@ fun DatePicker(
 @Composable
 fun ComponentCard(
     alarm:AlarmContent
-){
+) {
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
@@ -521,8 +530,8 @@ fun ComponentCard(
         modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
-    ){
-        Column(modifier = Modifier.padding(8.dp), ) {
+    ) {
+        Column(modifier = Modifier.padding(8.dp),) {
             Icon(
                 painter = painterResource(ICON_MAP[alarm.name]!!),
                 contentDescription = null,
@@ -542,14 +551,16 @@ fun ComponentCard(
                 JeepNiText(
                     text = formattedDate,
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp))
+                    modifier = Modifier.padding(start = 4.dp)
+                )
             }
-            val repeatability by remember{
+            val repeatability by remember {
                 derivedStateOf {
-                    if(alarm.isRepeatable){
-                        alarm.interval.first.toString()+" "+alarm.interval.second
+                    if (alarm.isRepeatable) {
+                        alarm.interval.first.toString() + " " + alarm.interval.second
+                    } else {
+                        "Off"
                     }
-                    else{"Off"}
                 }
             }
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
@@ -561,9 +572,9 @@ fun ComponentCard(
                 JeepNiText(
                     text = repeatability,
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp))
+                    modifier = Modifier.padding(start = 4.dp)
+                )
             }
         }
     }
 }
-

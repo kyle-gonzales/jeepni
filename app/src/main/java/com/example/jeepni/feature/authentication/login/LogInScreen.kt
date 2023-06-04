@@ -115,7 +115,7 @@ fun LogInScreen(
                         onClick = {
                             viewModel.onEvent(LogInEvent.OnSignUpClicked)
                         },
-                        contentPadding = PaddingValues(start = 4.dp)
+                        contentPadding = PaddingValues(start = 3.5.dp)
                         ){
                         Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }

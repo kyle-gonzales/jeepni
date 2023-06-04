@@ -159,7 +159,7 @@ fun SignUpScreen(
                 ){
                     JeepNiText(stringResource(R.string.has_account))
                     TextButton(
-                        contentPadding = PaddingValues(start = 4.dp),
+                        contentPadding = PaddingValues(start = (3.5).dp),
                         onClick = {
                             viewModel.onEvent(SignUpEvent.OnLogInClicked)
                         }
