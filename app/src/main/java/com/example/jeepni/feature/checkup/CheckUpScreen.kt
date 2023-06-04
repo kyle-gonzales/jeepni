@@ -32,6 +32,7 @@ import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckUpScreen (
     viewModel: CheckUpViewModel = hiltViewModel(),

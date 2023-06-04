@@ -551,7 +551,7 @@ fun ComponentCard(
             }
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Icon(
-                    painter = painterResource(R.drawable.alarm),
+                    painter = painterResource(R.drawable.alarm_48px),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
