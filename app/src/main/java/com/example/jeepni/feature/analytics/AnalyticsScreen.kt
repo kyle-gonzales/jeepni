@@ -26,6 +26,11 @@ fun AnalyticsScreen(
 ) {
 
     val analytics by viewModel.analytics.collectAsState(initial = null) // this is the list that is used in the lazy column
+    val averageFuelCost by viewModel.averageFuelCost.collectAsState(initial = 0.0)
+    val averageSalary by viewModel.averageSalary.collectAsState(initial = 0.0)
+    val df = DecimalFormat("#.##")
+
+
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 

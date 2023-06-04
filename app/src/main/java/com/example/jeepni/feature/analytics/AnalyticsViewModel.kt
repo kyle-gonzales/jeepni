@@ -3,14 +3,12 @@ package com.example.jeepni.feature.analytics
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +20,14 @@ class AnalyticsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var analytics = repository.getDailyStats()
+
+    var averageFuelCost = analytics.map {items ->
+        items.map { item -> item.fuelCost }.average()
+    }
+
+    var averageSalary = analytics.map { items ->
+        items.map { item -> item.salary }.average()
+    }
 
 
     private var _uiEvent = Channel<UiEvent>()
