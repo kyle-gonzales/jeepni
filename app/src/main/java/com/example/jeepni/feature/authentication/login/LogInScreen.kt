@@ -2,8 +2,10 @@ package com.example.jeepni.feature.authentication
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
@@ -50,18 +53,18 @@ fun LogInScreen(
                 BackIconButton {
                     viewModel.onEvent(LogInEvent.OnBackPressed)
                 }
-                JeepNiText(
-                    stringResource(R.string.welcome_back),
-                    fontSize = 18.sp,
+                Text(
+                    text = "Log in",
+                    fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    fontFamily = quicksandFontFamily
                 )
                 Column (
                     modifier = Modifier
                         .fillMaxWidth()
                 ){
                     JeepNiTextField (
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().height(65.dp),
                         label = "Email",
                         value = viewModel.email,
                         onValueChange = {viewModel.onEvent(LogInEvent.OnEmailChange(it))},
@@ -69,7 +72,7 @@ fun LogInScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
                         )
                     JeepNiTextField (
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().height(65.dp),
                         label = "Password",
                         value = viewModel.password,
                         onValueChange = {viewModel.onEvent(LogInEvent.OnPasswordChange(it))},
@@ -77,14 +80,14 @@ fun LogInScreen(
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
-                }
-                TextButton(
-                    onClick = {
-                        //TODO : implement forgot password
-                        viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
+                    TextButton(
+                        onClick = {
+                            //TODO : implement forgot password
+                            viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
+                        }
+                    ){
+                        Text("Forgot Password", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
-                ){
-                    Text("Forgot Password", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                 }
                 Column {
                     SolidButton(
@@ -92,16 +95,16 @@ fun LogInScreen(
                             viewModel.onEvent(LogInEvent.OnLogInClicked)
                         }
                     ) {
-                        Text("Log In", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        Text("Log in", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                     SolidButton(
-                        bgColor = Black,
-                        contentColor =  White,
+                        bgColor = MaterialTheme.colorScheme.onBackground,
+                        contentColor =  MaterialTheme.colorScheme.background,
                     onClick = {
                         //TODO: implement login with GOOGLE ACCOUNT
                         viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
                     }) {
-                        Text("Log In with Google", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        Text("Log in with Google", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                 }
                 Row (
@@ -112,7 +115,8 @@ fun LogInScreen(
                         onClick = {
                             viewModel.onEvent(LogInEvent.OnSignUpClicked)
                         },
-                    ){
+                        contentPadding = PaddingValues(start = 4.dp)
+                        ){
                         Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                 }

@@ -193,7 +193,10 @@ fun JeepNiTextField(
 fun BackIconButton(
     onClick: () -> Unit
 ) {
-    IconButton(onClick = { onClick() })
+    IconButton(
+        onClick = { onClick() },
+        modifier = Modifier.offset(-12.dp)
+    )
     {
         Icon(Icons.Filled.ArrowBack, contentDescription = null)
     }
