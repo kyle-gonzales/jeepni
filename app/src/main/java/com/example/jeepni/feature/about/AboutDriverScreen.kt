@@ -30,13 +30,10 @@ import com.example.jeepni.core.ui.Container
 
 import com.example.jeepni.core.ui.CustomDropDown
 import com.example.jeepni.core.ui.JeepNiAlertDialog
-import com.example.jeepni.core.ui.JeepNiText
-import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.SolidButton
 
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
-import com.example.jeepni.feature.authentication.signup.SignUpEvent
 import com.example.jeepni.util.UiEvent
 import java.util.*
 
@@ -70,8 +67,7 @@ fun AboutDriverScreen(
 
     JeepNiTheme {
         Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            modifier = Modifier.fillMaxSize()
         ){
             Box(
                 modifier = with (Modifier){

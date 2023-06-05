@@ -1,6 +1,7 @@
 package com.example.jeepni.feature.authentication
 
 import android.widget.Toast
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +14,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,120 +59,143 @@ fun SignUpScreen(
             }
         }
     }
+    val bgImage = if(isSystemInDarkTheme()){R.drawable.bg_dark}else{R.drawable.bg_light}
 
     JeepNiTheme() {
-        Surface {
-
-            Container(0.9f) {
-                BackIconButton {
-                    viewModel.onEvent(SignUpEvent.OnBackClicked)
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ){
+            Box(
+                modifier = with (Modifier){
+                    fillMaxSize()
+                        .paint(
+                            painterResource(id = bgImage),
+                            contentScale = ContentScale.Crop)
                 }
-                Text(
-                    text = "Sign up",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = quicksandFontFamily
-                )
-                Column(
-                    horizontalAlignment = Alignment.Start
-                ){
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth().height(65.dp),
-                        label = {Text("Email", fontFamily = quicksandFontFamily)},
-                        value = viewModel.email,
-                        onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-                        shape = RoundedCornerShape(20)
+            ){
+                Container(0.9f) {
+                    BackIconButton {
+                        viewModel.onEvent(SignUpEvent.OnBackClicked)
+                    }
+                    Text(
+                        text = "Sign up",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = quicksandFontFamily
                     )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth().height(65.dp),
-                        label = {Text("Password")},
-                        value = viewModel.password,
-                        onValueChange = {viewModel.onEvent(SignUpEvent.OnPasswordChange(it))},
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-                        textStyle = TextStyle(
-                            fontFamily = quicksandFontFamily,
-                        ),
-                        shape = RoundedCornerShape(20)
-                    )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth().height(65.dp),
-                        label = {Text("Confirm Password")},
-                        value = viewModel.confirmPassword,
-                        onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-                        shape = RoundedCornerShape(20)
-                    )
-                    Row (modifier = Modifier,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Checkbox(
-                            checked = viewModel.isAgreeToTerms,
-                            onCheckedChange = { viewModel.onEvent(SignUpEvent.OnAgreeTerms(it)) }
+                    Column(
+                        horizontalAlignment = Alignment.Start
+                    ){
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(65.dp),
+                            label = {Text("Email", fontFamily = quicksandFontFamily)},
+                            value = viewModel.email,
+                            onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+                            shape = RoundedCornerShape(20),
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = MaterialTheme.colorScheme.onBackground
+                            )
                         )
-                        Text(text = stringResource(R.string.agree), fontSize = 14.sp, fontFamily = quicksandFontFamily)
-                        TextButton(
-                            contentPadding = PaddingValues(start = 4.dp, end = 1.dp),
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(65.dp),
+                            label = {Text("Password")},
+                            value = viewModel.password,
+                            onValueChange = {viewModel.onEvent(SignUpEvent.OnPasswordChange(it))},
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+                            textStyle = TextStyle(
+                                fontFamily = quicksandFontFamily,
+                            ),
+                            shape = RoundedCornerShape(20),
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = MaterialTheme.colorScheme.onBackground
+                            )
+                        )
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(65.dp),
+                            label = {Text("Confirm Password")},
+                            value = viewModel.confirmPassword,
+                            onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+                            shape = RoundedCornerShape(20),
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = MaterialTheme.colorScheme.onBackground
+                            )
+                        )
+                        Row (modifier = Modifier,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Checkbox(
+                                checked = viewModel.isAgreeToTerms,
+                                onCheckedChange = { viewModel.onEvent(SignUpEvent.OnAgreeTerms(it)) }
+                            )
+                            Text(text = stringResource(R.string.agree), fontSize = 14.sp, fontFamily = quicksandFontFamily)
+                            TextButton(
+                                contentPadding = PaddingValues(start = 4.dp, end = 1.dp),
+                                onClick = {
+                                    //TODO : open terms and conditions dialog
+                                    viewModel.onEvent(SignUpEvent.OnShowTermsAndConditions)
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.terms),
+                                    fontFamily = quicksandFontFamily
+                                )
+                            }
+                            Text(text = ".", fontSize = 14.sp, fontFamily = quicksandFontFamily)
+                        }
+                    }
+                    Column {
+                        SolidButton(
                             onClick = {
-                                //TODO : open terms and conditions dialog
-                                viewModel.onEvent(SignUpEvent.OnShowTermsAndConditions)
+                                viewModel.onEvent(SignUpEvent.OnCreateAccountClicked)
                             }
                         ) {
                             Text(
-                                text = stringResource(R.string.terms),
+                                text = stringResource(R.string.create),
+                                fontFamily = quicksandFontFamily,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        SolidButton(
+                            bgColor = MaterialTheme.colorScheme.onBackground,
+                            contentColor =  MaterialTheme.colorScheme.background,
+                            onClick = {
+                                /*TODO: sign up with GOOGLE ACCOUNT */
+                                viewModel.onEvent(SignUpEvent.OnCreateAccountWithGoogleClicked)
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.create_google),
+                                fontFamily = quicksandFontFamily,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    Row (modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        JeepNiText(stringResource(R.string.has_account))
+                        TextButton(
+                            contentPadding = PaddingValues(start = (3.5).dp),
+                            onClick = {
+                                viewModel.onEvent(SignUpEvent.OnLogInClicked)
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.log_in),
+                                fontWeight = FontWeight.Bold,
                                 fontFamily = quicksandFontFamily
                             )
                         }
-                        Text(text = ".", fontSize = 14.sp, fontFamily = quicksandFontFamily)
-                    }
-                }
-                Column {
-                    SolidButton(
-                        onClick = {
-                            viewModel.onEvent(SignUpEvent.OnCreateAccountClicked)
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.create),
-                            fontFamily = quicksandFontFamily,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    SolidButton(
-                        bgColor = MaterialTheme.colorScheme.onBackground,
-                        contentColor =  MaterialTheme.colorScheme.background,
-                        onClick = {
-                            /*TODO: sign up with GOOGLE ACCOUNT */
-                            viewModel.onEvent(SignUpEvent.OnCreateAccountWithGoogleClicked)
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.create_google),
-                            fontFamily = quicksandFontFamily,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-                Row (modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    JeepNiText(stringResource(R.string.has_account))
-                    TextButton(
-                        contentPadding = PaddingValues(start = (3.5).dp),
-                        onClick = {
-                            viewModel.onEvent(SignUpEvent.OnLogInClicked)
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.log_in),
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = quicksandFontFamily
-                        )
                     }
                 }
             }
