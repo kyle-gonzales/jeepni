@@ -14,7 +14,7 @@ import com.example.jeepni.feature.about.AboutDriverScreen
 import com.example.jeepni.feature.analytics.AnalyticsScreen
 import com.example.jeepni.feature.authentication.LogInScreen
 import com.example.jeepni.feature.authentication.SignUpScreen
-import com.example.jeepni.feature.authentication.Welcome2Screen
+import com.example.jeepni.feature.authentication.welcome.Welcome2Screen
 import com.example.jeepni.feature.authentication.loading.LoadingScreen
 import com.example.jeepni.feature.checkup.CheckUpScreen
 import com.example.jeepni.feature.home.MainScreen
