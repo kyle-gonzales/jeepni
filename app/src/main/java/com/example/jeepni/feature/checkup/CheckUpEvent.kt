@@ -10,12 +10,14 @@ sealed class CheckUpEvent {
     object OnDismissEdit : CheckUpEvent()
 
     object OnDeleteClicked : CheckUpEvent()
+    data class OnOpenEditAlarmDialog(val isOpen: Boolean, val index : Int) : CheckUpEvent()
+    data class OnOpenAddAlarmDialog(val isOpen : Boolean, val index : Int =  0) : CheckUpEvent()
     data class OnNextAlarmChange(val nextAlarm: LocalDate) : CheckUpEvent()
     data class OnRepeatabilityChange(val isRepeated: Boolean) : CheckUpEvent()
     data class OnValueChange(val value: String) : CheckUpEvent() // the enter number textfield (see Figma)
     data class OnDurationChange(val duration: String) : CheckUpEvent() // day? month? year?
-  data class OnNameChange(val name: String) : CheckUpEvent()
-    object OnNameChange1: CheckUpEvent()
+    data class OnNameChange(val name: String) : CheckUpEvent()
+    object OnNameChange1: CheckUpEvent() //? what is this for???
     object OnSaveEditClicked : CheckUpEvent()
     object OnSaveAddClicked : CheckUpEvent()
 }

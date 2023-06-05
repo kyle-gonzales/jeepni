@@ -84,7 +84,7 @@ fun CheckUpScreen (
                             item {
                                 Button(
                                     onClick = {
-                                        viewModel.isAddComponentDialogOpen = true
+                                        viewModel.onEvent(CheckUpEvent.OnOpenAddAlarmDialog(true))
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -102,10 +102,10 @@ fun CheckUpScreen (
                                     )
                                 }
                             }
-                            items(viewModel.alarmList) {alarm ->
+                            itemsIndexed(viewModel.alarmList) {index, alarm ->
                                 Button(
                                     onClick =  {
-                                        viewModel.isEditDeleteDialogOpen = true
+                                        viewModel.onEvent(CheckUpEvent.OnOpenEditAlarmDialog(true, index))
                                     },
                                     shape = RoundedCornerShape(10.dp),
                                     modifier = Modifier
@@ -128,7 +128,7 @@ fun CheckUpScreen (
                     onDismiss = {viewModel.onEvent(
                         CheckUpEvent.OnDismissAdd
                     )},
-                    pickedDate = viewModel.nextAlarm,
+                    pickedDate = viewModel.nextAlarm.toLocalDate(),
                     onDateChange = {viewModel.onEvent(
                         CheckUpEvent.OnNextAlarmChange(it)
                     )},
@@ -162,14 +162,11 @@ fun CheckUpScreen (
                     isError = viewModel.isError
                 )
             }
-            if(viewModel.isEditDeleteDialogOpen){
+            if (viewModel.isEditDeleteDialogOpen) {
                 EditDeleteDialog(
                     alarmName = viewModel.alarmList[viewModel.alarmToEditIndex].name,
-                    onDismiss = {viewModel.onEvent(
-                        CheckUpEvent.OnDismissEdit
-                    )
-                                },
-                    pickedDate = viewModel.nextAlarm,
+                    onDismiss = { viewModel.onEvent( CheckUpEvent.OnDismissEdit ) },
+                    pickedDate = viewModel.nextAlarm.toLocalDate(),
                     onDateChange = {viewModel.onEvent(
                         CheckUpEvent.OnNextAlarmChange(it)
                     )},
