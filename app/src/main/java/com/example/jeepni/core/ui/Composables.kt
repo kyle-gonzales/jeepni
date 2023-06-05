@@ -249,6 +249,7 @@ fun CustomDropDown(
                     )
                 },
                 modifier = Modifier
+                    .clickable { onClickIcon(!expanded) }
                     .fillMaxWidth()
                     .height(65.dp)
                     .onGloballyPositioned {
@@ -451,7 +452,7 @@ fun DatePicker(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Box() {
+        Box {
             OutlinedButton(
                 onClick = { dateDialogState.show() },
                 modifier = Modifier.height(60.dp),
@@ -487,7 +488,7 @@ fun DatePicker(
                 fontSize = 11.sp,
                 fontFamily = quicksandFontFamily,
                 modifier = Modifier
-                    .offset(x = 15.dp, y = -15.dp)
+                    .offset(x = 15.dp, y = (-15).dp)
                     .padding(10.dp)
                     .background(MaterialTheme.colorScheme.background)
             )
@@ -538,7 +539,7 @@ fun DatePicker(
 
 @Composable
 fun ComponentCard(
-    alarm:AlarmContent
+    alarm: AlarmContent
 ) {
     val formattedDate by remember {
         derivedStateOf {
