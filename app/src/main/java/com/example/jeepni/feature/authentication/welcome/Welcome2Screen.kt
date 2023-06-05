@@ -1,4 +1,4 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.welcome
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -45,7 +45,7 @@ fun Welcome2Screen(
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         ) {
 
-            Container(0.6f){
+            Container(1.0f){
                 Logo()
                 Column{
                     Text(
