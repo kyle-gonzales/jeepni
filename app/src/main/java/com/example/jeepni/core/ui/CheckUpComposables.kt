@@ -217,19 +217,19 @@ fun EditDeleteDialog(
 fun AddDialog(
     onDismiss: () -> Unit,
     pickedDate: LocalDate,
-    onDateChange:(LocalDate)->Unit,
-    isRepeated:Boolean,
+    onDateChange: (LocalDate)->Unit,
+    isRepeated: Boolean,
     onRepeatabilityChange: (Boolean)->Unit,
-    value:String,
+    value: String,
     onValueChange: (String)->Unit,
-    duration:String,
+    duration: String,
     onDurationChange: (String) -> Unit,
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
-    name:String,
+    name: String,
     onNameChange: (String)-> Unit,
     onNameChange1: () -> Unit,
-    isError:Boolean
+    isError: Boolean
 ) {
     val state by remember{
         derivedStateOf {
@@ -238,7 +238,7 @@ fun AddDialog(
         }
     }
     Dialog(onDismissRequest = onDismiss) {
-        Card(
+        Card (
             elevation = CardDefaults.cardElevation(
                 defaultElevation =  4.dp
             ),
@@ -262,7 +262,7 @@ fun AddDialog(
                     )
                 }
                 Spacer(Modifier.height(20.dp))
-                AlarmName(name, onNameChange, onNameChange1)
+//                AlarmName(name, onNameChange, onNameChange1)
                 DatePicker(
                     label = "Date of next alarm",
                     pickedDate = pickedDate,
@@ -358,7 +358,7 @@ fun AddDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlarmName(
+fun AlarmName( // what is this?
     selectedOption: String,
     onSelectedChange: (String) -> Unit,
     onSelectedChange1: () -> Unit,
