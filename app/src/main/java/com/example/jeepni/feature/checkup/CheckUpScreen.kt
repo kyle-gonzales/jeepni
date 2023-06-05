@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.ui.AddDialog
 import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.ComponentCard
@@ -32,6 +30,7 @@ import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckUpScreen (
     viewModel: CheckUpViewModel = hiltViewModel(),
@@ -60,12 +59,12 @@ fun CheckUpScreen (
         }
     }
 
-    JeepNiTheme() {
+    JeepNiTheme {
         Surface {
             Scaffold(
                 topBar = {
                     AppBar(
-                        titledesc = "JeepNi! Check-up",
+                        title = "JeepNi! Check-up",
                         onPopBackStack = {  viewModel.onEvent(CheckUpEvent.OnBackPressed)  }
                     )
                 },
@@ -117,7 +116,7 @@ fun CheckUpScreen (
                                         contentColor = MaterialTheme.colorScheme.onSurface
                                     )
                                 ){
-                                        ComponentCard(alarm)
+                                    ComponentCard(alarm)
                                 }
                             }
                         }
@@ -202,7 +201,7 @@ fun CheckUpScreen (
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    titledesc: String,
+    title: String,
     onPopBackStack: () -> Unit,
 ) {
     Surface(
@@ -215,7 +214,7 @@ fun AppBar(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    JeepNiText(text = titledesc)
+                    JeepNiText(text = title)
                 }
             },
             navigationIcon = {
