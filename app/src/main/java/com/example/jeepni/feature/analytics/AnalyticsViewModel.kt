@@ -26,6 +26,14 @@ class AnalyticsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var analytics = repository.getDailyStats()
+        .map {items ->
+            items.sortedBy {stat ->
+                val input = stat.date.split("-")
+                val date = LocalDate.of(input[2].toInt(), input[0].toInt(), input[1].toInt())
+                date
+            }
+
+        }
 
     @SuppressLint("SimpleDateFormat")
     var averageFuelCost = analytics
