@@ -248,7 +248,6 @@ fun Activity.openAppSettings() {
     ).also(::startActivity)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogDailyStatDialog(
     salary: String,
@@ -483,7 +482,7 @@ fun TopActionBar(
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
-                    Icon(painterResource(R.drawable.white_timer_24), contentDescription = null)
+                    Icon(painterResource(R.drawable.alarm_48px), contentDescription = null, Modifier.height(24.dp))
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
                         text = time,

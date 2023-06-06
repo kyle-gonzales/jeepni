@@ -3,18 +3,7 @@ package com.example.jeepni.core.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,26 +14,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -61,9 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Dialog
 import com.example.jeepni.R
-import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
-import com.example.jeepni.feature.checkup.CheckUpEvent
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Constants.COMPONENTS
 import java.time.LocalDate
@@ -75,27 +44,29 @@ fun EditDeleteDialog(
     alarmName: String,
     onDismiss: () -> Unit,
     pickedDate: LocalDate,
-    onDateChange:(LocalDate)->Unit,
-    isRepeated:Boolean,
+    onDateChange: (LocalDate)->Unit,
+    isRepeated: Boolean,
     onRepeatabilityChange: (Boolean)->Unit,
-    value:String,
+    value: String,
     onValueChange: (String)->Unit,
-    duration:String,
+    duration: String,
     onDurationChange: (String) -> Unit,
     onDeleteClick: () -> Unit,
     onSaveClick: () -> Unit,
-    isError:Boolean,
+    isError: Boolean,
 ) {
 
-    val state by remember{
+    val repeatedTextState by remember{ //why is this not working?
         derivedStateOf {
-            if(isRepeated){"On"}
-            else{"Off"}
+            if(isRepeated)
+                "Repeat (On)"
+            else
+                "Repeat (Off)"
         }
     }
     Dialog(onDismissRequest = onDismiss) {
         Card(
-            elevation = CardDefaults.cardElevation(
+            elevation = CardDefaults.cardElevation (
                 defaultElevation =  4.dp
             ),
             shape = RoundedCornerShape(12.dp),
@@ -141,14 +112,13 @@ fun EditDeleteDialog(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(5.dp))
-                        Text(text = "Repeat (" + state + ")", fontFamily = quicksandFontFamily)
+                        Text(text = repeatedTextState, fontFamily = quicksandFontFamily)
                     }
                     Switch(
                         //change style
                         modifier = Modifier.height(17.dp),
                         checked = isRepeated,
-                        onCheckedChange = onRepeatabilityChange,
-                        enabled = true,
+                        onCheckedChange = { onRepeatabilityChange(it) },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = MaterialTheme.colorScheme.primary,
                             checkedTrackColor = MaterialTheme.colorScheme.background,
@@ -227,8 +197,8 @@ fun AddDialog(
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
     name: String,
-    onNameChange: (String)-> Unit,
-    onNameChange1: () -> Unit,
+    onNameChange: (String) -> Unit,
+    onNameChange1: (String) -> Unit,
     isError: Boolean
 ) {
     val state by remember{
@@ -261,8 +231,15 @@ fun AddDialog(
                         fontWeight = FontWeight.Bold
                     )
                 }
+                Spacer(Modifier.height(12.dp))
+
+                AlarmNameGrid(
+                    name,
+                    { onNameChange(it) },
+                    { onNameChange1(it) },
+                )
+
                 Spacer(Modifier.height(20.dp))
-//                AlarmName(name, onNameChange, onNameChange1)
                 DatePicker(
                     label = "Date of next alarm",
                     pickedDate = pickedDate,
@@ -358,203 +335,116 @@ fun AddDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlarmName( // what is this?
-    selectedOption: String,
-    onSelectedChange: (String) -> Unit,
-    onSelectedChange1: () -> Unit,
+fun AlarmNameGrid(
+    selectedAlarm: String,
+    onAlarmItemChanged: (String) -> Unit,
+    onCustomAlarmNameChanged: (String) -> Unit,
 ){
-    var customEnabled by remember {
-        mutableStateOf(true)
+    var isCustomAlarmItemEnabled by remember {
+        mutableStateOf(false)
     }
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
-            .fillMaxSize()
-            .padding(5.dp)
+            .padding(4.dp)
     ){
         items(COMPONENTS){
-            if(selectedOption == it){
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = (it == selectedOption),
-                            onClick ={}
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {},
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
+            val isSelected = (selectedAlarm == it && selectedAlarm in COMPONENTS) && !isCustomAlarmItemEnabled
+            OutlinedButton(
+                modifier = Modifier
+                    .selectable(
+                        selected = isSelected,
+                        onClick = {},
+                    )
+                    .fillMaxWidth()
+                    .height(60.dp),
+                onClick = {
+                    onAlarmItemChanged(it)
+                    isCustomAlarmItemEnabled = false
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background ,
+                    contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                contentPadding = PaddingValues(3.dp)
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(Constants.ICON_MAP[it]!!),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = it,
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            }
-            else{
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = (it == selectedOption),
-                            onClick = {
-                                onSelectedChange
-                                customEnabled = false
-                            }
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {
-                        onSelectedChange
-                        customEnabled = false
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
-                ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(Constants.ICON_MAP[it]!!),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = it,
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(Constants.ICON_MAP.getValue(it)),
+                        contentDescription = null,
+                        modifier = Modifier.height(24.dp)
+                    )
+                    Text(
+                        text = it,
+                        fontFamily = quicksandFontFamily,
+                        maxLines = 2,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
-        item{
-            if(selectedOption in COMPONENTS){
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = !(selectedOption in COMPONENTS),
-                            onClick = {
-                                customEnabled = true
-                                onSelectedChange1
-                            }
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {
-                        customEnabled = true
-                        onSelectedChange1
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
+        item {//custom alarm item
+            OutlinedButton(
+                modifier = Modifier
+                    .selectable(
+                        selected = isCustomAlarmItemEnabled,
+                        onClick = {}
+                    )
+                    .fillMaxWidth()
+                    .height(60.dp),
+                onClick = {
+                    isCustomAlarmItemEnabled = true
+                    onAlarmItemChanged("")
+                },
+                shape = RoundedCornerShape(20),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isCustomAlarmItemEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background ,
+                    contentColor = if (isCustomAlarmItemEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                contentPadding = PaddingValues(3.dp)
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(R.drawable.samplelogo),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = "Add Custom",
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            }
-            else{
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = !(selectedOption in COMPONENTS),
-                            onClick = {
-                                customEnabled = true
-
-                            }
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {customEnabled = true},
-                    shape = RoundedCornerShape(20),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
-                ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(R.drawable.samplelogo),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = "Add Custom",
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(R.drawable.samplelogo),
+                        contentDescription = null,
+                        modifier = Modifier.height(25.dp)
+                    )
+                    Text(
+                        text = "Add Custom",
+                        fontFamily = quicksandFontFamily,
+                        maxLines = 2,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
         item(span = { GridItemSpan(2) }){
-            if(customEnabled){
+            if(isCustomAlarmItemEnabled){
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp),
-                    value = selectedOption,
-                    onValueChange = {onSelectedChange},
+                    value = selectedAlarm,
+                    onValueChange = { onCustomAlarmNameChanged(it) },
                     label = {
                         Text(
-                            text = "Custom Alarm Name",
+                            text = "Custom Alarm",
                             fontFamily = quicksandFontFamily,
                             textAlign = TextAlign.Start,
-                            fontSize =12.sp
+                            fontSize = 12.sp,
                         )
                     },
                     shape = RoundedCornerShape(20),
