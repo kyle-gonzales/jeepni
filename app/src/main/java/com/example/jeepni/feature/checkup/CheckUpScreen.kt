@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +37,8 @@ fun CheckUpScreen (
     onPopBackStack : () -> Unit,
 ) {
     val context = LocalContext.current
+
+    val alarms by viewModel.alarms.collectAsState(null)
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -99,10 +103,10 @@ fun CheckUpScreen (
                                     )
                                 }
                             }
-                            itemsIndexed(viewModel.alarmList) {index, alarm ->
+                            itemsIndexed(alarms?: emptyList()) { index, alarm ->
                                 Button(
                                     onClick =  {
-                                        viewModel.onEvent(CheckUpEvent.OnOpenEditAlarmDialog(true, index))
+                                        viewModel.onEvent(CheckUpEvent.OnOpenEditAlarmDialog(true, alarm))
                                     },
                                     shape = RoundedCornerShape(10.dp),
                                     modifier = Modifier

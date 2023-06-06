@@ -1,14 +1,18 @@
 package com.example.jeepni.feature.checkup
 
-import androidx.compose.runtime.*
-import androidx.compose.ui.geometry.Size
+import android.util.Log
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.AlarmContent
-import com.example.jeepni.core.data.repository.AuthRepository
-import com.example.jeepni.core.data.repository.JeepsRepository
-import com.example.jeepni.core.data.repository.UserDetailRepository
+import com.example.jeepni.core.data.repository.AlarmContentRepository
+import com.example.jeepni.util.AlarmScheduler
+import com.example.jeepni.util.Constants
 import com.example.jeepni.util.UiEvent
+import com.example.jeepni.util.formatStringToDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -19,14 +23,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CheckUpViewModel
 @Inject constructor(
-    private val auth : AuthRepository,
-    private val jeepsRepository: JeepsRepository,
-    private val userDetailRepository: UserDetailRepository,
+    private val alarmRepository : AlarmContentRepository,
+    private val alarmManager: AlarmScheduler,
 ) : ViewModel() {
-    var alarmList = mutableStateListOf<AlarmContent>()
 
-    var alarmToEditIndex by mutableStateOf(0)
-    var nextAlarm: LocalDateTime by mutableStateOf(LocalDateTime.now())
+    val alarms = alarmRepository.getAllAlarms()
 
     var alarmName by mutableStateOf("Tires")
     var isRepeated by mutableStateOf(false)
@@ -47,14 +48,6 @@ class CheckUpViewModel
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    init {
-        alarmList.addAll(
-            listOf(
-                AlarmContent(name = "Tires"),
-                AlarmContent(name = "Oil Change", isRepeatable = true, interval = Pair(3, "day"))
-            )
-        )
-    }
     private fun resetAlarmContentVariables(){
         alarmToEditIndex = 0
         nextAlarm = LocalDateTime.now()
