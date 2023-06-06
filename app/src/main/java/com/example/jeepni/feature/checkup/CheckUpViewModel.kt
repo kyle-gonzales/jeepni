@@ -13,7 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -25,22 +24,25 @@ class CheckUpViewModel
     private val userDetailRepository: UserDetailRepository,
 ) : ViewModel() {
     var alarmList = mutableStateListOf<AlarmContent>()
+
     var alarmToEditIndex by mutableStateOf(0)
     var nextAlarm: LocalDateTime by mutableStateOf(LocalDateTime.now())
-    var value by mutableStateOf("1")
+
+    var alarmName by mutableStateOf("Tires")
     var isRepeated by mutableStateOf(false)
-    var name by mutableStateOf("")
-    var duration by mutableStateOf("")
+    var intervalType by mutableStateOf("day")
+    var intervalValue by mutableStateOf("1")
     var isNameDropdownClicked by mutableStateOf(false)
     var nameDropdownSize by mutableStateOf(Size.Zero)
-//    val isError by derivedStateOf {
-//        (value.toLong() > 100 || value.toInt() < 1) && value.all { char -> char.isDigit() }
-//    }
-    val isError by mutableStateOf(false)
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+
+    val isError by derivedStateOf {
+        (intervalValue.toLong() > 100 || intervalValue.toInt() < 1) && intervalValue.all { char -> char.isDigit() }
+    }
     var isAddComponentDialogOpen by mutableStateOf(false)
     var isEditDeleteDialogOpen by mutableStateOf(false)
+
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         alarmList.addAll(
@@ -50,13 +52,13 @@ class CheckUpViewModel
             )
         )
     }
-    fun resetVariables(){
+    private fun resetAlarmContentVariables(){
         alarmToEditIndex = 0
         nextAlarm = LocalDateTime.now()
-        value = ""
+        intervalValue = "1"
         isRepeated = false
-        name = ""
-        duration = ""
+        alarmName = "Tires"
+        intervalType = "day"
     }
     fun onEvent(event: CheckUpEvent) {
         when (event) {
@@ -95,10 +97,10 @@ class CheckUpViewModel
                 isRepeated = event.isRepeated
             }
             is CheckUpEvent.OnDurationChange -> {
-                duration = event.duration
+                intervalType = event.duration
             }
             is CheckUpEvent.OnValueChange -> {
-                value = event.value
+                intervalValue = event.value
             }
             is CheckUpEvent.OnBackPressed -> {
                 sendUiEvent(UiEvent.PopBackStack)
@@ -110,10 +112,10 @@ class CheckUpViewModel
             is CheckUpEvent.OnOpenEditAlarmDialog -> {
                 val item = alarmList[alarmToEditIndex]
                 nextAlarm = item.nextAlarmDate
-                value = item.interval.first.toString()
+                intervalValue = item.interval.first.toString()
                 isRepeated = item.isRepeatable
-                name = item.name
-                duration = item.interval.second
+                alarmName = item.name
+                intervalType = item.interval.second
                 isEditDeleteDialogOpen = event.isOpen
             }
         }

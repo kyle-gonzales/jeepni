@@ -136,11 +136,11 @@ fun CheckUpScreen (
                     onRepeatabilityChange = {viewModel.onEvent(
                         CheckUpEvent.OnRepeatabilityChange(it)
                     )},
-                    value = viewModel.value,
+                    value = viewModel.intervalValue,
                     onValueChange = {viewModel.onEvent(
                         CheckUpEvent.OnValueChange(it)
                     )},
-                    duration = viewModel.duration,
+                    duration = viewModel.intervalType,
                     onDurationChange = {viewModel.onEvent(
                         CheckUpEvent.OnDurationChange(it)
                     )
@@ -152,7 +152,7 @@ fun CheckUpScreen (
                     onSaveClick = {viewModel.onEvent(
                         CheckUpEvent.OnSaveAddClicked
                     )},
-                    name = viewModel.name,
+                    name = viewModel.alarmName,
                     onNameChange = {viewModel.onEvent(
                         CheckUpEvent.OnNameChange(it)
                     )},
@@ -173,12 +173,12 @@ fun CheckUpScreen (
                     isRepeated = viewModel.isRepeated,
                     onRepeatabilityChange = {viewModel.onEvent(
                         CheckUpEvent.OnRepeatabilityChange(it)
-                    )},
-                    value = viewModel.value,
+                    ) },
+                    value = viewModel.intervalValue,
                     onValueChange = {viewModel.onEvent(
                         CheckUpEvent.OnValueChange(it)
                     )},
-                    duration = viewModel.duration,
+                    duration = viewModel.intervalType,
                     onDurationChange = {viewModel.onEvent(
                         CheckUpEvent.OnDurationChange(it)
                     )
