@@ -36,7 +36,10 @@ class CheckUpViewModel
     var nameDropdownSize by mutableStateOf(Size.Zero)
 
     val isError by derivedStateOf {
-        (intervalValue.toLong() > 100 || intervalValue.toInt() < 1) && intervalValue.all { char -> char.isDigit() }
+        if (intervalValue.isNotEmpty())
+            (intervalValue.toLong() > 100 || intervalValue.toInt() < 1) && intervalValue.all { char -> char.isDigit() }
+        else
+            false
     }
     var isAddComponentDialogOpen by mutableStateOf(false)
     var isEditDeleteDialogOpen by mutableStateOf(false)
