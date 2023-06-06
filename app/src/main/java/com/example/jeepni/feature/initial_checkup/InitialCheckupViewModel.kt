@@ -65,7 +65,7 @@ class InitialCheckupViewModel @Inject constructor(
                     AlarmContent(
                         name = "LTFRB Inspection",
                         nextAlarmDate = ltfrbDate.plusYears(1).minusDays(3).atTime(7,0),
-                        interval = Pair(1, "year")
+                        intervalPair = Pair(1, "year")
                     ),
                     NotificationContent(
                         notificationId = Constants.LTFRB_INSPECTION_NOTIFICATION,
@@ -77,7 +77,7 @@ class InitialCheckupViewModel @Inject constructor(
                     AlarmContent(
                         name = "LTO Inspection",
                         nextAlarmDate = ltoDate.plusYears(1).minusDays(3).atTime(7,0),
-                        interval = Pair(1, "year")
+                        intervalPair = Pair(1, "year")
                     ),
                     NotificationContent(
                         notificationId = Constants.LTO_INSPECTION_NOTIFICATION,
@@ -90,7 +90,7 @@ class InitialCheckupViewModel @Inject constructor(
                         AlarmContent(
                             name = "Battery",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
+                            intervalPair = Pair(7, "day")
                         ),
                         NotificationContent(
                             notificationId = Constants.BATTERY_REPAIR_NOTIFICATION,
@@ -104,7 +104,7 @@ class InitialCheckupViewModel @Inject constructor(
                         AlarmContent(
                             name = "Engine",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
+                            intervalPair = Pair(7, "day")
                         ),
                         NotificationContent(
                             notificationId = Constants.ENGINE_REPAIR_NOTIFICATION,
@@ -118,7 +118,7 @@ class InitialCheckupViewModel @Inject constructor(
                         AlarmContent(
                             name = "Mirrors",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
+                            intervalPair = Pair(7, "day")
                         ),
                         NotificationContent(
                             notificationId = Constants.SIDE_MIRRORS_REPAIR_NOTIFICATION,
@@ -132,7 +132,7 @@ class InitialCheckupViewModel @Inject constructor(
                         AlarmContent(
                             name = "Seatbelt",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
+                            intervalPair = Pair(7, "day")
                         ),
                         NotificationContent(
                             notificationId = Constants.SEATBELT_REPAIR_NOTIFICATION,
@@ -146,7 +146,7 @@ class InitialCheckupViewModel @Inject constructor(
                         AlarmContent(
                             name = "Wipers",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
+                            intervalPair = Pair(7, "day")
                         ),
                         NotificationContent(
                             notificationId = Constants.WIPERS_REPAIR_NOTIFICATION,
@@ -161,7 +161,7 @@ class InitialCheckupViewModel @Inject constructor(
                         AlarmContent(
                             name = "Tires",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
+                            intervalPair = Pair(7, "day")
                         ),
                         NotificationContent(
                             notificationId = Constants.TIRE_CHANGE_NOTIFICATION,
