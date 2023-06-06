@@ -35,8 +35,7 @@ class CheckUpViewModel
     var isRepeated by mutableStateOf(false)
     var intervalType by mutableStateOf("day")
     var intervalValue by mutableStateOf("1")
-    var isNameDropdownClicked by mutableStateOf(false)
-    var nameDropdownSize by mutableStateOf(Size.Zero)
+    var nextAlarmDate: LocalDateTime by mutableStateOf(LocalDateTime.now().plusMinutes(1))
 
     val isError by derivedStateOf {
         if (intervalValue.isNotEmpty())
@@ -52,7 +51,9 @@ class CheckUpViewModel
 
     private fun resetAlarmContentVariables(){
         selectedAlarm = null
-        nextAlarm = LocalDateTime.now()
+//        nextAlarmDate = LocalDateTime.now().toLocalDate().atTime(7,0,0)
+
+        nextAlarmDate = LocalDateTime.now().plusMinutes(1) // for testing
         intervalValue = "1"
         isRepeated = false
         alarmName = "Tires"

@@ -129,7 +129,7 @@ fun CheckUpScreen (
                     onDismiss = {viewModel.onEvent(
                         CheckUpEvent.OnDismissAdd
                     )},
-                    pickedDate = viewModel.nextAlarm.toLocalDate(),
+                    pickedDate = viewModel.nextAlarmDate.toLocalDate(),
                     onDateChange = {viewModel.onEvent(
                         CheckUpEvent.OnNextAlarmChange(it)
                     )},
@@ -167,7 +167,7 @@ fun CheckUpScreen (
                 EditDeleteDialog(
                     alarmName = viewModel.selectedAlarm!!.name,
                     onDismiss = { viewModel.onEvent( CheckUpEvent.OnDismissEdit ) },
-                    pickedDate = viewModel.nextAlarm.toLocalDate(),
+                    pickedDate = viewModel.nextAlarmDate.toLocalDate(),
                     onDateChange = {viewModel.onEvent(
                         CheckUpEvent.OnNextAlarmChange(it)
                     )},
