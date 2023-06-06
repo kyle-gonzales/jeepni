@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.AlarmContent
-import com.example.jeepni.core.data.model.NotificationContent
 import com.example.jeepni.util.AlarmScheduler
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Screen
@@ -56,11 +55,7 @@ class InitialCheckupViewModel @Inject constructor(
                         intervalPair = Pair(3, "month"),
                         nextAlarmDate = oilChangeDate.plusMonths(3).atTime(7, 0)
                     ),
-                    NotificationContent(
-                        notificationId = Constants.CHANGE_OIL_NOTIFICATION,
-                        title = "Change Your Oil Today",
-                        content = "It's been three months since your last known oil change, please check your vehicle's oil"
-                    )
+                    Constants.NOTIFICATION_MAP[Constants.OIL_CHANGE]!!
                 )
                 alarmScheduler.schedule(
                     AlarmContent(
@@ -68,11 +63,8 @@ class InitialCheckupViewModel @Inject constructor(
                         nextAlarmDate = ltfrbDate.plusYears(1).minusDays(3).atTime(7,0),
                         intervalPair = Pair(1, "year")
                     ),
-                    NotificationContent(
-                        notificationId = Constants.LTFRB_INSPECTION_NOTIFICATION,
-                        title = "Prepare for LTFRB inspection",
-                        content ="It's been a while since the last known LTFRB inspection, please prepare for any possible upcoming inspections"
-                    )
+                    Constants.NOTIFICATION_MAP[Constants.LTFRB_INSPECTION]!!
+
                 )
                 alarmScheduler.schedule(
                     AlarmContent(
@@ -80,11 +72,8 @@ class InitialCheckupViewModel @Inject constructor(
                         nextAlarmDate = ltoDate.plusYears(1).minusDays(3).atTime(7,0),
                         intervalPair = Pair(1, "year")
                     ),
-                    NotificationContent(
-                        notificationId = Constants.LTO_INSPECTION_NOTIFICATION,
-                        title = "Prepare for LTO inspection",
-                        content ="It's been a while since the last known LTO inspection, please prepare for any possible upcoming inspections"
-                    )
+                    Constants.NOTIFICATION_MAP[Constants.LTO_INSPECTION]!!
+
                 )
                 if (isBatteryEnabled) {
                     alarmScheduler.schedule(
@@ -93,11 +82,8 @@ class InitialCheckupViewModel @Inject constructor(
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
                             intervalPair = Pair(7, "day")
                         ),
-                        NotificationContent(
-                            notificationId = Constants.BATTERY_REPAIR_NOTIFICATION,
-                            title = "Replace Your Battery Today",
-                            content = "Your battery may be malfunctioning. Consider replacing it as soon as possible"
-                        )
+                        Constants.NOTIFICATION_MAP[Constants.BATTERY]!!
+
                     )
                 }
                 if (isEngineEnabled) {
@@ -107,11 +93,8 @@ class InitialCheckupViewModel @Inject constructor(
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
                             intervalPair = Pair(7, "day")
                         ),
-                        NotificationContent(
-                            notificationId = Constants.ENGINE_REPAIR_NOTIFICATION,
-                            title = "Repair Your Engine Today",
-                            content = "Your engine may be malfunctioning. Consider repairing it as soon as possible"
-                        )
+                        Constants.NOTIFICATION_MAP[Constants.ENGINE]!!
+
                     )
                 }
                 if (isMirrorsEnabled) {
@@ -121,11 +104,8 @@ class InitialCheckupViewModel @Inject constructor(
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
                             intervalPair = Pair(7, "day")
                         ),
-                        NotificationContent(
-                            notificationId = Constants.SIDE_MIRRORS_REPAIR_NOTIFICATION,
-                            title = "Repair Your Side Mirrors Today",
-                            content = "Your side mirrors may be in need of a repair. Consider repairing them as soon as possible"
-                        )
+                        Constants.NOTIFICATION_MAP[Constants.MIRRORS]!!
+
                     )
                 }
                 if (isSeatbeltEnabled) {
@@ -135,11 +115,8 @@ class InitialCheckupViewModel @Inject constructor(
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
                             intervalPair = Pair(7, "day")
                         ),
-                        NotificationContent(
-                            notificationId = Constants.SEATBELT_REPAIR_NOTIFICATION,
-                            title = "Repair Your Seatbelt Today",
-                            content = "Your seatbelt may be in need of a repair. Consider repairing it as soon as possible"
-                        )
+                        Constants.NOTIFICATION_MAP[Constants.SEATBELT]!!
+
                     )
                 }
                 if (isWipersEnabled) {
@@ -149,11 +126,8 @@ class InitialCheckupViewModel @Inject constructor(
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
                             intervalPair = Pair(7, "day")
                         ),
-                        NotificationContent(
-                            notificationId = Constants.WIPERS_REPAIR_NOTIFICATION,
-                            title = "Repair Your Wipers Today",
-                            content = "Your wipers may be in need of a repair. Consider repairing them as soon as possible"
-                        )
+                        Constants.NOTIFICATION_MAP[Constants.WIPERS]!!
+
                     )
 
                 }
@@ -164,11 +138,8 @@ class InitialCheckupViewModel @Inject constructor(
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
                             intervalPair = Pair(7, "day")
                         ),
-                        NotificationContent(
-                            notificationId = Constants.TIRE_CHANGE_NOTIFICATION,
-                            title = "Repair Your Tires Today",
-                            content = "Your tires may be in need of a repair. Consider repairing them as soon as possible"
-                        )
+                        Constants.NOTIFICATION_MAP[Constants.TIRES]!!
+
                     )
                 }
                 sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
