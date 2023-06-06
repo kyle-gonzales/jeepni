@@ -106,10 +106,11 @@ class CheckUpViewModel
                 sendUiEvent(UiEvent.PopBackStack)
             }
             is CheckUpEvent.OnOpenAddAlarmDialog -> {
-                alarmToEditIndex = event.index
                 isAddComponentDialogOpen = event.isOpen
             }
             is CheckUpEvent.OnOpenEditAlarmDialog -> {
+                alarmToEditIndex = event.index
+
                 val item = alarmList[alarmToEditIndex]
                 nextAlarm = item.nextAlarmDate
                 intervalValue = item.interval.first.toString()
