@@ -17,21 +17,5 @@ class AlarmContent(
         else -> 0
     }
 
-    init{
-        when(interval.second){
-            "day" -> nextAlarmDate = LocalDateTime.now().plusDays(interval.first)
-            "month" -> nextAlarmDate = LocalDateTime.now().plusMonths(interval.first)
-            "year" -> nextAlarmDate =  LocalDateTime.now().plusYears(interval.first)
-        }
-    }
 
-
-    fun copy(newName : String = name, newIsRepeatable: Boolean = isRepeatable, newInterval: Pair<Long, String> = interval, newNextAlarmDate: LocalDateTime = nextAlarmDate ) :AlarmContent {
-        return AlarmContent(
-            newName,
-            newIsRepeatable,
-            newInterval,
-            newNextAlarmDate,
-        )
-    }
 }
