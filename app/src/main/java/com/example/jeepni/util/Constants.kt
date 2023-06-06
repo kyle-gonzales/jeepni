@@ -34,70 +34,70 @@ object Constants {
     const val LTO_INSPECTION = "LTO Inspection"
 
     val COMPONENTS = listOf(
-        "Tires",
-        "Mirrors",
-        "Wipers",
-        "Engine",
-        "Seatbelt",
-        "Battery",
-        "Oil Change",
-        "LTFRB Inspection",
-        "LTO Inspection"
+        TIRES,
+        MIRRORS,
+        WIPERS,
+        ENGINE,
+        SEATBELT,
+        BATTERY,
+        OIL_CHANGE,
+        LTFRB_INSPECTION,
+        LTO_INSPECTION,
     )
     val ICON_MAP = mapOf<String, Int>(
-        "Tires" to R.drawable.tire,
-        "Oil Change" to R.drawable.oil,
-        "Mirrors" to R.drawable.mirror,
-        "LTFRB Check" to R.drawable.search_check_48px,
-        "LTO Check" to R.drawable.search_check_48px,
-        "Seatbelt" to R.drawable.safety_belt,
-        "Wipers" to R.drawable.wiper,
-        "Engine" to R.drawable.car_engine,
-        "Battery" to R.drawable.car_battery,
+        TIRES to R.drawable.tire,
+        OIL_CHANGE to R.drawable.oil,
+        MIRRORS to R.drawable.mirror,
+        LTFRB_INSPECTION to R.drawable.search_check_48px,
+        LTO_INSPECTION to R.drawable.search_check_48px,
+        SEATBELT to R.drawable.safety_belt,
+        WIPERS to R.drawable.wiper,
+        ENGINE to R.drawable.car_engine,
+        BATTERY to R.drawable.car_battery,
     ).withDefault { R.drawable.samplelogo }
 
     val NOTIFICATION_MAP = mapOf<String, NotificationContent>(
-        "Tires" to NotificationContent(
+        TIRES to NotificationContent(
             notificationId = TIRE_CHANGE_NOTIFICATION,
             title = "Repair Your Tires Today",
             content = "Your tires may be in need of a repair. Consider repairing them as soon as possible"
         ),
-        "Mirrors" to NotificationContent(
+        MIRRORS to NotificationContent(
             notificationId = SIDE_MIRRORS_REPAIR_NOTIFICATION,
             title = "Repair Your Side Mirrors Today",
             content = "Your side mirrors may be in need of a repair. Consider repairing them as soon as possible"
         ),
-        "Wipers" to NotificationContent(
+        WIPERS to NotificationContent(
             notificationId = Constants.WIPERS_REPAIR_NOTIFICATION,
             title = "Repair Your Wipers Today",
             content = "Your wipers may be in need of a repair. Consider repairing them as soon as possible"
         ),
-        "Engine" to NotificationContent(
+        ENGINE to NotificationContent(
             notificationId = Constants.ENGINE_REPAIR_NOTIFICATION,
             title = "Repair Your Engine Today",
             content = "Your engine may be malfunctioning. Consider repairing it as soon as possible"
         ),
-        "Seatbelt" to NotificationContent(
+        SEATBELT to NotificationContent(
             notificationId = Constants.SEATBELT_REPAIR_NOTIFICATION,
             title = "Repair Your Seatbelt Today",
             content = "Your seatbelt may be in need of a repair. Consider repairing it as soon as possible"
         ),
-        "Battery" to NotificationContent(
+        BATTERY to NotificationContent(
             notificationId = Constants.BATTERY_REPAIR_NOTIFICATION,
             title = "Replace Your Battery Today",
             content = "Your battery may be malfunctioning. Consider replacing it as soon as possible"
         ),
-        "Oil Change" to NotificationContent(
+        OIL_CHANGE to NotificationContent(
             notificationId = Constants.CHANGE_OIL_NOTIFICATION,
             title = "Change Your Oil Today",
             content = "It's been three months since your last known oil change, please check your vehicle's oil"
         ),
-        "LTFRB Inspection" to NotificationContent(
+        LTFRB_INSPECTION to NotificationContent(
             notificationId = Constants.LTFRB_INSPECTION_NOTIFICATION,
             title = "Prepare for LTFRB inspection",
             content ="It's been a while since the last known LTFRB inspection, please prepare for any possible upcoming inspections"
         ),
-        "LTO Inspection" to NotificationContent(
+        LTO_INSPECTION to NotificationContent(
             notificationId = Constants.LTO_INSPECTION_NOTIFICATION,
             title = "Prepare for LTO inspection",
             content ="It's been a while since the last known LTO inspection, please prepare for any possible upcoming inspections"
