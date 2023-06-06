@@ -97,6 +97,8 @@ class MainViewModel
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
             timeState = formatSecondsToTime(time)
+            distance = repository.fetchDistance().toDouble()
+            distanceState = convertDistanceToString(distance)
         }
     }
     fun simulateLocationChange() {
@@ -141,6 +143,8 @@ class MainViewModel
                     repository.deleteDailyStat()
                     time = 0
                     timeState = formatSecondsToTime(time)
+                    distance = 0.0
+                    distanceState = convertDistanceToString(distance)
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
@@ -160,9 +164,9 @@ class MainViewModel
                             )
                         )
                         if (result) {
-                            sendUiEvent(UiEvent.ShowToast("saved timer"))
+                            sendUiEvent(UiEvent.ShowToast("saved timer and distance"))
                         } else {
-                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer"))
+                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer and distance"))
 
                         }
                     }
