@@ -442,7 +442,7 @@ fun DatePicker(
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("MM/dd/yyyy")
+                .ofPattern("M-d-yyyy")
                 .format(selectedDate)
         }
     }
@@ -541,13 +541,7 @@ fun DatePicker(
 fun ComponentCard(
     alarm: AlarmContent
 ) {
-    val formattedDate by remember {
-        derivedStateOf {
-            DateTimeFormatter
-                .ofPattern("MM/dd/yyyy")
-                .format(alarm.nextAlarmDate)
-        }
-    }
+
     Row(
         modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
@@ -571,19 +565,10 @@ fun ComponentCard(
                     modifier = Modifier.size(16.dp)
                 )
                 JeepNiText(
-                    text = formattedDate,
+                    text = alarm.nextAlarm,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp)
                 )
-            }
-            val repeatability by remember {
-                derivedStateOf {
-                    if (alarm.isRepeatable) {
-                        alarm.interval.first.toString() + " " + alarm.interval.second
-                    } else {
-                        "Off"
-                    }
-                }
             }
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Icon(
@@ -592,7 +577,11 @@ fun ComponentCard(
                     modifier = Modifier.size(16.dp)
                 )
                 JeepNiText(
-                    text = repeatability,
+                    text = if (alarm.isRepeatable) {
+                        alarm.intervalPair.first.toString() + " " + alarm.intervalPair.second
+                    } else {
+                        "Off"
+                    },
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 4.dp)
                 )
