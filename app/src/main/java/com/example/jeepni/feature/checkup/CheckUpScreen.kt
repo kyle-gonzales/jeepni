@@ -165,7 +165,7 @@ fun CheckUpScreen (
             }
             if (viewModel.isEditDeleteDialogOpen) {
                 EditDeleteDialog(
-                    alarmName = viewModel.alarmList[viewModel.alarmToEditIndex].name,
+                    alarmName = viewModel.selectedAlarm!!.name,
                     onDismiss = { viewModel.onEvent( CheckUpEvent.OnDismissEdit ) },
                     pickedDate = viewModel.nextAlarm.toLocalDate(),
                     onDateChange = {viewModel.onEvent(

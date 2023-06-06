@@ -29,6 +29,8 @@ class CheckUpViewModel
 
     val alarms = alarmRepository.getAllAlarms()
 
+    var selectedAlarm : AlarmContent? by mutableStateOf(null)
+    // parameters of selected alarm
     var alarmName by mutableStateOf("Tires")
     var isRepeated by mutableStateOf(false)
     var intervalType by mutableStateOf("day")
@@ -49,7 +51,7 @@ class CheckUpViewModel
     val uiEvent = _uiEvent.receiveAsFlow()
 
     private fun resetAlarmContentVariables(){
-        alarmToEditIndex = 0
+        selectedAlarm = null
         nextAlarm = LocalDateTime.now()
         intervalValue = "1"
         isRepeated = false
