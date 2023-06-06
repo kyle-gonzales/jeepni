@@ -200,7 +200,8 @@ fun BackIconButton(
 ) {
     IconButton(
         onClick = { onClick() },
-        modifier = Modifier.offset(-12.dp)
+        modifier = Modifier
+            //.offset(-12.dp) // what is this for?
     )
     {
         Icon(Icons.Filled.ArrowBack, contentDescription = null)
