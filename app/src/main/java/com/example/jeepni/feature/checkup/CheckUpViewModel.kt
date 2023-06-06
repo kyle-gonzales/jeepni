@@ -61,47 +61,17 @@ class CheckUpViewModel
     }
     fun onEvent(event: CheckUpEvent) {
         when (event) {
+            is CheckUpEvent.OnBackPressed -> {
+                sendUiEvent(UiEvent.PopBackStack)
+            }
             is CheckUpEvent.OnAlarmItemSelected -> {
                 alarmName = event.name
             }
             is CheckUpEvent.OnCustomAlarmItemNameChanged -> {
                 alarmName = event.name
             }
-            is CheckUpEvent.OnSaveAddClicked -> {
-                isAddComponentDialogOpen = false
-
-                val isValidDialogInput =  ( ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated ) && alarmName.isNotEmpty()
-                if (isValidDialogInput) {
-                    alarmList.add(
-                        AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarm)
-                    )
-                } else {
-                    sendUiEvent(UiEvent.ShowToast("interval value and name should not be empty"))
-                }
-                resetAlarmContentVariables()
-            }
-            is CheckUpEvent.OnSaveEditClicked -> {
-                isEditDeleteDialogOpen = false
-                val isValidDialogInput = ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated
-                if (isValidDialogInput) {
-                    alarmList[alarmToEditIndex] = AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarm)
-                } else {
-                    sendUiEvent(UiEvent.ShowToast("interval value should not be empty"))
-                }
-                resetAlarmContentVariables()
-            }
-            is CheckUpEvent.OnDeleteClicked -> {
-                alarmList.removeAt(alarmToEditIndex)
-                isEditDeleteDialogOpen = false
-            }
-            is CheckUpEvent.OnDismissAdd -> {
-                isAddComponentDialogOpen = false
-            }
-            is CheckUpEvent.OnDismissEdit -> {
-                isEditDeleteDialogOpen = false
-            }
             is CheckUpEvent.OnNextAlarmChange -> {
-                nextAlarm = event.nextAlarm.atTime(7,0,0)
+                nextAlarmDate = event.nextAlarm.atTime(7,0,0)
             }
             is CheckUpEvent.OnRepeatabilityChange -> {
                 isRepeated = event.isRepeated
@@ -112,22 +82,75 @@ class CheckUpViewModel
             is CheckUpEvent.OnIntervalValueChange -> {
                 intervalValue = event.value
             }
-            is CheckUpEvent.OnBackPressed -> {
-                sendUiEvent(UiEvent.PopBackStack)
+            is CheckUpEvent.OnDismissAdd -> {
+                isAddComponentDialogOpen = false
+            }
+            is CheckUpEvent.OnDismissEdit -> {
+                isEditDeleteDialogOpen = false
             }
             is CheckUpEvent.OnOpenAddAlarmDialog -> {
                 isAddComponentDialogOpen = event.isOpen
             }
             is CheckUpEvent.OnOpenEditAlarmDialog -> {
-                alarmToEditIndex = event.index
+                selectedAlarm = event.alarm
 
-                val item = alarmList[alarmToEditIndex]
-                nextAlarm = item.nextAlarmDate
-                intervalValue = item.interval.first.toString()
-                isRepeated = item.isRepeatable
-                alarmName = item.name
-                intervalType = item.interval.second
+                alarmName = selectedAlarm!!.name
+                isRepeated = selectedAlarm!!.isRepeatable
+                intervalValue = selectedAlarm!!.intervalPair.first.toString()
+                intervalType = selectedAlarm!!.intervalPair.second
+                nextAlarmDate = formatStringToDate(selectedAlarm!!.nextAlarm)
+
                 isEditDeleteDialogOpen = event.isOpen
+            }
+            is CheckUpEvent.OnSaveAddClicked -> {
+                viewModelScope.launch {
+                    isAddComponentDialogOpen = false
+
+                    val isValidDialogInput =  ( ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated ) && alarmName.isNotEmpty()
+                    if (isValidDialogInput) {
+                        val alarm = AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarmDate)
+                        alarmRepository.insertAlarm(alarm)
+                        alarmManager.schedule(
+                            alarm = alarm,
+                            notification = Constants.NOTIFICATION_MAP.getValue(alarm.name)
+                        )
+                    } else {
+                        sendUiEvent(UiEvent.ShowToast("interval value and name should not be empty"))
+                    }
+                    resetAlarmContentVariables()
+                }
+            }
+            is CheckUpEvent.OnSaveEditClicked -> {
+                viewModelScope.launch {
+                    isEditDeleteDialogOpen = false
+                    val isValidDialogInput = ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated
+                    if (isValidDialogInput) { //TODO: create previous saved alarm date state holder; this is important when the date is changed to a new date
+                        alarmManager.cancel(nextAlarmDate)
+                        alarmRepository.deleteAlarm(selectedAlarm!!)
+
+                        val alarm = AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarmDate)
+                        alarmRepository.insertAlarm(alarm)
+                        alarmManager.schedule(
+                            alarm = alarm,
+                            notification = Constants.NOTIFICATION_MAP.getValue(alarm.name)
+                        )
+                        Log.i("JEEPNI_ALARM", "${alarm.nextAlarmDate == nextAlarmDate}")
+
+                    } else {
+                        sendUiEvent(UiEvent.ShowToast("interval value should not be empty"))
+                    }
+                    resetAlarmContentVariables()
+                }
+            }
+            is CheckUpEvent.OnDeleteClicked -> {
+                viewModelScope.launch {
+                    alarmManager.cancel(nextAlarmDate)
+
+                    alarmRepository.deleteAlarm(selectedAlarm!!)
+                    isEditDeleteDialogOpen = false
+
+                    resetAlarmContentVariables()
+                }
             }
         }
     }
