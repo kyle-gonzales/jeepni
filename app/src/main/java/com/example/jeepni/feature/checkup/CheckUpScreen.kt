@@ -208,7 +208,7 @@ fun AppBar(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    JeepNiText(text = title)
+                    JeepNiText(text = title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 }
             },
             navigationIcon = {
