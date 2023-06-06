@@ -335,203 +335,116 @@ fun AddDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlarmName( // what is this?
-    selectedOption: String,
-    onSelectedChange: (String) -> Unit,
-    onSelectedChange1: () -> Unit,
+fun AlarmNameGrid(
+    selectedAlarm: String,
+    onAlarmItemChanged: (String) -> Unit,
+    onCustomAlarmNameChanged: (String) -> Unit,
 ){
-    var customEnabled by remember {
-        mutableStateOf(true)
+    var isCustomAlarmItemEnabled by remember {
+        mutableStateOf(false)
     }
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
-            .fillMaxSize()
-            .padding(5.dp)
+            .padding(4.dp)
     ){
         items(COMPONENTS){
-            if(selectedOption == it){
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = (it == selectedOption),
-                            onClick ={}
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {},
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
+            val isSelected = (selectedAlarm == it && selectedAlarm in COMPONENTS) && !isCustomAlarmItemEnabled
+            OutlinedButton(
+                modifier = Modifier
+                    .selectable(
+                        selected = isSelected,
+                        onClick = {},
+                    )
+                    .fillMaxWidth()
+                    .height(60.dp),
+                onClick = {
+                    onAlarmItemChanged(it)
+                    isCustomAlarmItemEnabled = false
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background ,
+                    contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                contentPadding = PaddingValues(3.dp)
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(Constants.ICON_MAP[it]!!),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = it,
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            }
-            else{
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = (it == selectedOption),
-                            onClick = {
-                                onSelectedChange
-                                customEnabled = false
-                            }
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {
-                        onSelectedChange
-                        customEnabled = false
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
-                ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(Constants.ICON_MAP[it]!!),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = it,
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(Constants.ICON_MAP.getValue(it)),
+                        contentDescription = null,
+                        modifier = Modifier.height(24.dp)
+                    )
+                    Text(
+                        text = it,
+                        fontFamily = quicksandFontFamily,
+                        maxLines = 2,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
-        item{
-            if(selectedOption in COMPONENTS){
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = !(selectedOption in COMPONENTS),
-                            onClick = {
-                                customEnabled = true
-                                onSelectedChange1
-                            }
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {
-                        customEnabled = true
-                        onSelectedChange1
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onBackground
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
+        item {//custom alarm item
+            OutlinedButton(
+                modifier = Modifier
+                    .selectable(
+                        selected = isCustomAlarmItemEnabled,
+                        onClick = {}
+                    )
+                    .fillMaxWidth()
+                    .height(60.dp),
+                onClick = {
+                    isCustomAlarmItemEnabled = true
+                    onAlarmItemChanged("")
+                },
+                shape = RoundedCornerShape(20),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isCustomAlarmItemEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background ,
+                    contentColor = if (isCustomAlarmItemEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                contentPadding = PaddingValues(3.dp)
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(R.drawable.samplelogo),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = "Add Custom",
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            }
-            else{
-                OutlinedButton(
-                    modifier = Modifier
-                        .selectable(
-                            selected = !(selectedOption in COMPONENTS),
-                            onClick = {
-                                customEnabled = true
-
-                            }
-                        )
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    onClick = {customEnabled = true},
-                    shape = RoundedCornerShape(20),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                    contentPadding = PaddingValues(3.dp)
-                ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Icon(
-                            painter = painterResource(R.drawable.samplelogo),
-                            contentDescription = null,
-                            modifier = Modifier.height(25.dp)
-                        )
-                        Text(
-                            text = "Add Custom",
-                            fontFamily = quicksandFontFamily,
-                            maxLines = 2,
-                            fontSize = 12.sp
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(R.drawable.samplelogo),
+                        contentDescription = null,
+                        modifier = Modifier.height(25.dp)
+                    )
+                    Text(
+                        text = "Add Custom",
+                        fontFamily = quicksandFontFamily,
+                        maxLines = 2,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
         item(span = { GridItemSpan(2) }){
-            if(customEnabled){
+            if(isCustomAlarmItemEnabled){
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp),
-                    value = selectedOption,
-                    onValueChange = {onSelectedChange},
+                    value = selectedAlarm,
+                    onValueChange = { onCustomAlarmNameChanged(it) },
                     label = {
                         Text(
-                            text = "Custom Alarm Name",
+                            text = "Custom Alarm",
                             fontFamily = quicksandFontFamily,
                             textAlign = TextAlign.Start,
-                            fontSize =12.sp
+                            fontSize = 12.sp,
                         )
                     },
                     shape = RoundedCornerShape(20),
