@@ -69,16 +69,27 @@ class CheckUpViewModel
                 alarmName = event.name
             }
             is CheckUpEvent.OnSaveAddClicked -> {
-                isEditDeleteDialogOpen = false
-                alarmList += AlarmContent(name, isRepeated, Pair(value.toLong(), duration), nextAlarm)
-                resetVariables()
+                isAddComponentDialogOpen = false
 
+                val isValidDialogInput =  ( ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated ) && alarmName.isNotEmpty()
+                if (isValidDialogInput) {
+                    alarmList.add(
+                        AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarm)
+                    )
+                } else {
+                    sendUiEvent(UiEvent.ShowToast("interval value and name should not be empty"))
+                }
+                resetAlarmContentVariables()
             }
             is CheckUpEvent.OnSaveEditClicked -> {
                 isEditDeleteDialogOpen = false
-                alarmList[alarmToEditIndex] = AlarmContent(name, isRepeated, Pair(value.toLong(), duration), nextAlarm)
-                resetVariables()
-
+                val isValidDialogInput = ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated
+                if (isValidDialogInput) {
+                    alarmList[alarmToEditIndex] = AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarm)
+                } else {
+                    sendUiEvent(UiEvent.ShowToast("interval value should not be empty"))
+                }
+                resetAlarmContentVariables()
             }
             is CheckUpEvent.OnDeleteClicked -> {
                 alarmList.removeAt(alarmToEditIndex)
