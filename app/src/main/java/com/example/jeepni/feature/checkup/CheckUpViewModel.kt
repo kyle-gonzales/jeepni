@@ -62,11 +62,11 @@ class CheckUpViewModel
     }
     fun onEvent(event: CheckUpEvent) {
         when (event) {
-            is CheckUpEvent.OnNameChange -> {
-                name = event.name
+            is CheckUpEvent.OnAlarmItemSelected -> {
+                alarmName = event.name
             }
-            is CheckUpEvent.OnNameChange1 -> {
-                name = ""
+            is CheckUpEvent.OnCustomAlarmItemNameChanged -> {
+                alarmName = event.name
             }
             is CheckUpEvent.OnSaveAddClicked -> {
                 isEditDeleteDialogOpen = false
@@ -96,10 +96,10 @@ class CheckUpViewModel
             is CheckUpEvent.OnRepeatabilityChange -> {
                 isRepeated = event.isRepeated
             }
-            is CheckUpEvent.OnDurationChange -> {
+            is CheckUpEvent.OnIntervalTypeChange -> {
                 intervalType = event.duration
             }
-            is CheckUpEvent.OnValueChange -> {
+            is CheckUpEvent.OnIntervalValueChange -> {
                 intervalValue = event.value
             }
             is CheckUpEvent.OnBackPressed -> {

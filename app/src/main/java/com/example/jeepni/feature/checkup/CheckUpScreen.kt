@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -18,15 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.AddDialog
-import com.example.jeepni.core.ui.BackIconButton
-import com.example.jeepni.core.ui.ComponentCard
-import com.example.jeepni.core.ui.EditDeleteDialog
-import com.example.jeepni.core.ui.JeepNiText
+import com.example.jeepni.core.ui.*
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
 
@@ -138,11 +135,11 @@ fun CheckUpScreen (
                     )},
                     value = viewModel.intervalValue,
                     onValueChange = {viewModel.onEvent(
-                        CheckUpEvent.OnValueChange(it)
+                        CheckUpEvent.OnIntervalValueChange(it)
                     )},
                     duration = viewModel.intervalType,
                     onDurationChange = {viewModel.onEvent(
-                        CheckUpEvent.OnDurationChange(it)
+                        CheckUpEvent.OnIntervalTypeChange(it)
                     )
                     },
                     onCancelClick = {viewModel.onEvent(
@@ -154,10 +151,10 @@ fun CheckUpScreen (
                     )},
                     name = viewModel.alarmName,
                     onNameChange = {viewModel.onEvent(
-                        CheckUpEvent.OnNameChange(it)
+                        CheckUpEvent.OnAlarmItemSelected(it)
                     )},
                     onNameChange1 = {viewModel.onEvent(
-                        CheckUpEvent.OnNameChange1
+                        CheckUpEvent.OnCustomAlarmItemNameChanged(it)
                     )},
                     isError = viewModel.isError
                 )
@@ -171,16 +168,16 @@ fun CheckUpScreen (
                         CheckUpEvent.OnNextAlarmChange(it)
                     )},
                     isRepeated = viewModel.isRepeated,
-                    onRepeatabilityChange = {viewModel.onEvent(
+                    onRepeatabilityChange = { viewModel.onEvent(
                         CheckUpEvent.OnRepeatabilityChange(it)
                     ) },
                     value = viewModel.intervalValue,
                     onValueChange = {viewModel.onEvent(
-                        CheckUpEvent.OnValueChange(it)
+                        CheckUpEvent.OnIntervalValueChange(it)
                     )},
                     duration = viewModel.intervalType,
                     onDurationChange = {viewModel.onEvent(
-                        CheckUpEvent.OnDurationChange(it)
+                        CheckUpEvent.OnIntervalTypeChange(it)
                     )
                     },
                     onDeleteClick = {viewModel.onEvent(
