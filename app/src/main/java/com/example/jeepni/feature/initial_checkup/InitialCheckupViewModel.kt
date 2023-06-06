@@ -53,6 +53,7 @@ class InitialCheckupViewModel @Inject constructor(
                 alarmScheduler.schedule(
                     AlarmContent(
                         name = "Oil Change",
+                        intervalPair = Pair(3, "month"),
                         nextAlarmDate = oilChangeDate.plusMonths(3).atTime(7, 0)
                     ),
                     NotificationContent(
