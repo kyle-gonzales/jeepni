@@ -1,6 +1,7 @@
 package com.example.jeepni.util
 
 import com.example.jeepni.R
+import com.example.jeepni.core.data.model.NotificationContent
 
 object Constants {
     const val CHANNEL_ID = "jeepni_by_algofirst_notification_channel_id"
@@ -54,4 +55,58 @@ object Constants {
         "Engine" to R.drawable.car_engine,
         "Battery" to R.drawable.car_battery,
     ).withDefault { R.drawable.samplelogo }
+
+    val NOTIFICATION_MAP = mapOf<String, NotificationContent>(
+        "Tires" to NotificationContent(
+            notificationId = TIRE_CHANGE_NOTIFICATION,
+            title = "Repair Your Tires Today",
+            content = "Your tires may be in need of a repair. Consider repairing them as soon as possible"
+        ),
+        "Mirrors" to NotificationContent(
+            notificationId = SIDE_MIRRORS_REPAIR_NOTIFICATION,
+            title = "Repair Your Side Mirrors Today",
+            content = "Your side mirrors may be in need of a repair. Consider repairing them as soon as possible"
+        ),
+        "Wipers" to NotificationContent(
+            notificationId = Constants.WIPERS_REPAIR_NOTIFICATION,
+            title = "Repair Your Wipers Today",
+            content = "Your wipers may be in need of a repair. Consider repairing them as soon as possible"
+        ),
+        "Engine" to NotificationContent(
+            notificationId = Constants.ENGINE_REPAIR_NOTIFICATION,
+            title = "Repair Your Engine Today",
+            content = "Your engine may be malfunctioning. Consider repairing it as soon as possible"
+        ),
+        "Seatbelt" to NotificationContent(
+            notificationId = Constants.SEATBELT_REPAIR_NOTIFICATION,
+            title = "Repair Your Seatbelt Today",
+            content = "Your seatbelt may be in need of a repair. Consider repairing it as soon as possible"
+        ),
+        "Battery" to NotificationContent(
+            notificationId = Constants.BATTERY_REPAIR_NOTIFICATION,
+            title = "Replace Your Battery Today",
+            content = "Your battery may be malfunctioning. Consider replacing it as soon as possible"
+        ),
+        "Oil Change" to NotificationContent(
+            notificationId = Constants.CHANGE_OIL_NOTIFICATION,
+            title = "Change Your Oil Today",
+            content = "It's been three months since your last known oil change, please check your vehicle's oil"
+        ),
+        "LTFRB Inspection" to NotificationContent(
+            notificationId = Constants.LTFRB_INSPECTION_NOTIFICATION,
+            title = "Prepare for LTFRB inspection",
+            content ="It's been a while since the last known LTFRB inspection, please prepare for any possible upcoming inspections"
+        ),
+        "LTO Inspection" to NotificationContent(
+            notificationId = Constants.LTO_INSPECTION_NOTIFICATION,
+            title = "Prepare for LTO inspection",
+            content ="It's been a while since the last known LTO inspection, please prepare for any possible upcoming inspections"
+        ),
+    ).withDefault { alarmName ->
+        NotificationContent(
+            notificationId = alarmName.hashCode(),
+            title = "JeepNi Reminder: ${alarmName.uppercase()}",
+            content = "Be reminded of ${alarmName.uppercase()}. Take care of your Jeepney!"
+        )
+    }
 }
