@@ -1,6 +1,6 @@
 package com.example.jeepni.core.ui
 
-import android.widget.Button
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,12 +24,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.ui.theme.Black
-import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.White
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.Constants.ICON_MAP
@@ -179,13 +177,14 @@ fun JeepNiTextField(
             singleLine = singleLine,
             readOnly = readOnly,
             supportingText = {
-                if (isError) {
+                AnimatedVisibility(visible = isError) {
                     Text(
                         text = errorMessage, //! convert to state
                         color = MaterialTheme.colorScheme.error,
                         fontFamily = quicksandFontFamily,
                     )
                 }
+
             },
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
