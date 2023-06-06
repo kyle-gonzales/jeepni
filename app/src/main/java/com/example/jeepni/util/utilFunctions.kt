@@ -10,6 +10,8 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.UserDetails
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 fun isIncompleteUserDetails(userDetails: UserDetails) : Boolean {
     return userDetails.route == "null" || userDetails.name == "null" || userDetails.name.isNullOrEmpty() || userDetails.route.isNullOrEmpty()
@@ -64,4 +66,33 @@ fun showSimpleNotification(
     with(NotificationManagerCompat.from(context)) {
         notify(notificationId, builder.build())
     }
+}
+
+
+
+fun formatIntervalStringToPair(interval : String) : Pair<Long, String> {
+    val components = interval.split(" ")
+    return Pair(components[0].toLong(), components[1])
+}
+
+fun formatIntervalPairToString(interval : Pair<Long, String>) : String {
+    return "${interval.first} ${interval.second}"
+}
+
+fun formatStringToDate(alarm : String) : LocalDateTime {
+    val formatter = DateTimeFormatter.ofPattern("M-d-yyyy HH:mm:ss")
+    try {
+//        Log.i("KYLE_DATE", LocalDateTime.parse("$alarm 07:00:00", formatter).toString())
+    } catch (e: Exception) {
+    }
+    return LocalDateTime.parse("$alarm 07:00:00", formatter)
+}
+fun formatDateToString(date : LocalDateTime) : String {
+    val formatter = DateTimeFormatter.ofPattern("M-d-yyyy")
+
+    try {
+//        Log.i("KYLE_DATE", date.format(formatter))
+    } catch (e: Exception) {
+    }
+    return date.format(formatter)
 }
