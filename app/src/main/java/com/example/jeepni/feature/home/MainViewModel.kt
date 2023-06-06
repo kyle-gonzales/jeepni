@@ -17,12 +17,14 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class MainViewModel
@@ -31,6 +33,7 @@ class MainViewModel
     private val authRepo: AuthRepository,
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
+
 
     var user by mutableStateOf(authRepo.getUser())
 
@@ -59,7 +62,7 @@ class MainViewModel
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
 
-    private var distance by mutableStateOf(12382.9)
+    private var distance by mutableStateOf(0.0)// 12382.9
     var distanceState by mutableStateOf(convertDistanceToString(distance))
         private set
 
@@ -72,8 +75,19 @@ class MainViewModel
     private var longitude by mutableStateOf(123.8854)
     var targetPosition by mutableStateOf(LatLng(latitude, longitude))
         private set
-    var cameraPositionState by mutableStateOf(CameraPositionState(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
+    var cameraPositionState by mutableStateOf(
+        CameraPositionState(
+            CameraPosition.fromLatLngZoom(
+                targetPosition,
+                15f
+            )
+        )
+    )
         private set
+
+    // distance stuff
+    private val locations = mutableListOf<LatLng>()
+
 
 //    fun onMapLoaded() {
 //        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
@@ -139,9 +153,10 @@ class MainViewModel
                     }
                 } else {
                     viewModelScope.launch {
-                        val result = repository.saveTimer(
+                        val result = repository.saveTimerAndDistance(
                             DailyAnalytics(
-                                timer = time
+                                timer = time,
+                                distance = distance
                             )
                         )
                         if (result) {
@@ -239,11 +254,24 @@ class MainViewModel
     }
     private val locationCallBack = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            val lastLocation = locationResult.lastLocation!!
-            latitude = lastLocation.latitude
-            longitude = lastLocation.longitude
+
+            val currentLocation = locationResult.lastLocation!!
+
+            latitude = currentLocation.latitude
+            longitude = currentLocation.longitude
             targetPosition = LatLng(latitude, longitude)
             //Log.i("LOCATION UPDATE", "$latitude, $longitude")
+
+
+            val lastLocation = locations.lastOrNull()
+
+            if (lastLocation != null) {
+                distance +=
+                    SphericalUtil.computeDistanceBetween(lastLocation, targetPosition).roundToInt()
+            }
+
+            distanceState = convertDistanceToString(distance)
+            locations.add(targetPosition)
 
             viewModelScope.launch {
                 try {
