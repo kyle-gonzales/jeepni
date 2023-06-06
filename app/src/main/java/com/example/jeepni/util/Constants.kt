@@ -21,6 +21,17 @@ object Constants {
     const val NOTIFICATION_OBJECT = "notification_object"
 
     const val FIRST_NOTIFICATION_ID = 999
+
+    const val TIRES = "Tires"
+    const val MIRRORS = "Mirrors"
+    const val WIPERS = "Wipers"
+    const val ENGINE = "Engine"
+    const val SEATBELT = "Seatbelt"
+    const val BATTERY = "Battery"
+    const val OIL_CHANGE = "Oil Change"
+    const val LTFRB_INSPECTION = "LTFRB Inspection"
+    const val LTO_INSPECTION = "LTO Inspection"
+
     val COMPONENTS = listOf(
         "Tires",
         "Mirrors",
