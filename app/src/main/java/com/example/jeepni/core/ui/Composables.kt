@@ -555,7 +555,7 @@ fun ComponentCard(
     ) {
         Column(modifier = Modifier.padding(8.dp),) {
             Icon(
-                painter = painterResource(ICON_MAP[alarm.name]!!),
+                painter = painterResource(ICON_MAP.getValue(alarm.name)),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp)
             )
