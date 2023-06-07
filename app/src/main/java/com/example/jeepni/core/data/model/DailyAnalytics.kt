@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class DailyAnalytics(
     val date: String = getCurrentDateString(),
     val timer: Long = 0L,
+    val distance: Double = 0.0,
     val salary: Double = 0.0,
     val fuelCost: Double = 0.0,
 ) : Parcelable
