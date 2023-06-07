@@ -14,8 +14,8 @@ class AlarmContent(
     var name: String = "",
     var isRepeatable: Boolean = true,
 
-    @Ignore var intervalPair: Pair<Long, String>,// = Pair(3, "month"),
-    @Ignore var nextAlarmDate: LocalDateTime,// = LocalDate.now().plusMonths(3).atTime(7,0,0)
+    @Ignore var intervalPair: Pair<Long, String>,
+    @Ignore var nextAlarmDate: LocalDateTime,
 ){
 
     constructor(name : String, isRepeatable: Boolean, interval: String, nextAlarm : String, ) : this(name, isRepeatable, formatIntervalStringToPair(interval), formatStringToDate(nextAlarm))
