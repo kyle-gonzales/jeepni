@@ -125,6 +125,7 @@ fun SolidButton(
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
     width: Float = 1f,
     onClick: () -> Unit,
+    border : BorderStroke? = null,
     content: @Composable () -> Unit
 ) {
     Button(
@@ -134,7 +135,8 @@ fun SolidButton(
             .fillMaxWidth(width)
             .padding(vertical = 10.dp),
         shape = RoundedCornerShape(36),
-        colors = ButtonDefaults.buttonColors(bgColor, contentColor)
+        colors = ButtonDefaults.buttonColors(bgColor, contentColor),
+        border = border
     ) {
         content()
     }
