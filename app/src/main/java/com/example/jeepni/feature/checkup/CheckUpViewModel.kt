@@ -9,10 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.data.repository.AlarmContentRepository
-import com.example.jeepni.util.AlarmScheduler
-import com.example.jeepni.util.Constants
-import com.example.jeepni.util.UiEvent
-import com.example.jeepni.util.formatStringToDate
+import com.example.jeepni.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -54,7 +51,7 @@ class CheckUpViewModel
     private fun resetAlarmContentVariables(){
         previouslySavedAlarm = null
         selectedAlarm = null
-//        nextAlarmDate = LocalDateTime.now().toLocalDate().atTime(7,0,0)
+        nextAlarmDate = LocalDateTime.now().toLocalDate().atTime(7,0,0, randInt())
 
         nextAlarmDate = LocalDateTime.now().plusMinutes(1) // for testing
         intervalValue = "1"
@@ -74,7 +71,7 @@ class CheckUpViewModel
                 alarmName = event.name
             }
             is CheckUpEvent.OnNextAlarmChange -> {
-                nextAlarmDate = event.nextAlarm.atTime(7,0,0)
+                nextAlarmDate = event.nextAlarm.atTime(7,0,0, randInt())
             }
             is CheckUpEvent.OnRepeatabilityChange -> {
                 isRepeated = event.isRepeated

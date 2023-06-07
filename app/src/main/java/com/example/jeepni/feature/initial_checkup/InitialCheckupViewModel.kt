@@ -53,14 +53,18 @@ class InitialCheckupViewModel @Inject constructor(
                     AlarmContent(
                         name = "Oil Change",
                         intervalPair = Pair(3, "month"),
-                        nextAlarmDate = oilChangeDate.plusMonths(3).atTime(7, 0)
-                    ),
-                    Constants.NOTIFICATION_MAP[Constants.OIL_CHANGE]!!
-                )
-                alarmScheduler.schedule(
-                    AlarmContent(
+                        nextAlarmDate = oilChangeDate.plusMonths(3).atTime(7,0,0, randInt()
+                        )
+                    )
+                    alarmScheduler.schedule(
+                        oilChangeAlarm,
+                        Constants.NOTIFICATION_MAP[Constants.OIL_CHANGE]!!
+                    )
+                    alarmContentRepository.insertAlarm(oilChangeAlarm)
+
+                    val ltfrbAlarm = AlarmContent(
                         name = "LTFRB Inspection",
-                        nextAlarmDate = ltfrbDate.plusYears(1).minusDays(3).atTime(7,0),
+                        nextAlarmDate = ltfrbDate.plusYears(1).minusDays(3).atTime(7,0,0, randInt()),
                         intervalPair = Pair(1, "year")
                     ),
                     Constants.NOTIFICATION_MAP[Constants.LTFRB_INSPECTION]!!
@@ -69,7 +73,7 @@ class InitialCheckupViewModel @Inject constructor(
                 alarmScheduler.schedule(
                     AlarmContent(
                         name = "LTO Inspection",
-                        nextAlarmDate = ltoDate.plusYears(1).minusDays(3).atTime(7,0),
+                        nextAlarmDate = ltoDate.plusYears(1).minusDays(3).atTime(7,0,0, randInt()),
                         intervalPair = Pair(1, "year")
                     ),
                     Constants.NOTIFICATION_MAP[Constants.LTO_INSPECTION]!!
@@ -79,7 +83,7 @@ class InitialCheckupViewModel @Inject constructor(
                     alarmScheduler.schedule(
                         AlarmContent(
                             name = "Battery",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
                         ),
                         Constants.NOTIFICATION_MAP[Constants.BATTERY]!!
@@ -90,7 +94,7 @@ class InitialCheckupViewModel @Inject constructor(
                     alarmScheduler.schedule(
                         AlarmContent(
                             name = "Engine",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
                         ),
                         Constants.NOTIFICATION_MAP[Constants.ENGINE]!!
@@ -101,7 +105,7 @@ class InitialCheckupViewModel @Inject constructor(
                     alarmScheduler.schedule(
                         AlarmContent(
                             name = "Mirrors",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
                         ),
                         Constants.NOTIFICATION_MAP[Constants.MIRRORS]!!
@@ -112,7 +116,7 @@ class InitialCheckupViewModel @Inject constructor(
                     alarmScheduler.schedule(
                         AlarmContent(
                             name = "Seatbelt",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
                         ),
                         Constants.NOTIFICATION_MAP[Constants.SEATBELT]!!
@@ -123,7 +127,7 @@ class InitialCheckupViewModel @Inject constructor(
                     alarmScheduler.schedule(
                         AlarmContent(
                             name = "Wipers",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
                         ),
                         Constants.NOTIFICATION_MAP[Constants.WIPERS]!!
@@ -135,7 +139,7 @@ class InitialCheckupViewModel @Inject constructor(
                     alarmScheduler.schedule(
                         AlarmContent(
                             name = "Tires",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
                         ),
                         Constants.NOTIFICATION_MAP[Constants.TIRES]!!

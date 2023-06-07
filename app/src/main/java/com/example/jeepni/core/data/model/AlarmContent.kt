@@ -3,10 +3,7 @@ package com.example.jeepni.core.data.model
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.example.jeepni.util.formatDateToString
-import com.example.jeepni.util.formatIntervalPairToString
-import com.example.jeepni.util.formatIntervalStringToPair
-import com.example.jeepni.util.formatStringToDate
+import com.example.jeepni.util.*
 import java.time.LocalDateTime
 
 @Entity(tableName = "alarm")
@@ -54,9 +51,9 @@ fun main() { // used for testing
     println("\n")
 
     val now = LocalDateTime.now().toLocalDate()
-    val new = now.minusDays(1).atTime(7,0,0)
+    val new = now.minusDays(1).atTime(7,0,0, randInt())
     println(now.toString())
-    println(LocalDateTime.now().minusDays(1).toLocalDate().atTime(7,0,0))
+    println(LocalDateTime.now().minusDays(1).toLocalDate().atTime(7,0,0, randInt()))
     println(new.toString())
     println(alarm.nextAlarmDate.hashCode() == new.hashCode())
 //    println(j.toString())

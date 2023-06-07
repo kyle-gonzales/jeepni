@@ -81,15 +81,15 @@ fun formatIntervalPairToString(interval : Pair<Long, String>) : String {
 }
 
 fun formatStringToDate(alarm : String) : LocalDateTime {
-    val formatter = DateTimeFormatter.ofPattern("M-d-yyyy HH:mm:ss")
+    val formatter = DateTimeFormatter.ofPattern("M-d-yyyy HH:mm:ss.SSSSSSSSS")
     try {
 //        Log.i("KYLE_DATE", LocalDateTime.parse("$alarm 07:00:00", formatter).toString())
     } catch (e: Exception) {
     }
-    return LocalDateTime.parse("$alarm 07:00:00", formatter)
+    return LocalDateTime.parse(alarm, formatter)
 }
 fun formatDateToString(date : LocalDateTime) : String {
-    val formatter = DateTimeFormatter.ofPattern("M-d-yyyy")
+    val formatter = DateTimeFormatter.ofPattern("M-d-yyyy HH:mm:ss.SSSSSSSSS")
 
     try {
 //        Log.i("KYLE_DATE", date.format(formatter))
