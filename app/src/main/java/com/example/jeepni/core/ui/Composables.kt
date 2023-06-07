@@ -490,7 +490,7 @@ fun DatePicker(
                 modifier = Modifier
                     .offset(x = 15.dp, y = (-15).dp)
                     .padding(10.dp)
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(color = MaterialTheme.colorScheme.background)
             )
         }
     }
@@ -524,7 +524,7 @@ fun DatePicker(
             colors = DatePickerDefaults.colors(
                 headerBackgroundColor = MaterialTheme.colorScheme.primary,
                 headerTextColor = MaterialTheme.colorScheme.onPrimary,
-                calendarHeaderTextColor = MaterialTheme.colorScheme.onPrimary,
+                calendarHeaderTextColor = MaterialTheme.colorScheme.primary,
                 dateActiveBackgroundColor = MaterialTheme.colorScheme.primary,
                 dateActiveTextColor = MaterialTheme.colorScheme.onPrimary,
                 dateInactiveBackgroundColor = White,
