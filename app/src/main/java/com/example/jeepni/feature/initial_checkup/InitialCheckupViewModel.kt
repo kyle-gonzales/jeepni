@@ -6,10 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.AlarmContent
-import com.example.jeepni.util.AlarmScheduler
-import com.example.jeepni.util.Constants
-import com.example.jeepni.util.Screen
-import com.example.jeepni.util.UiEvent
+import com.example.jeepni.core.data.repository.AlarmContentRepository
+import com.example.jeepni.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -20,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InitialCheckupViewModel @Inject constructor(
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val alarmContentRepository: AlarmContentRepository
 ) : ViewModel() {
 
     private var _uiEvent = Channel<UiEvent>()
@@ -48,9 +47,8 @@ class InitialCheckupViewModel @Inject constructor(
     fun onEvent(event: InitialCheckupEvent) {
         when(event) {
             is InitialCheckupEvent.OnSaveClicked -> {
-                // TODO: save data to firestore?
-                alarmScheduler.schedule(
-                    AlarmContent(
+                viewModelScope.launch {
+                    val oilChangeAlarm = AlarmContent(
                         name = "Oil Change",
                         intervalPair = Pair(3, "month"),
                         nextAlarmDate = oilChangeDate.plusMonths(3).atTime(7,0,0, randInt()
@@ -66,87 +64,98 @@ class InitialCheckupViewModel @Inject constructor(
                         name = "LTFRB Inspection",
                         nextAlarmDate = ltfrbDate.plusYears(1).minusDays(3).atTime(7,0,0, randInt()),
                         intervalPair = Pair(1, "year")
-                    ),
-                    Constants.NOTIFICATION_MAP[Constants.LTFRB_INSPECTION]!!
+                    )
+                    alarmScheduler.schedule(
+                        ltfrbAlarm,
+                        Constants.NOTIFICATION_MAP[Constants.LTFRB_INSPECTION]!!
+                    )
+                    alarmContentRepository.insertAlarm(ltfrbAlarm)
 
-                )
-                alarmScheduler.schedule(
-                    AlarmContent(
+                    val ltoAlarm = AlarmContent(
                         name = "LTO Inspection",
                         nextAlarmDate = ltoDate.plusYears(1).minusDays(3).atTime(7,0,0, randInt()),
                         intervalPair = Pair(1, "year")
-                    ),
-                    Constants.NOTIFICATION_MAP[Constants.LTO_INSPECTION]!!
-
-                )
-                if (isBatteryEnabled) {
+                    )
                     alarmScheduler.schedule(
-                        AlarmContent(
+                        ltoAlarm,
+                        Constants.NOTIFICATION_MAP[Constants.LTO_INSPECTION]!!
+                    )
+                    alarmContentRepository.insertAlarm(ltoAlarm)
+
+                    if (isBatteryEnabled) {
+                        val batteryAlarm = AlarmContent(
                             name = "Battery",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
-                        ),
-                        Constants.NOTIFICATION_MAP[Constants.BATTERY]!!
-
-                    )
-                }
-                if (isEngineEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
+                        )
+                        alarmScheduler.schedule(
+                            batteryAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.BATTERY]!!
+                        )
+                        alarmContentRepository.insertAlarm(batteryAlarm)
+                    }
+                    if (isEngineEnabled) {
+                        val engineAlarm = AlarmContent(
                             name = "Engine",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
-                        ),
-                        Constants.NOTIFICATION_MAP[Constants.ENGINE]!!
-
-                    )
-                }
-                if (isMirrorsEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
+                        )
+                        alarmScheduler.schedule(
+                            engineAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.ENGINE]!!
+                        )
+                        alarmContentRepository.insertAlarm(engineAlarm)
+                    }
+                    if (isMirrorsEnabled) {
+                        val mirrorsAlarm = AlarmContent(
                             name = "Mirrors",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
-                        ),
-                        Constants.NOTIFICATION_MAP[Constants.MIRRORS]!!
-
-                    )
-                }
-                if (isSeatbeltEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
+                        )
+                        alarmScheduler.schedule(
+                            mirrorsAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.MIRRORS]!!
+                        )
+                        alarmContentRepository.insertAlarm(mirrorsAlarm)
+                    }
+                    if (isSeatbeltEnabled) {
+                        val seatbeltAlarm = AlarmContent(
                             name = "Seatbelt",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
-                        ),
-                        Constants.NOTIFICATION_MAP[Constants.SEATBELT]!!
-
-                    )
-                }
-                if (isWipersEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
+                        )
+                        alarmScheduler.schedule(
+                            seatbeltAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.SEATBELT]!!
+                        )
+                        alarmContentRepository.insertAlarm(seatbeltAlarm)
+                    }
+                    if (isWipersEnabled) {
+                        val wipersAlarm = AlarmContent(
                             name = "Wipers",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
-                        ),
-                        Constants.NOTIFICATION_MAP[Constants.WIPERS]!!
-
-                    )
-
-                }
-                if (isTireEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
+                        )
+                        alarmScheduler.schedule(
+                            wipersAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.WIPERS]!!
+                        )
+                        alarmContentRepository.insertAlarm(wipersAlarm)
+                    }
+                    if (isTireEnabled) {
+                        val tiresAlarm = AlarmContent(
                             name = "Tires",
                             nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
                             intervalPair = Pair(7, "day")
-                        ),
-                        Constants.NOTIFICATION_MAP[Constants.TIRES]!!
-
-                    )
+                        )
+                        alarmScheduler.schedule(
+                            tiresAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.TIRES]!!
+                        )
+                        alarmContentRepository.insertAlarm(tiresAlarm)
+                    }
+                    sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
                 }
-                sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
             }
             is InitialCheckupEvent.OnOilChangeDateChange -> {
                 oilChangeDate = event.oilChangeDate
