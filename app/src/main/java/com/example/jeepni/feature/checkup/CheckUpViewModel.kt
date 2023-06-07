@@ -106,7 +106,7 @@ class CheckUpViewModel
                 viewModelScope.launch {
                     isAddComponentDialogOpen = false
 
-                    val isValidDialogInput =  ( ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated ) && alarmName.isNotEmpty()
+                    val isValidDialogInput =  ( ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated ) && alarmName.isNotEmpty() && !isError
                     if (isValidDialogInput) {
                         val alarm = AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarmDate)
                         alarmRepository.insertAlarm(alarm)
@@ -123,7 +123,7 @@ class CheckUpViewModel
             is CheckUpEvent.OnSaveEditClicked -> {
                 viewModelScope.launch {
                     isEditDeleteDialogOpen = false
-                    val isValidDialogInput = ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated
+                    val isValidDialogInput = ( ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated ) && !isError
                     if (isValidDialogInput) { //TODO: create previous saved alarm date state holder; this is important when the date is changed to a new date
                         alarmManager.cancel(nextAlarmDate)
                         alarmRepository.deleteAlarm(selectedAlarm!!)
