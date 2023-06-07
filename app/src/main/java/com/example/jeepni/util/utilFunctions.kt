@@ -12,6 +12,7 @@ import com.example.jeepni.R
 import com.example.jeepni.core.data.model.UserDetails
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 fun isIncompleteUserDetails(userDetails: UserDetails) : Boolean {
     return userDetails.route == "null" || userDetails.name == "null" || userDetails.name.isNullOrEmpty() || userDetails.route.isNullOrEmpty()
@@ -96,3 +97,4 @@ fun formatDateToString(date : LocalDateTime) : String {
     }
     return date.format(formatter)
 }
+fun randInt() = Random.nextInt(999999999)
