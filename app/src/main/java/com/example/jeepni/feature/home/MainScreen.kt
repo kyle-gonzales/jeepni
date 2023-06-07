@@ -451,7 +451,19 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Driving Mode is Off")
+            val image = if (isSystemInDarkTheme()){
+                R.drawable.droff_dark
+            } else {
+                R.drawable.droff_light
+            }
+            Image(painter = painterResource(
+                id = image),
+                contentDescription = null)
+            Text(modifier = Modifier.padding(4.dp, 0.dp),
+                text = "Driving Mode is Off",
+                fontFamily = quicksandFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp)
         }
     }
 }
