@@ -12,6 +12,7 @@ import com.example.jeepni.core.data.repository.AlarmContentRepository
 import com.example.jeepni.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -25,6 +26,9 @@ class CheckUpViewModel
 ) : ViewModel() {
 
     val alarms = alarmRepository.getAllAlarms()
+        .map {alarms ->
+            alarms.sortedBy { alarm -> alarm.name }
+        }
 
     var selectedAlarm : AlarmContent? by mutableStateOf(null)
     // parameters of selected alarm
