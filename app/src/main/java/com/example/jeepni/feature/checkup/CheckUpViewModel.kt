@@ -37,6 +37,8 @@ class CheckUpViewModel
     var intervalValue by mutableStateOf("1")
     var nextAlarmDate: LocalDateTime by mutableStateOf(LocalDateTime.now().plusMinutes(1))
 
+    var previouslySavedAlarm : LocalDateTime? by mutableStateOf(null)
+
     val isError by derivedStateOf {
         if (intervalValue.isNotEmpty())
             (intervalValue.toLong() > 100 || intervalValue.toInt() < 1) && intervalValue.all { char -> char.isDigit() }
@@ -50,6 +52,7 @@ class CheckUpViewModel
     val uiEvent = _uiEvent.receiveAsFlow()
 
     private fun resetAlarmContentVariables(){
+        previouslySavedAlarm = null
         selectedAlarm = null
 //        nextAlarmDate = LocalDateTime.now().toLocalDate().atTime(7,0,0)
 
@@ -84,9 +87,13 @@ class CheckUpViewModel
             }
             is CheckUpEvent.OnDismissAdd -> {
                 isAddComponentDialogOpen = false
+                
+                resetAlarmContentVariables()
             }
             is CheckUpEvent.OnDismissEdit -> {
                 isEditDeleteDialogOpen = false
+
+                resetAlarmContentVariables()
             }
             is CheckUpEvent.OnOpenAddAlarmDialog -> {
                 isAddComponentDialogOpen = event.isOpen
@@ -99,6 +106,7 @@ class CheckUpViewModel
                 intervalValue = selectedAlarm!!.intervalPair.first.toString()
                 intervalType = selectedAlarm!!.intervalPair.second
                 nextAlarmDate = formatStringToDate(selectedAlarm!!.nextAlarm)
+                previouslySavedAlarm = formatStringToDate(selectedAlarm!!.nextAlarm)
 
                 isEditDeleteDialogOpen = event.isOpen
             }
@@ -125,7 +133,7 @@ class CheckUpViewModel
                     isEditDeleteDialogOpen = false
                     val isValidDialogInput = ( ( isRepeated && intervalValue.isNotEmpty() ) || !isRepeated ) && !isError
                     if (isValidDialogInput) { //TODO: create previous saved alarm date state holder; this is important when the date is changed to a new date
-                        alarmManager.cancel(nextAlarmDate)
+                        alarmManager.cancel(previouslySavedAlarm!!)
                         alarmRepository.deleteAlarm(selectedAlarm!!)
 
                         val alarm = AlarmContent(alarmName, isRepeated, Pair((intervalValue.ifEmpty { "1" }).toLong(), intervalType), nextAlarmDate)
