@@ -25,11 +25,11 @@ class InitialCheckupViewModel @Inject constructor(
     private var _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    var oilChangeDate by mutableStateOf(LocalDate.now())
+    var oilChangeDate : LocalDate by mutableStateOf(LocalDate.now())
         private set
-    var ltfrbDate by mutableStateOf(LocalDate.now())
+    var ltfrbDate : LocalDate by mutableStateOf(LocalDate.now())
         private set
-    var ltoDate by mutableStateOf(LocalDate.now())
+    var ltoDate : LocalDate by mutableStateOf(LocalDate.now())
         private set
     var isTireEnabled by mutableStateOf(false)
         private set
