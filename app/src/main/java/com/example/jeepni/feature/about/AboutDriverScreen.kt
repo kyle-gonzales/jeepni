@@ -25,12 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.BackIconButton
-import com.example.jeepni.core.ui.Container
-
-import com.example.jeepni.core.ui.CustomDropDown
-import com.example.jeepni.core.ui.JeepNiAlertDialog
-import com.example.jeepni.core.ui.SolidButton
+import com.example.jeepni.core.ui.*
 
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
@@ -93,17 +88,16 @@ fun AboutDriverScreen(
                             fontWeight = FontWeight.Bold,
                             fontFamily = quicksandFontFamily
                         )
-                        Column(){
-                            OutlinedTextField(
+                        Column {
+                            JeepNiTextField(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(65.dp),
-                                label = {Text("First Name", fontFamily = quicksandFontFamily)},
+                                label = "First Name",
                                 value = viewModel.firstName,
                                 onValueChange = {viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it))},
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                                 singleLine = true,
-                                shape = RoundedCornerShape(20),
                                 isError = !viewModel.isValidFirstName,
                                 colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
                             )
