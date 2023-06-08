@@ -1,11 +1,6 @@
 package com.example.jeepni.core.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,9 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -667,12 +660,13 @@ fun FabMenuLabel(
     Surface (
         modifier = modifier,
         shape = RoundedCornerShape(6.dp),
-        color = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.secondaryContainer,
     ) {
         JeepNiText(
             text = label,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp)
         )
     }
 }
@@ -683,7 +677,7 @@ fun FabMenuIcon(
     modifier : Modifier = Modifier,
     onClick: (FabMenuItem) -> Unit
 ) {
-    SmallFloatingActionButton(onClick = { onClick(menuItem) }, modifier = modifier) {
+    SmallFloatingActionButton(onClick = { onClick(menuItem) }, modifier = modifier.size(36.dp)) {
         Icon(
             menuItem.icon,
             null
@@ -699,9 +693,10 @@ fun FabMenuItem(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        verticalAlignment = Alignment.CenterVertically
     ) {
         FabMenuLabel(label = menuItem.name)
+        Spacer(modifier = Modifier.width(8.dp))
         FabMenuIcon(menuItem = menuItem, onClick = { onClick(menuItem) })
     }
 }
@@ -717,19 +712,34 @@ fun Fab(
 //    val enterTransition = remember {
 //        animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 50))
 //    }
+    Box (
+        modifier = Modifier.size(150.dp),
+        contentAlignment = Alignment.BottomEnd
+    ){
 
-    FloatingActionButton(onClick = { onClick(!isVisible) }) {
-        Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
-    }
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = slideInVertically { -it },
-        exit = slideOutVertically { it }
-    ) {
-        Column {
-            menuItems.forEach {menuItem ->
-                FabMenuItem(menuItem = menuItem, onClick = { onMenuItemClick(menuItem) })
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = slideInVertically { it + 300 } + fadeIn(),
+            exit = slideOutVertically { it / 2 + 50 } + fadeOut(),
+            modifier = Modifier
+                .offset(y = (-60).dp, x = (-12).dp)
+        ) {
+            Column (
+                horizontalAlignment = Alignment.End,
+            ){
+                menuItems.forEach {menuItem ->
+                    FabMenuItem(menuItem = menuItem, onClick = { onMenuItemClick(menuItem) }, modifier = Modifier.padding(vertical = 4.dp))
+                }
+            }
+        }
+        Box (
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ){
+            FloatingActionButton(onClick = { onClick(!isVisible) }, ) {
+                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
             }
         }
     }
+
 }
