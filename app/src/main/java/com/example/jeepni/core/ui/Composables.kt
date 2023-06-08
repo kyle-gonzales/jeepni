@@ -130,6 +130,7 @@ fun SolidButton(
     contentColorDisabled: Color = Color.DarkGray,
     width: Float = 1f,
     onClick: () -> Unit,
+    border : BorderStroke? = null,
     content: @Composable () -> Unit
 ) {
     Button(
@@ -620,5 +621,36 @@ fun ComponentCard(
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun JeepNiBasicAppBar(
+    title: String,
+    onPopBackStack: () -> Unit,
+) {
+
+    Surface(
+        contentColor = Color.White,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 8.dp,
+    ) {
+        TopAppBar(
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    JeepNiText(
+                        text = title,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            navigationIcon = {
+                BackIconButton(onClick = onPopBackStack)
+            }
+        )
     }
 }
