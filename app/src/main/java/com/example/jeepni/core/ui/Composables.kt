@@ -583,7 +583,7 @@ fun ComponentCard(
                 overflow = TextOverflow.Ellipsis
             )
             Row(
-                modifier = Modifier.padding(vertical = 2.dp),
+                modifier = Modifier.padding(vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -591,10 +591,10 @@ fun ComponentCard(
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
+                Spacer(Modifier.width(4.dp))
                 JeepNiText(
                     text = formattedDate,
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
             val repeatability by remember {
@@ -607,7 +607,7 @@ fun ComponentCard(
                 }
             }
             Row(
-                modifier = Modifier.padding(vertical = 2.dp),
+                modifier = Modifier.padding(vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -615,10 +615,10 @@ fun ComponentCard(
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
+                Spacer(Modifier.width(4.dp))
                 JeepNiText(
                     text = repeatability,
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
         }
