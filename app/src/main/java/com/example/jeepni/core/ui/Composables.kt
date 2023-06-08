@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.AlarmContent
@@ -102,7 +103,9 @@ fun JeepNiText(
     fontSize: TextUnit = 14.sp,
     fontStyle: FontStyle = FontStyle.Normal,
     textAlign: TextAlign = TextAlign.Start,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    maxLines : Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         text = text,
@@ -113,6 +116,8 @@ fun JeepNiText(
         textAlign = textAlign,
         fontWeight = fontWeight,
         fontFamily = quicksandFontFamily,
+        maxLines = maxLines,
+        overflow = overflow
     )
 }
 
@@ -562,7 +567,10 @@ fun ComponentCard(
         }
         Column(modifier = Modifier.padding(8.dp)) {
             JeepNiText(
-                text = alarm.name
+                text = alarm.name,
+                modifier = Modifier,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Icon(
