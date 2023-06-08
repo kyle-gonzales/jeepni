@@ -25,21 +25,40 @@ class DailyAnalyticsRepositoryImpl(
         context = appContext.applicationContext
     }
 
-    override suspend fun logDailyStat(dailyStat: DailyAnalytics) {
-        usersRef.document(auth.currentUser!!.uid)
-            .collection("analytics")
-            .document(dailyStat.date)
-            .update(
-                mapOf(
-                    "salary" to dailyStat.salary,
-                    "fuelCost" to dailyStat.fuelCost,
-                )
-            )
-
-            .addOnSuccessListener {
-                Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
-            } // not sure if this works
-            .addOnFailureListener {}
+    override suspend fun logDailyStat(dailyStat: DailyAnalytics) : Boolean {
+        var result : Boolean
+        try {
+            usersRef.document(auth.currentUser!!.uid)
+                .collection("analytics")
+                .document(dailyStat.date)
+                .update(
+                    mapOf(
+                        "salary" to dailyStat.salary,
+                        "fuelCost" to dailyStat.fuelCost,
+                    )
+                ).await()
+            result = true
+        } catch (e: Exception) {
+            if (e is FirebaseFirestoreException) {
+                try {
+                    usersRef.document(auth.currentUser!!.uid)
+                        .collection("analytics")
+                        .document(dailyStat.date)
+                        .set(
+                            mapOf(
+                                "salary" to dailyStat.salary,
+                                "fuelCost" to dailyStat.fuelCost,
+                            )
+                        ).await()
+                    result = true
+                } catch (e: Exception) {
+                    result = false
+                }
+            } else {
+                result = false
+            }
+        }
+        return result
     }
 
     override suspend fun updateDailyStat(dailyStat: DailyAnalytics) {

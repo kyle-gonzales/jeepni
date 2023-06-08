@@ -35,7 +35,7 @@ class MainViewModel
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
 
-    val fabMenuItems = listOf<FabMenuItem>(
+    val fabMenuItems = listOf(
         FabMenuItem(
             "Delete",
             Icons.Filled.Delete
@@ -141,12 +141,18 @@ class MainViewModel
                 //TODO: perform network call to update state on relaunch
                 if (isValidFuelCost && isValidSalary) {
                     viewModelScope.launch {
-                        repository.updateDailyStat(
+                        val isSuccess = repository.logDailyStat(
                             DailyAnalytics(
                                 fuelCost = fuelCost.toDouble(),
                                 salary = salary.toDouble()
                             )
                         )
+                        if (isSuccess) {
+                            sendUiEvent(UiEvent.ShowToast("Successfully saved daily stat!"))
+                        } else {
+                            sendUiEvent(UiEvent.ShowToast("Failed to save daily stat"))
+
+                        }
                     }
                 } else {
                     sendUiEvent(UiEvent.ShowToast("Invalid Input"))
@@ -177,14 +183,13 @@ class MainViewModel
                             )
                         )
                         if (result) {
-                            sendUiEvent(UiEvent.ShowToast("saved timer and distance"))
+                            sendUiEvent(UiEvent.ShowToast("Saved timer and distance!"))
                         } else {
-                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer and distance"))
+                            sendUiEvent(UiEvent.ShowToast("Failed to save timer and distance..."))
 
                         }
                     }
                     fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
-                    //TODO: update distance in driving mode to Firestore
                 }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
