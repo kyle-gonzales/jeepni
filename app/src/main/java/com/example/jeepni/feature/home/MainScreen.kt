@@ -38,6 +38,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
+import com.example.jeepni.core.ui.Fab
 import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
@@ -161,11 +162,16 @@ fun MainScreen(
                         ) },
 
                         floatingActionButton = {
-                            FloatingActionButton(onClick = {
-                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
-                            }) {
-                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
-                            }
+//                            FloatingActionButton(onClick = {
+////                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+////                            }) {
+////                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+////                            }
+                            Fab(
+                                isVisible = viewModel.isFabMenuOpen,
+                                menuItems = viewModel.fabMenuItems,
+                                onClick = { viewModel.onEvent(MainEvent.OnToggleFab(it)) },
+                                onMenuItemClick = { viewModel.onEvent(MainEvent.OnMenuItemClicked(it)) } )
                         },
                         floatingActionButtonPosition = FabPosition.End,
                         content = {
