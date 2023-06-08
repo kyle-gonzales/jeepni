@@ -143,7 +143,8 @@ fun SolidButton(
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.buttonColors(
             bgColor, contentColor, bgColorDisabled, contentColorDisabled
-        )
+        ),
+        border = border,
     ) {
         content()
     }
