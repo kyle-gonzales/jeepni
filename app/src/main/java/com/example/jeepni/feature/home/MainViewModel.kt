@@ -41,7 +41,7 @@ class MainViewModel
             Icons.Filled.Delete
         ),
         FabMenuItem(
-            "Add",
+            "Log",
             Icons.Filled.Add
         )
     )
@@ -159,7 +159,6 @@ class MainViewModel
                     repository.deleteDailyStat()
                     time = 0
                     distance = 0.0
-                    sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
             is MainEvent.OnToggleDrivingMode -> {
@@ -189,18 +188,7 @@ class MainViewModel
                 }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
-                deletedStat?.let {
-                    viewModelScope.launch {
-                        repository.updateDailyStat(deletedStat ?: return@launch)
-                        deletedStat = null
-                        sendUiEvent(
-                            UiEvent.ShowSnackBar(
-                                message = "Daily Analytics Deleted",
-                                action = "Undo"
-                            )
-                        )
-                    }
-                }
+
             }
             is MainEvent.OnSalaryChange -> {
                 salary = event.salary
@@ -238,7 +226,15 @@ class MainViewModel
             is MainEvent.OnToggleFab -> {
                 isFabMenuOpen = event.isOpen
             }
-            is MainEvent.OnMenuItemClicked -> TODO()
+            is MainEvent.OnMenuItemClicked -> {
+                if (event.menuItem.name == "Log") {
+                    onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+                    isFabMenuOpen = false
+                } else if (event.menuItem.name == "Delete") {
+                    onEvent(MainEvent.OnDeleteDailyStatClick)
+                    isFabMenuOpen = false
+                }
+            }
         }
     }
 

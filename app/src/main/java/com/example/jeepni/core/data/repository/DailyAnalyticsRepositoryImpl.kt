@@ -115,8 +115,8 @@ class DailyAnalyticsRepositoryImpl(
             .collection("analytics")
             .document(getCurrentDateString())
             .delete()
-            .addOnSuccessListener { Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show() }
-            .addOnFailureListener {}
+            .addOnSuccessListener { Toast.makeText(context, "Deleted daily stat!", Toast.LENGTH_SHORT).show() }
+            .addOnFailureListener { Toast.makeText(context, "Failed to delete daily stat...", Toast.LENGTH_SHORT).show() }
 
     }
     override fun getDailyStats(): Flow<List<DailyAnalytics>> = callbackFlow {
