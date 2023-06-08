@@ -93,7 +93,7 @@ fun EditDeleteDialog(
                     label = "Date of next alarm",
                     pickedDate = pickedDate,
                     onChange = onDateChange,
-                    dateValidator = {it.isAfter(LocalDate.now())}
+                    dateValidator = {it.isAfter(LocalDate.now())},
                 )
                 Spacer(Modifier.height(10.dp))
                 Row(
@@ -401,13 +401,14 @@ fun AlarmNameGrid(
                     Icon(
                         painter = painterResource(Constants.ICON_MAP.getValue(it)),
                         contentDescription = null,
-                        modifier = Modifier.height(24.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                     Text(
                         text = it,
                         fontFamily = quicksandFontFamily,
-                        maxLines = 2,
-                        fontSize = 12.sp
+                        maxLines = 1,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -438,16 +439,12 @@ fun AlarmNameGrid(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Icon(
-                        painter = painterResource(R.drawable.samplelogo),
-                        contentDescription = null,
-                        modifier = Modifier.height(25.dp)
-                    )
                     Text(
                         text = "Add Custom",
                         fontFamily = quicksandFontFamily,
                         maxLines = 2,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -517,7 +514,7 @@ fun DurationButton(
                 text = text,
                 fontWeight = FontWeight.Bold,
                 fontFamily = quicksandFontFamily,
-                modifier = Modifier.padding(start = 2.dp),
+                modifier = Modifier.padding(start = 0.dp),
                 fontSize = (10).sp
             )
         }

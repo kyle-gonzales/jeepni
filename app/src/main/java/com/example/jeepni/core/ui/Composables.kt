@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.AlarmContent
@@ -102,7 +103,9 @@ fun JeepNiText(
     fontSize: TextUnit = 14.sp,
     fontStyle: FontStyle = FontStyle.Normal,
     textAlign: TextAlign = TextAlign.Start,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    maxLines : Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         text = text,
@@ -113,6 +116,8 @@ fun JeepNiText(
         textAlign = textAlign,
         fontWeight = fontWeight,
         fontFamily = quicksandFontFamily,
+        maxLines = maxLines,
+        overflow = overflow
     )
 }
 
@@ -125,6 +130,7 @@ fun SolidButton(
     contentColorDisabled: Color = Color.DarkGray,
     width: Float = 1f,
     onClick: () -> Unit,
+    border : BorderStroke? = null,
     content: @Composable () -> Unit
 ) {
     Button(
@@ -137,7 +143,8 @@ fun SolidButton(
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.buttonColors(
             bgColor, contentColor, bgColorDisabled, contentColorDisabled
-        )
+        ),
+        border = border,
     ) {
         content()
     }
@@ -490,7 +497,7 @@ fun DatePicker(
                 modifier = Modifier
                     .offset(x = 15.dp, y = (-15).dp)
                     .padding(10.dp)
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(color = MaterialTheme.colorScheme.background)
             )
         }
     }
@@ -524,7 +531,7 @@ fun DatePicker(
             colors = DatePickerDefaults.colors(
                 headerBackgroundColor = MaterialTheme.colorScheme.primary,
                 headerTextColor = MaterialTheme.colorScheme.onPrimary,
-                calendarHeaderTextColor = MaterialTheme.colorScheme.onPrimary,
+                calendarHeaderTextColor = MaterialTheme.colorScheme.primary,
                 dateActiveBackgroundColor = MaterialTheme.colorScheme.primary,
                 dateActiveTextColor = MaterialTheme.colorScheme.onPrimary,
                 dateInactiveBackgroundColor = White,
@@ -543,39 +550,57 @@ fun ComponentCard(
 ) {
 
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.Start
     ) {
-        Column(modifier = Modifier.padding(8.dp),) {
+        Spacer(Modifier.width(2.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+        ) {
             Icon(
                 painter = painterResource(ICON_MAP.getValue(alarm.name)),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp)
             )
         }
-        Column(modifier = Modifier.padding(8.dp)) {
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(
+            modifier = Modifier.padding(vertical = 2.dp)
+        ) {
             JeepNiText(
-                text = alarm.name
+                text = alarm.name,
+                modifier = Modifier,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+            Row(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.hourglass_top),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
+                Spacer(Modifier.width(4.dp))
                 JeepNiText(
                     text = alarm.nextAlarm,
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
-            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+            Row(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.alarm_48px),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
+                Spacer(Modifier.width(4.dp))
                 JeepNiText(
                     text = if (alarm.isRepeatable) {
                         alarm.intervalPair.first.toString() + " " + alarm.intervalPair.second
@@ -583,9 +608,39 @@ fun ComponentCard(
                         "Off"
                     },
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun JeepNiBasicAppBar(
+    title: String,
+    onPopBackStack: () -> Unit,
+) {
+
+    Surface(
+        contentColor = Color.White,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 8.dp,
+    ) {
+        TopAppBar(
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    JeepNiText(
+                        text = title,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            navigationIcon = {
+                BackIconButton(onClick = onPopBackStack)
+            }
+        )
     }
 }

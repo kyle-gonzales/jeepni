@@ -1,19 +1,15 @@
 package com.example.jeepni.feature.analytics
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.core.ui.AnalyticsCard
-import com.example.jeepni.core.ui.BackIconButton
+import com.example.jeepni.core.ui.JeepNiBasicAppBar
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.util.UiEvent
 
@@ -55,8 +51,8 @@ fun AnalyticsScreen(
         Surface {
             Scaffold(
                 topBar = {
-                    AppBar(
-                        titledesc = "Analytics",
+                    JeepNiBasicAppBar(
+                        title = "Analytics",
                         onPopBackStack = {  viewModel.onEvent(AnalyticsEvent.OnBackPressed)  }
                     )
                 },
@@ -77,37 +73,3 @@ fun AnalyticsScreen(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppBar(
-    titledesc: String,
-    onPopBackStack: () -> Unit,
-//    onMenuItems: () -> Unit
-) {
-    val menuItems = listOf(
-        "Revenue",
-        "Fuel Expenses",
-        "Time Travelled",
-        "Distance Travelled"
-    )
-
-    Surface(
-        contentColor = Color.White,
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 8.dp,
-    ) {
-        TopAppBar(
-            title = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = titledesc)
-                }
-            },
-            navigationIcon = {
-                BackIconButton(onClick = onPopBackStack)
-            }
-        )
-    }
-}

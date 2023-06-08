@@ -2,10 +2,7 @@ package com.example.jeepni.feature.home
 
 import android.annotation.SuppressLint
 import android.os.Looper
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.DailyAnalytics
@@ -17,12 +14,14 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import com.google.maps.android.compose.CameraPositionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class MainViewModel
@@ -31,6 +30,7 @@ class MainViewModel
     private val authRepo: AuthRepository,
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
+
 
     var user by mutableStateOf(authRepo.getUser())
 
@@ -58,22 +58,33 @@ class MainViewModel
         private set
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
-
-    private var distance by mutableStateOf(12382.9)
-    var distanceState by mutableStateOf(convertDistanceToString(distance))
-        private set
-
+    private var distance by mutableStateOf(0.0)// 12382.9
+    val distanceState by derivedStateOf {
+        convertDistanceToString(distance)
+    }
     private var time by mutableStateOf(0L)
-    var timeState by mutableStateOf(formatSecondsToTime(time))
-        private set
+    val timeState by derivedStateOf {
+        formatSecondsToTime(time)
+    }
 
     //cebu basic coords
     private var latitude by mutableStateOf(10.3157)
     private var longitude by mutableStateOf(123.8854)
     var targetPosition by mutableStateOf(LatLng(latitude, longitude))
         private set
-    var cameraPositionState by mutableStateOf(CameraPositionState(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
+    var cameraPositionState by mutableStateOf(
+        CameraPositionState(
+            CameraPosition.fromLatLngZoom(
+                targetPosition,
+                15f
+            )
+        )
+    )
         private set
+
+    // distance stuff
+    private val locations = mutableListOf<LatLng>()
+
 
 //    fun onMapLoaded() {
 //        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(targetPosition, 15f)))
@@ -82,7 +93,7 @@ class MainViewModel
     init {
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
-            timeState = formatSecondsToTime(time)
+            distance = repository.fetchDistance().toDouble()
         }
     }
     fun simulateLocationChange() {
@@ -113,7 +124,10 @@ class MainViewModel
                 if (isValidFuelCost && isValidSalary) {
                     viewModelScope.launch {
                         repository.updateDailyStat(
-                            DailyAnalytics(salary = event.salary, fuelCost = event.fuelCost)
+                            DailyAnalytics(
+                                fuelCost = fuelCost.toDouble(),
+                                salary = salary.toDouble()
+                            )
                         )
                     }
                 } else {
@@ -126,7 +140,7 @@ class MainViewModel
 //                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
                     repository.deleteDailyStat()
                     time = 0
-                    timeState = formatSecondsToTime(time)
+                    distance = 0.0
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
@@ -139,15 +153,16 @@ class MainViewModel
                     }
                 } else {
                     viewModelScope.launch {
-                        val result = repository.saveTimer(
+                        val result = repository.saveTimerAndDistance(
                             DailyAnalytics(
-                                timer = time
+                                timer = time,
+                                distance = distance
                             )
                         )
                         if (result) {
-                            sendUiEvent(UiEvent.ShowToast("saved timer"))
+                            sendUiEvent(UiEvent.ShowToast("saved timer and distance"))
                         } else {
-                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer"))
+                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer and distance"))
 
                         }
                     }
@@ -218,7 +233,6 @@ class MainViewModel
             while(drivingMode) {
                 time++
                 delay(1000L)
-                timeState = formatSecondsToTime(time)
 //                Log.i("UPTIME", time.toString())
 //                Log.i("UPTIME", timeState)
             }
@@ -239,11 +253,23 @@ class MainViewModel
     }
     private val locationCallBack = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            val lastLocation = locationResult.lastLocation!!
-            latitude = lastLocation.latitude
-            longitude = lastLocation.longitude
+
+            val currentLocation = locationResult.lastLocation!!
+
+            latitude = currentLocation.latitude
+            longitude = currentLocation.longitude
             targetPosition = LatLng(latitude, longitude)
             //Log.i("LOCATION UPDATE", "$latitude, $longitude")
+
+
+            val lastLocation = locations.lastOrNull()
+
+            if (lastLocation != null) {
+                distance +=
+                    SphericalUtil.computeDistanceBetween(lastLocation, targetPosition).roundToInt()
+            }
+
+            locations.add(targetPosition)
 
             viewModelScope.launch {
                 try {
