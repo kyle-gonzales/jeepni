@@ -585,7 +585,7 @@ fun ComponentCard(
                 )
                 Spacer(Modifier.width(4.dp))
                 JeepNiText(
-                    text = alarm.nextAlarm,
+                    text = alarm.nextAlarm.split(" ")[0],
                     fontSize = 10.sp,
                 )
             }
