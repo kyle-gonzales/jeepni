@@ -306,7 +306,8 @@ fun LogDailyStatDialog(
                     onValueChange = { onSalaryChange(it) },
                     label = "Salary",
                     singleLine = true,
-                    leadingIcon = { Icon(painterResource(id = R.drawable.white_dollar_24), null) },
+                    leadingIcon = {Icon(painterResource(
+                        id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                     isError = !isValidSalary,
                     errorMessage = "Invalid Input"
@@ -323,7 +324,8 @@ fun LogDailyStatDialog(
                     onValueChange = {onFuelCostChange(it)},
                     label = "Fuel Cost",
                     singleLine = true,
-                    leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
+                    leadingIcon = {Icon(painterResource(
+                        id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = !isValidFuelCost,
                     errorMessage = "Invalid Input"
