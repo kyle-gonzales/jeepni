@@ -1,6 +1,11 @@
 package com.example.jeepni.core.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -644,5 +652,84 @@ fun JeepNiBasicAppBar(
                 BackIconButton(onClick = onPopBackStack)
             }
         )
+    }
+}
+
+data class FabMenuItem (
+    val name : String,
+    val icon : ImageVector
+)
+@Composable
+fun FabMenuLabel(
+    label : String,
+    modifier : Modifier = Modifier,
+) {
+    Surface (
+        modifier = modifier,
+        shape = RoundedCornerShape(6.dp),
+        color = MaterialTheme.colorScheme.background,
+    ) {
+        JeepNiText(
+            text = label,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+fun FabMenuIcon(
+    menuItem : FabMenuItem,
+    modifier : Modifier = Modifier,
+    onClick: (FabMenuItem) -> Unit
+) {
+    SmallFloatingActionButton(onClick = { onClick(menuItem) }, modifier = modifier) {
+        Icon(
+            menuItem.icon,
+            null
+        )
+    }
+}
+
+@Composable
+fun FabMenuItem(
+    menuItem : FabMenuItem,
+    onClick: (FabMenuItem) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        FabMenuLabel(label = menuItem.name)
+        FabMenuIcon(menuItem = menuItem, onClick = { onClick(menuItem) })
+    }
+}
+
+@Composable
+fun Fab(
+    isVisible: Boolean,
+    menuItems : List<FabMenuItem>,
+    modifier : Modifier = Modifier,
+    onClick: (Boolean) -> Unit,
+    onMenuItemClick : (FabMenuItem) -> Unit,
+) {
+//    val enterTransition = remember {
+//        animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 50))
+//    }
+
+    FloatingActionButton(onClick = { onClick(!isVisible) }) {
+        Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+    }
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically { -it },
+        exit = slideOutVertically { it }
+    ) {
+        Column {
+            menuItems.forEach {menuItem ->
+                FabMenuItem(menuItem = menuItem, onClick = { onMenuItemClick(menuItem) })
+            }
+        }
     }
 }
