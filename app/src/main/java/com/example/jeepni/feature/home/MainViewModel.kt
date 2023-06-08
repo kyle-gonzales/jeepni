@@ -2,12 +2,16 @@ package com.example.jeepni.feature.home
 
 import android.annotation.SuppressLint
 import android.os.Looper
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
+import com.example.jeepni.core.ui.FabMenuItem
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
 import com.google.android.gms.location.*
@@ -30,6 +34,17 @@ class MainViewModel
     private val authRepo: AuthRepository,
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
+
+    val fabMenuItems = listOf<FabMenuItem>(
+        FabMenuItem(
+            "Delete",
+            Icons.Filled.Delete
+        ),
+        FabMenuItem(
+            "Add",
+            Icons.Filled.Add
+        )
+    )
 
 
     var user by mutableStateOf(authRepo.getUser())
@@ -60,6 +75,7 @@ class MainViewModel
     }
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
+    var isFabMenuOpen by mutableStateOf(false)
     private var distance by mutableStateOf(0.0)// 12382.9
     val distanceState by derivedStateOf {
         convertDistanceToString(distance)
@@ -219,6 +235,10 @@ class MainViewModel
             is MainEvent.OnProfileClicked -> {
                 sendUiEvent(UiEvent.Navigate(Screen.ProfileScreen.route))
             }
+            is MainEvent.OnToggleFab -> {
+                isFabMenuOpen = event.isOpen
+            }
+            is MainEvent.OnMenuItemClicked -> TODO()
         }
     }
 
