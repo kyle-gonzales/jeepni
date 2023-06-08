@@ -50,9 +50,9 @@ class DailyAnalyticsRepositoryImpl(
     }
 
     @Suppress("LiftReturnOrAssignment")
-    override suspend fun saveTimer(dailyStat: DailyAnalytics) : Boolean {
+    override suspend fun saveTimerAndDistance(dailyStat: DailyAnalytics): Boolean {
         // ONLY SAVES ON THE TIMER FIELD
-        var result = false
+        var result: Boolean
         try {
 
             usersRef.document(auth.currentUser!!.uid)
@@ -61,6 +61,7 @@ class DailyAnalyticsRepositoryImpl(
                 .update(
                     mapOf(
                         "timer" to dailyStat.timer,
+                        "distance" to dailyStat.distance
                     )
                 ).await()
             result = true
@@ -87,7 +88,6 @@ class DailyAnalyticsRepositoryImpl(
         }
         return result
     }
-
     override suspend fun fetchTimer(date: String): String {
         val timer = usersRef.document(auth.currentUser!!.uid)
             .collection("analytics")
@@ -95,6 +95,18 @@ class DailyAnalyticsRepositoryImpl(
             .get()
             .await()
             .get("timer") ?: return "0"
+
+        return timer.toString()
+
+    }
+
+    override suspend fun fetchDistance(date: String): String {
+        val timer = usersRef.document(auth.currentUser!!.uid)
+            .collection("analytics")
+            .document(date)
+            .get()
+            .await()
+            .get("distance") ?: return "0"
 
         return timer.toString()
 
