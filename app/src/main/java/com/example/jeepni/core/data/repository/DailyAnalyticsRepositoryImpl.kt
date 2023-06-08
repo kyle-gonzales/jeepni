@@ -70,7 +70,6 @@ class DailyAnalyticsRepositoryImpl(
         // ONLY SAVES ON THE TIMER FIELD
         var result: Boolean
         try {
-
             usersRef.document(auth.currentUser!!.uid)
                 .collection("analytics")
                 .document(dailyStat.date)
@@ -92,6 +91,7 @@ class DailyAnalyticsRepositoryImpl(
                         .set(
                             mapOf(
                                 "timer" to dailyStat.timer,
+                                "distance" to dailyStat.distance
                             )
                         ).await()
                     result = true
