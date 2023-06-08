@@ -7,7 +7,7 @@ sealed class MainEvent {
     object OnDeleteDailyStatClick : MainEvent()
     object OnLogOutClick : MainEvent()
     data class OnToggleDrivingMode(val isDrivingMode : Boolean) : MainEvent()
-    data class OnSaveDailyAnalyticClick(val salary: Double,val fuelCost: Double) : MainEvent()
+    object OnSaveDailyAnalyticClick : MainEvent()
     object OnUndoDeleteClick : MainEvent()
     data class OnSalaryChange(val salary: String) : MainEvent()
     data class OnFuelCostChange(val fuelCost: String) : MainEvent()
