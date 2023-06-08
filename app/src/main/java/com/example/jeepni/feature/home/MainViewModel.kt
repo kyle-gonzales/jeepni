@@ -58,14 +58,14 @@ class MainViewModel
         private set
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
-
     private var distance by mutableStateOf(0.0)// 12382.9
-    var distanceState by mutableStateOf(convertDistanceToString(distance))
-        private set
-
+    val distanceState by derivedStateOf {
+        convertDistanceToString(distance)
+    }
     private var time by mutableStateOf(0L)
-    var timeState by mutableStateOf(formatSecondsToTime(time))
-        private set
+    val timeState by derivedStateOf {
+        formatSecondsToTime(time)
+    }
 
     //cebu basic coords
     private var latitude by mutableStateOf(10.3157)
@@ -93,9 +93,7 @@ class MainViewModel
     init {
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
-            timeState = formatSecondsToTime(time)
             distance = repository.fetchDistance().toDouble()
-            distanceState = convertDistanceToString(distance)
         }
     }
     fun simulateLocationChange() {
@@ -142,9 +140,7 @@ class MainViewModel
 //                    deletedStat = DailyAnalytics(salary.toDouble(), fuelCost.toDouble())
                     repository.deleteDailyStat()
                     time = 0
-                    timeState = formatSecondsToTime(time)
                     distance = 0.0
-                    distanceState = convertDistanceToString(distance)
                     sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
@@ -237,7 +233,6 @@ class MainViewModel
             while(drivingMode) {
                 time++
                 delay(1000L)
-                timeState = formatSecondsToTime(time)
 //                Log.i("UPTIME", time.toString())
 //                Log.i("UPTIME", timeState)
             }
@@ -274,7 +269,6 @@ class MainViewModel
                     SphericalUtil.computeDistanceBetween(lastLocation, targetPosition).roundToInt()
             }
 
-            distanceState = convertDistanceToString(distance)
             locations.add(targetPosition)
 
             viewModelScope.launch {
