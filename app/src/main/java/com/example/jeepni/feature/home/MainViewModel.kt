@@ -52,10 +52,12 @@ class MainViewModel
         private set
     var drivingMode by mutableStateOf(false)
         private set
-    var isValidSalary by mutableStateOf(true)
-        private set
-    var isValidFuelCost by mutableStateOf(true)
-        private set
+    val isValidSalary by derivedStateOf {
+        isValidDecimal(salary)
+    }
+    val isValidFuelCost by derivedStateOf {
+        isValidDecimal(fuelCost)
+    }
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
     private var distance by mutableStateOf(0.0)// 12382.9
@@ -186,11 +188,9 @@ class MainViewModel
             }
             is MainEvent.OnSalaryChange -> {
                 salary = event.salary
-                isValidSalary = isValidDecimal(salary)
             }
             is MainEvent.OnFuelCostChange -> {
                 fuelCost = event.fuelCost
-                isValidFuelCost = isValidDecimal(fuelCost)
             }
             is MainEvent.OnLogOutClick -> {
                 viewModelScope.launch {
