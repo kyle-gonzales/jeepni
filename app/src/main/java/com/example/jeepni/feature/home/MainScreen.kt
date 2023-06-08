@@ -521,17 +521,16 @@ fun TopActionBar(
             actions = {
                 Column (
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(8.dp)
                 ) {
-                    Row(modifier = Modifier.padding(horizontal = 8.dp)) {
-                        Switch(
-                            checked = drivingMode,
-                            onCheckedChange = { toggleDrivingMode(it) },
-                            enabled = true,
-                            colors = SwitchDefaults.colors()
-                        )
-                    }
-                    JeepNiText(text = "Driver Mode", fontSize = 11.sp)
+                    Switch(
+                        checked = drivingMode,
+                        onCheckedChange = { toggleDrivingMode(it) },
+                        enabled = true,
+                        colors = SwitchDefaults.colors(),
+                        modifier = Modifier
+                    )
                 }
             }
         )
