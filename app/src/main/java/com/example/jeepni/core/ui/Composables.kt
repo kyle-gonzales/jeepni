@@ -470,12 +470,12 @@ fun DatePicker(
             ) {
                 Row(
                     Modifier
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+                        modifier = Modifier,
                         text = formattedDate,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = quicksandFontFamily
@@ -488,15 +488,19 @@ fun DatePicker(
                     )
                 }
             }
-            Text(
-                text = label,
-                fontSize = 11.sp,
-                fontFamily = quicksandFontFamily,
+            Surface(
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
-                    .offset(x = 15.dp, y = (-15).dp)
-                    .padding(10.dp)
-                    .background(color = MaterialTheme.colorScheme.background)
-            )
+                    .offset(x = 15.dp, y = (-12).dp)
+            ) {
+                Text(
+                    text = label,
+                    fontSize = 12.sp,
+                    fontFamily = quicksandFontFamily,
+                    modifier = Modifier
+                        .padding(vertical = 2.dp, horizontal = 4.dp)
+                )
+            }
         }
     }
 
