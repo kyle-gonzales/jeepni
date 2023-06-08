@@ -541,7 +541,9 @@ fun MenuContent(
             .padding(0.dp, 0.dp, 60.dp, 0.dp)
             .fillMaxHeight(),
     ) {
-        Surface {
+        Surface  (
+            color = MaterialTheme.colorScheme.background
+        ){
             Column (
                 modifier = Modifier
                     .fillMaxSize()
@@ -565,18 +567,25 @@ fun MenuContent(
                             .align(Alignment.BottomStart),
                         verticalAlignment = Alignment.Top
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.profile_pic), // should become state
-                            contentDescription = null,
+                        Surface (
                             modifier = Modifier
-                                .size(80.dp)
                                 .clip(CircleShape)
-                                .border(6.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                                .clickable {
-                                    onProfileClicked()
-                                },
-                            contentScale = ContentScale.Crop
-                        )
+                                .size(80.dp)
+                                .background(MaterialTheme.colorScheme.background)
+                                .padding(6.dp),
+                            color = MaterialTheme.colorScheme.background,
+                            shape = CircleShape,
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.profile_pic), // should become state
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        onProfileClicked()
+                                    },
+                            )
+                        }
                         Text(email?:"no email found", /* TODO: show user name instead */
                             modifier = Modifier
                                 .padding(12.dp, 8.dp)
