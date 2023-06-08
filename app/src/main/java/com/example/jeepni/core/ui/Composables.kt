@@ -28,9 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.AlarmContent
-import com.example.jeepni.core.ui.theme.Black
-import com.example.jeepni.core.ui.theme.White
-import com.example.jeepni.core.ui.theme.quicksandFontFamily
+import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.Constants.ICON_MAP
 import com.example.jeepni.util.PermissionTextProvider
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -166,11 +164,11 @@ fun JeepNiTextField(
     keyboardActions: KeyboardActions = KeyboardActions(),
     singleLine: Boolean = true,
     readOnly: Boolean = false,
-    textAlign:TextAlign = TextAlign.Start
+    textAlign:TextAlign = TextAlign.Start,
+    colors : TextFieldColors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
+
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column {
         OutlinedTextField(
             modifier = modifier,
             value = value,
@@ -196,7 +194,7 @@ fun JeepNiTextField(
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
+            colors = colors
         )
     }
 }
@@ -261,7 +259,8 @@ fun CustomDropDown(
                     .height(65.dp)
                     .onGloballyPositioned {
                         onSizeChange(it.size.toSize())
-                    }
+                    },
+                colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
             )
             DropdownMenu(
                 expanded = expanded,
@@ -430,7 +429,6 @@ fun PermissionDialog(
                 )
             },
         )
-
     }
 }
 
