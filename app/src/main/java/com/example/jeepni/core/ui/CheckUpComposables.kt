@@ -55,15 +55,6 @@ fun EditDeleteDialog(
     onSaveClick: () -> Unit,
     isError: Boolean,
 ) {
-
-    val repeatedTextState by remember{ //why is this not working?
-        derivedStateOf {
-            if(isRepeated)
-                "Repeat (On)"
-            else
-                "Repeat (Off)"
-        }
-    }
     Dialog(onDismissRequest = onDismiss) {
         Card(
             elevation = CardDefaults.cardElevation (
@@ -112,7 +103,10 @@ fun EditDeleteDialog(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(5.dp))
-                        Text(text = repeatedTextState, fontFamily = quicksandFontFamily)
+                        Text(
+                            text = if(isRepeated) "Repeat (On)" else "Repeat (Off)",
+                            fontFamily = quicksandFontFamily
+                        )
                     }
                     Switch(
                         //change style
@@ -206,15 +200,6 @@ fun AddDialog(
     onNameChange1: (String) -> Unit,
     isError: Boolean
 ) {
-    val isRepeatedState by remember {
-        mutableStateOf(isRepeated)
-    }
-    val isRepeatedTextState by remember{
-        derivedStateOf {
-            if(isRepeatedState){"Repeat (On)"}
-            else{"Repeat (Off)"}
-        }
-    }
     Dialog(onDismissRequest = onDismiss) {
         Card (
             elevation = CardDefaults.cardElevation(
@@ -271,7 +256,10 @@ fun AddDialog(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(5.dp))
-                        Text(text = isRepeatedTextState, fontFamily = quicksandFontFamily)
+                        Text(
+                            text = if(isRepeated) "Repeat (On)" else "Repeat (Off)",
+                            fontFamily = quicksandFontFamily
+                        )
                     }
                     Switch(
                         //change style
