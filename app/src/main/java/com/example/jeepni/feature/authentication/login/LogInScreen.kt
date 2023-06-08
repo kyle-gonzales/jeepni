@@ -2,10 +2,12 @@ package com.example.jeepni.feature.authentication
 
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,6 +15,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -24,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -134,6 +141,113 @@ fun LogInScreen(
                             contentPadding = PaddingValues(start = 3.5.dp)
                         ){
                             Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewLogInScreen(
+
+){
+    var email by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
+
+    val bgImage = if(isSystemInDarkTheme()){R.drawable.bg_dark}else{R.drawable.bg_light}
+    JeepNiTheme {
+        Surface {
+            Box(
+                modifier = with (Modifier){
+                    fillMaxSize()
+                        .paint(
+                            painterResource(id = bgImage),
+                            contentScale = ContentScale.Crop)
+                },
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize(0.85f),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.Start
+                ){
+                    Column(){
+                        BackIconButton {
+
+                        }
+                        Spacer(Modifier.height(40.dp))
+                        Text(
+                            text = "Log in",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = quicksandFontFamily
+                        )
+                    }
+                    Column (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ){
+                        JeepNiTextField (
+                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            label = "Email",
+                            value = email,
+                            onValueChange = { email = it },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
+                        )
+                        JeepNiTextField (
+                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            label = "Password",
+                            value = password,
+                            onValueChange = { password = it },
+                            singleLine = true,
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        )
+                        TextButton(
+                            onClick = {
+                                //TODO : implement forgot password
+                            }
+                        ){
+                            Text("Forgot Password", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        }
+                        SolidButton(
+                            onClick = {
+
+                            }
+                        ) {
+                            Text("Log in", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        }
+                        Spacer(Modifier.height(10.dp))
+                        SolidButton(
+                            bgColor = MaterialTheme.colorScheme.onBackground,
+                            contentColor =  MaterialTheme.colorScheme.background,
+                            onClick = {
+                                //TODO: implement login with GOOGLE ACCOUNT
+
+                            }) {
+                            Text("Log in with Google", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        }
+                        Row (
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            JeepNiText(stringResource(R.string.no_account))
+                            TextButton(
+                                onClick = {
+
+                                },
+                                contentPadding = PaddingValues(start = 3.5.dp)
+                            ){
+                                Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                 }

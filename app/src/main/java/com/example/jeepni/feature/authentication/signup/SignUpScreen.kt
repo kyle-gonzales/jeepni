@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -229,6 +230,137 @@ fun SignUpScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun PreviewSignUpScreen(
+) {
+    val bgImage = if(isSystemInDarkTheme()){R.drawable.bg_dark}else{R.drawable.bg_light}
+    var email by remember {
+        mutableStateOf("")
+    }
+
+    JeepNiTheme() {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ){
+            Box(
+                modifier = with (Modifier){
+                    fillMaxSize()
+                        .paint(
+                            painterResource(id = bgImage),
+                            contentScale = ContentScale.Crop)
+                }
+            ){
+                Container(0.9f) {
+                    BackIconButton {
+                    }
+                    Text(
+                        text = "Sign up",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = quicksandFontFamily
+                    )
+                    Column(
+                        horizontalAlignment = Alignment.Start
+                    ){
+                        JeepNiTextField (
+                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            label = "Email",
+                            value = email,
+                            onValueChange = { email = it},
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
+                        )
+                        JeepNiTextField (
+                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            label = "Password",
+                            value = "",
+                            onValueChange = {},
+                            singleLine = true,
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        )
+                        JeepNiTextField (
+                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            label = "Re-enter Password",
+                            value = "",
+                            onValueChange = {},
+                            singleLine = true,
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        )
+                        Row (modifier = Modifier,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Checkbox(
+                                checked = false,
+                                onCheckedChange = { }
+                            )
+                            Text(text = stringResource(R.string.agree), fontSize = 14.sp, fontFamily = quicksandFontFamily)
+                            TextButton(
+                                contentPadding = PaddingValues(start = 4.dp, end = 1.dp),
+                                onClick = {
+                                    //TODO : open terms and conditions dialog
+
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.terms),
+                                    fontFamily = quicksandFontFamily,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Text(text = ".", fontSize = 14.sp, fontFamily = quicksandFontFamily)
+                        }
+                    }
+                    Column {
+                        SolidButton(
+                            onClick = {
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.create),
+                                fontFamily = quicksandFontFamily,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        SolidButton(
+                            bgColor = MaterialTheme.colorScheme.onBackground,
+                            contentColor =  MaterialTheme.colorScheme.background,
+                            onClick = {
+                                /*TODO: sign up with GOOGLE ACCOUNT */
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.create_google),
+                                fontFamily = quicksandFontFamily,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    Row (modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        JeepNiText(stringResource(R.string.has_account))
+                        TextButton(
+                            contentPadding = PaddingValues(start = (3.5).dp),
+                            onClick = {
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.log_in),
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = quicksandFontFamily
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 val JeepNiIcons = Icons.Filled
 @Composable
 fun TermsAndConditions(
@@ -236,6 +368,47 @@ fun TermsAndConditions(
 ){
     Container(height = 0.9f) {
         IconButton(onClick = onClick) {
+
+        }
+        Text(
+            stringResource(R.string.terms),
+            Modifier.fillMaxWidth(0.6f)
+        )
+        Text(
+            text = stringResource(R.string.terms1),
+            modifier = Modifier
+                .fillMaxHeight(0.6f)
+                .verticalScroll(
+                    rememberScrollState()
+                )
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ){
+            SolidButton(width = 0.45f,
+                onClick = {}) {
+                Row{
+                    JeepNiIcons.Close
+                    Text(stringResource(R.string.decline))
+                }
+            }
+            SolidButton(width = 0.82f,
+                onClick = {}) {
+                Row{
+                    JeepNiIcons.Check
+                    Text(stringResource(R.string.accept))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+@Preview
+fun PreviewTermsAndConditions(
+){
+    Container(height = 0.9f) {
+        IconButton(onClick = {}) {
 
         }
         Text(

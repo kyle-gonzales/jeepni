@@ -276,7 +276,7 @@ fun LogDailyStatDialog(
                     modifier = Modifier
                         .padding(8.dp),
                     content = {
-                        Text("Save")
+                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     }
                 )
             },
@@ -288,7 +288,7 @@ fun LogDailyStatDialog(
                     modifier = Modifier
                         .padding(8.dp),
                     content = {
-                        Text("Cancel")
+                        Text("Cancel", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
                     }
                 )
             },
@@ -296,7 +296,6 @@ fun LogDailyStatDialog(
                 Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
             },
             text = {
-
                 Column (
                     modifier = Modifier,
                     horizontalAlignment = Alignment.Start,
@@ -304,7 +303,7 @@ fun LogDailyStatDialog(
                     Text(
                         modifier = Modifier.padding(0.dp, 8.dp),
                         text = "Enter your earnings for today: ",
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField(
                         value = salary,
@@ -321,7 +320,7 @@ fun LogDailyStatDialog(
                             .padding(0.dp, 8.dp)
                             .wrapContentWidth(),
                         text = "Enter the amount you spent on fuel for today: ",
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField(
                         value = fuelCost,
@@ -449,7 +448,7 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Driving Mode is Off")
+            Text("Driving Mode is Off", fontFamily = quicksandFontFamily)
         }
     }
 }
