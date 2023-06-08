@@ -210,8 +210,9 @@ fun MainScreen(
                         isValidSalary = viewModel.isValidSalary,
                         isValidFuelCost = viewModel.isValidFuelCost,
                         onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
-                        onSave = { salary, fuelCost ->
-                            viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
+                        onSave = {
+                            viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick)
+                        }
                     )
                 }
                 val activity = LocalContext.current as MainActivity //apparently this is not a memory leak!
@@ -247,7 +248,6 @@ fun Activity.openAppSettings() {
     ).also(::startActivity)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogDailyStatDialog(
     salary: String,
@@ -257,7 +257,7 @@ fun LogDailyStatDialog(
     isValidSalary : Boolean,
     isValidFuelCost : Boolean,
     onDialogOpenChange : (Boolean) -> Unit,
-    onSave : (String, String) -> Unit
+    onSave : () -> Unit
  ) {
     AlertDialog(
         modifier = Modifier,
@@ -268,7 +268,7 @@ fun LogDailyStatDialog(
             TextButton(
                 onClick = {
                     /*TODO: add / edit to database*/
-                    onSave(salary, fuelCost)
+                    onSave()
                     onDialogOpenChange(false)
                 },
                 modifier = Modifier,
