@@ -27,6 +27,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -72,11 +73,12 @@ fun EditDeleteDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ){
-                    Text(
+                    JeepNiText (
                         text = alarmName,
                         fontSize = 20.sp,
-                        fontFamily = quicksandFontFamily,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
                 Spacer(Modifier.height(20.dp))
@@ -294,15 +296,6 @@ fun AddDialog(
                             textStyle = TextStyle(fontFamily = quicksandFontFamily),
                             singleLine = true,
                             onValueChange = onValueChange,
-                            supportingText = {
-                                if (isError) {
-                                    Text(
-                                        text = "Input should be within 1-100", //! convert to state
-                                        color = MaterialTheme.colorScheme.error,
-                                        fontFamily = quicksandFontFamily,
-                                    )
-                                }
-                            },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                         Spacer(Modifier.width(5.dp))
