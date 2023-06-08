@@ -6,11 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jeepni.core.data.model.AlarmContent
-import com.example.jeepni.core.data.model.NotificationContent
-import com.example.jeepni.util.AlarmScheduler
-import com.example.jeepni.util.Constants
-import com.example.jeepni.util.Screen
-import com.example.jeepni.util.UiEvent
+import com.example.jeepni.core.data.repository.AlarmContentRepository
+import com.example.jeepni.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -21,17 +18,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InitialCheckupViewModel @Inject constructor(
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val alarmContentRepository: AlarmContentRepository
 ) : ViewModel() {
 
     private var _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    var oilChangeDate by mutableStateOf(LocalDate.now())
+    var oilChangeDate : LocalDate by mutableStateOf(LocalDate.now())
         private set
-    var ltfrbDate by mutableStateOf(LocalDate.now())
+    var ltfrbDate : LocalDate by mutableStateOf(LocalDate.now())
         private set
-    var ltoDate by mutableStateOf(LocalDate.now())
+    var ltoDate : LocalDate by mutableStateOf(LocalDate.now())
         private set
     var isTireEnabled by mutableStateOf(false)
         private set
@@ -49,128 +47,115 @@ class InitialCheckupViewModel @Inject constructor(
     fun onEvent(event: InitialCheckupEvent) {
         when(event) {
             is InitialCheckupEvent.OnSaveClicked -> {
-                // TODO: save data to firestore?
-                alarmScheduler.schedule(
-                    AlarmContent(
+                viewModelScope.launch {
+                    val oilChangeAlarm = AlarmContent(
                         name = "Oil Change",
-                        nextAlarmDate = oilChangeDate.plusMonths(3).atTime(7, 0)
-                    ),
-                    NotificationContent(
-                        notificationId = Constants.CHANGE_OIL_NOTIFICATION,
-                        title = "Change Your Oil Today",
-                        content = "It's been three months since your last known oil change, please check your vehicle's oil"
-                    )
-                )
-                alarmScheduler.schedule(
-                    AlarmContent(
-                        name = "LTFRB Inspection",
-                        nextAlarmDate = ltfrbDate.plusYears(1).minusDays(3).atTime(7,0),
-                        interval = Pair(1, "year")
-                    ),
-                    NotificationContent(
-                        notificationId = Constants.LTFRB_INSPECTION_NOTIFICATION,
-                        title = "Prepare for LTFRB inspection",
-                        content ="It's been a while since the last known LTFRB inspection, please prepare for any possible upcoming inspections"
-                    )
-                )
-                alarmScheduler.schedule(
-                    AlarmContent(
-                        name = "LTO Inspection",
-                        nextAlarmDate = ltoDate.plusYears(1).minusDays(3).atTime(7,0),
-                        interval = Pair(1, "year")
-                    ),
-                    NotificationContent(
-                        notificationId = Constants.LTO_INSPECTION_NOTIFICATION,
-                        title = "Prepare for LTO inspection",
-                        content ="It's been a while since the last known LTO inspection, please prepare for any possible upcoming inspections"
-                    )
-                )
-                if (isBatteryEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
-                            name = "Battery",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
-                        ),
-                        NotificationContent(
-                            notificationId = Constants.BATTERY_REPAIR_NOTIFICATION,
-                            title = "Replace Your Battery Today",
-                            content = "Your battery may be malfunctioning. Consider replacing it as soon as possible"
+                        intervalPair = Pair(3, "month"),
+                        nextAlarmDate = oilChangeDate.plusMonths(3).atTime(7,0,0, randInt()
                         )
                     )
-                }
-                if (isEngineEnabled) {
                     alarmScheduler.schedule(
-                        AlarmContent(
-                            name = "Engine",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
-                        ),
-                        NotificationContent(
-                            notificationId = Constants.ENGINE_REPAIR_NOTIFICATION,
-                            title = "Repair Your Engine Today",
-                            content = "Your engine may be malfunctioning. Consider repairing it as soon as possible"
-                        )
+                        oilChangeAlarm,
+                        Constants.NOTIFICATION_MAP[Constants.OIL_CHANGE]!!
                     )
-                }
-                if (isMirrorsEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
-                            name = "Mirrors",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
-                        ),
-                        NotificationContent(
-                            notificationId = Constants.SIDE_MIRRORS_REPAIR_NOTIFICATION,
-                            title = "Repair Your Side Mirrors Today",
-                            content = "Your side mirrors may be in need of a repair. Consider repairing them as soon as possible"
-                        )
-                    )
-                }
-                if (isSeatbeltEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
-                            name = "Seatbelt",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
-                        ),
-                        NotificationContent(
-                            notificationId = Constants.SEATBELT_REPAIR_NOTIFICATION,
-                            title = "Repair Your Seatbelt Today",
-                            content = "Your seatbelt may be in need of a repair. Consider repairing it as soon as possible"
-                        )
-                    )
-                }
-                if (isWipersEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
-                            name = "Wipers",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
-                        ),
-                        NotificationContent(
-                            notificationId = Constants.WIPERS_REPAIR_NOTIFICATION,
-                            title = "Repair Your Wipers Today",
-                            content = "Your wipers may be in need of a repair. Consider repairing them as soon as possible"
-                        )
-                    )
+                    alarmContentRepository.insertAlarm(oilChangeAlarm)
 
-                }
-                if (isTireEnabled) {
-                    alarmScheduler.schedule(
-                        AlarmContent(
-                            name = "Tires",
-                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7, 0),
-                            interval = Pair(7, "day")
-                        ),
-                        NotificationContent(
-                            notificationId = Constants.TIRE_CHANGE_NOTIFICATION,
-                            title = "Repair Your Tires Today",
-                            content = "Your tires may be in need of a repair. Consider repairing them as soon as possible"
-                        )
+                    val ltfrbAlarm = AlarmContent(
+                        name = "LTFRB Inspection",
+                        nextAlarmDate = ltfrbDate.plusYears(1).minusDays(3).atTime(7,0,0, randInt()),
+                        intervalPair = Pair(1, "year")
                     )
+                    alarmScheduler.schedule(
+                        ltfrbAlarm,
+                        Constants.NOTIFICATION_MAP[Constants.LTFRB_INSPECTION]!!
+                    )
+                    alarmContentRepository.insertAlarm(ltfrbAlarm)
+
+                    val ltoAlarm = AlarmContent(
+                        name = "LTO Inspection",
+                        nextAlarmDate = ltoDate.plusYears(1).minusDays(3).atTime(7,0,0, randInt()),
+                        intervalPair = Pair(1, "year")
+                    )
+                    alarmScheduler.schedule(
+                        ltoAlarm,
+                        Constants.NOTIFICATION_MAP[Constants.LTO_INSPECTION]!!
+                    )
+                    alarmContentRepository.insertAlarm(ltoAlarm)
+
+                    if (isBatteryEnabled) {
+                        val batteryAlarm = AlarmContent(
+                            name = "Battery",
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
+                            intervalPair = Pair(7, "day")
+                        )
+                        alarmScheduler.schedule(
+                            batteryAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.BATTERY]!!
+                        )
+                        alarmContentRepository.insertAlarm(batteryAlarm)
+                    }
+                    if (isEngineEnabled) {
+                        val engineAlarm = AlarmContent(
+                            name = "Engine",
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
+                            intervalPair = Pair(7, "day")
+                        )
+                        alarmScheduler.schedule(
+                            engineAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.ENGINE]!!
+                        )
+                        alarmContentRepository.insertAlarm(engineAlarm)
+                    }
+                    if (isMirrorsEnabled) {
+                        val mirrorsAlarm = AlarmContent(
+                            name = "Mirrors",
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
+                            intervalPair = Pair(7, "day")
+                        )
+                        alarmScheduler.schedule(
+                            mirrorsAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.MIRRORS]!!
+                        )
+                        alarmContentRepository.insertAlarm(mirrorsAlarm)
+                    }
+                    if (isSeatbeltEnabled) {
+                        val seatbeltAlarm = AlarmContent(
+                            name = "Seatbelt",
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
+                            intervalPair = Pair(7, "day")
+                        )
+                        alarmScheduler.schedule(
+                            seatbeltAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.SEATBELT]!!
+                        )
+                        alarmContentRepository.insertAlarm(seatbeltAlarm)
+                    }
+                    if (isWipersEnabled) {
+                        val wipersAlarm = AlarmContent(
+                            name = "Wipers",
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
+                            intervalPair = Pair(7, "day")
+                        )
+                        alarmScheduler.schedule(
+                            wipersAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.WIPERS]!!
+                        )
+                        alarmContentRepository.insertAlarm(wipersAlarm)
+                    }
+                    if (isTireEnabled) {
+                        val tiresAlarm = AlarmContent(
+                            name = "Tires",
+                            nextAlarmDate = LocalDate.now().plusDays(7).atTime(7,0,0, randInt()),
+                            intervalPair = Pair(7, "day")
+                        )
+                        alarmScheduler.schedule(
+                            tiresAlarm,
+                            Constants.NOTIFICATION_MAP[Constants.TIRES]!!
+                        )
+                        alarmContentRepository.insertAlarm(tiresAlarm)
+                    }
+                    sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
                 }
-                sendUiEvent(UiEvent.Navigate(Screen.MainScreen.route, "0"))
             }
             is InitialCheckupEvent.OnOilChangeDateChange -> {
                 oilChangeDate = event.oilChangeDate

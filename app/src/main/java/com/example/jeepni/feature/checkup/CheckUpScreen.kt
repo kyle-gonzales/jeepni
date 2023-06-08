@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +37,8 @@ fun CheckUpScreen (
     onPopBackStack : () -> Unit,
 ) {
     val context = LocalContext.current
+
+    val alarms by viewModel.alarms.collectAsState(null)
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -100,10 +104,10 @@ fun CheckUpScreen (
                                     )
                                 }
                             }
-                            itemsIndexed(viewModel.alarmList) {index, alarm ->
+                            itemsIndexed(alarms?: emptyList()) { index, alarm ->
                                 Button(
                                     onClick =  {
-                                        viewModel.onEvent(CheckUpEvent.OnOpenEditAlarmDialog(true, index))
+                                        viewModel.onEvent(CheckUpEvent.OnOpenEditAlarmDialog(true, alarm))
                                     },
                                     shape = RoundedCornerShape(10.dp),
                                     modifier = Modifier
@@ -127,7 +131,7 @@ fun CheckUpScreen (
                     onDismiss = {viewModel.onEvent(
                         CheckUpEvent.OnDismissAdd
                     )},
-                    pickedDate = viewModel.nextAlarm.toLocalDate(),
+                    pickedDate = viewModel.nextAlarmDate.toLocalDate(),
                     onDateChange = {viewModel.onEvent(
                         CheckUpEvent.OnNextAlarmChange(it)
                     )},
@@ -163,9 +167,9 @@ fun CheckUpScreen (
             }
             if (viewModel.isEditDeleteDialogOpen) {
                 EditDeleteDialog(
-                    alarmName = viewModel.alarmList[viewModel.alarmToEditIndex].name,
+                    alarmName = viewModel.selectedAlarm!!.name,
                     onDismiss = { viewModel.onEvent( CheckUpEvent.OnDismissEdit ) },
-                    pickedDate = viewModel.nextAlarm.toLocalDate(),
+                    pickedDate = viewModel.nextAlarmDate.toLocalDate(),
                     onDateChange = {viewModel.onEvent(
                         CheckUpEvent.OnNextAlarmChange(it)
                     )},

@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.checkup
 
+import com.example.jeepni.core.data.model.AlarmContent
 import java.time.LocalDate
 
 sealed class CheckUpEvent {
@@ -8,7 +9,7 @@ sealed class CheckUpEvent {
     object OnDismissEdit : CheckUpEvent()
 
     object OnDeleteClicked : CheckUpEvent()
-    data class OnOpenEditAlarmDialog(val isOpen: Boolean, val index : Int) : CheckUpEvent()
+    data class OnOpenEditAlarmDialog(val isOpen: Boolean, val alarm: AlarmContent) : CheckUpEvent()
     data class OnOpenAddAlarmDialog(val isOpen : Boolean, val index : Int =  0) : CheckUpEvent()
     data class OnNextAlarmChange(val nextAlarm: LocalDate) : CheckUpEvent()
     data class OnRepeatabilityChange(val isRepeated: Boolean) : CheckUpEvent()
