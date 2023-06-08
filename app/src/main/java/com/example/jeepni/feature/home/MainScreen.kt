@@ -296,6 +296,7 @@ fun LogDailyStatDialog(
                 Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
             },
             text = {
+
                 Column (
                     modifier = Modifier,
                     horizontalAlignment = Alignment.Start,
@@ -310,7 +311,8 @@ fun LogDailyStatDialog(
                         onValueChange = { onSalaryChange(it) },
                         label = "Salary",
                         singleLine = true,
-                        leadingIcon = { Icon(painterResource(id = R.drawable.white_dollar_24), null) },
+                        leadingIcon = { Icon(painterResource(
+                            id = R.drawable.white_dollar_24), null, Modifier.size(18.dp)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                         isError = !isValidSalary,
                         errorMessage = "Invalid Input"
@@ -448,7 +450,19 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Driving Mode is Off", fontFamily = quicksandFontFamily)
+            val image = if (isSystemInDarkTheme()){
+                R.drawable.droff_dark
+            } else {
+                R.drawable.droff_light
+            }
+            Image(painter = painterResource(
+                id = image),
+                contentDescription = null)
+            Text(modifier = Modifier.padding(4.dp, 0.dp),
+                text = "Driving Mode is Off",
+                fontFamily = quicksandFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp)
         }
     }
 }
