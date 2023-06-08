@@ -67,16 +67,17 @@ fun CheckUpScreen (
                 },
                 content = { paddingValues ->
                     Box(
-                        modifier = Modifier.background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                        modifier = Modifier
+                            .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                            .padding(paddingValues)
                     ){
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(2),
-                            contentPadding = paddingValues,
-                            verticalArrangement = Arrangement.spacedBy(10.dp),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            contentPadding = PaddingValues(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(10.dp)
                         ) {
                             item {
                                 Button(
@@ -108,6 +109,7 @@ fun CheckUpScreen (
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(100.dp),
+                                    contentPadding = PaddingValues(0.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.outlineVariant,
                                         contentColor = MaterialTheme.colorScheme.onSurface

@@ -554,25 +554,36 @@ fun ComponentCard(
         }
     }
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.Start
     ) {
-        Column(modifier = Modifier.padding(8.dp),) {
+        Spacer(Modifier.width(2.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+        ) {
             Icon(
                 painter = painterResource(ICON_MAP.getValue(alarm.name)),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp)
             )
         }
-        Column(modifier = Modifier.padding(8.dp)) {
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(
+            modifier = Modifier.padding(vertical = 2.dp)
+        ) {
             JeepNiText(
                 text = alarm.name,
                 modifier = Modifier,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+            Row(
+                modifier = Modifier.padding(vertical = 2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.hourglass_top),
                     contentDescription = null,
@@ -593,7 +604,10 @@ fun ComponentCard(
                     }
                 }
             }
-            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+            Row(
+                modifier = Modifier.padding(vertical = 2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.alarm_48px),
                     contentDescription = null,
