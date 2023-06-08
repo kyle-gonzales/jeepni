@@ -38,6 +38,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
+import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
@@ -514,13 +515,19 @@ fun TopActionBar(
                 }
             },
             actions = {
-                Row(modifier = Modifier.padding(8.dp,0.dp)) {
-                    Switch(
-                        checked = drivingMode,
-                        onCheckedChange = { toggleDrivingMode(it) },
-                        enabled = true,
-                        colors = SwitchDefaults.colors()
-                    )
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row(modifier = Modifier.padding(horizontal = 8.dp)) {
+                        Switch(
+                            checked = drivingMode,
+                            onCheckedChange = { toggleDrivingMode(it) },
+                            enabled = true,
+                            colors = SwitchDefaults.colors()
+                        )
+                    }
+                    JeepNiText(text = "Driver Mode", fontSize = 11.sp)
                 }
             }
         )
