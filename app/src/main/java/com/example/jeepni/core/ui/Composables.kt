@@ -1,6 +1,6 @@
 package com.example.jeepni.core.ui
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -80,20 +81,6 @@ fun Container(
 }
 
 @Composable
-fun Logo(
-    width: Dp = 100.dp,
-    height: Dp = 100.dp
-) {
-    Image(
-        painter = painterResource(id = R.drawable.samplelogo),
-        contentDescription = "JeepNi Logo",
-        modifier = Modifier
-            .width(width)
-            .height(height)
-    )
-}
-
-@Composable
 fun JeepNiText(
     text: String,
     modifier: Modifier = Modifier,
@@ -135,15 +122,15 @@ fun SolidButton(
         enabled = isEnabled,
         onClick = onClick,
         modifier = Modifier
-            .height(75.dp)
-            .fillMaxWidth(width)
-            .padding(vertical = 10.dp),
-        shape = RoundedCornerShape(20),
+            .height(65.dp)
+            .fillMaxWidth(width),
+        shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(
             bgColor, contentColor, bgColorDisabled, contentColorDisabled
         ),
         border = border,
-    ) {
+        contentPadding = PaddingValues(0.dp)
+    ){
         content()
     }
 }
@@ -206,7 +193,7 @@ fun BackIconButton(
     IconButton(
         onClick = { onClick() },
         modifier = Modifier
-            //.offset(-12.dp) // what is this for?
+            .offset(-13.dp) // aligns backbutton and texts
     )
     {
         Icon(Icons.Filled.ArrowBack, contentDescription = null)
@@ -460,7 +447,7 @@ fun DatePicker(
         Box {
             OutlinedButton(
                 onClick = { dateDialogState.show() },
-                modifier = Modifier.height(60.dp),
+                modifier = Modifier.height(65.dp),
                 shape = RoundedCornerShape(20),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
                 colors = ButtonDefaults.buttonColors(
@@ -645,4 +632,100 @@ fun JeepNiBasicAppBar(
             }
         )
     }
+}
+
+data class FabMenuItem (
+    val name : String,
+    val icon : ImageVector
+)
+@Composable
+fun FabMenuLabel(
+    label : String,
+    modifier : Modifier = Modifier,
+) {
+    Surface (
+        modifier = modifier,
+        shape = RoundedCornerShape(6.dp),
+        color = MaterialTheme.colorScheme.secondaryContainer,
+    ) {
+        JeepNiText(
+            text = label,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp)
+        )
+    }
+}
+
+@Composable
+fun FabMenuIcon(
+    menuItem : FabMenuItem,
+    modifier : Modifier = Modifier,
+    onClick: (FabMenuItem) -> Unit
+) {
+    SmallFloatingActionButton(onClick = { onClick(menuItem) }, modifier = modifier.size(36.dp)) {
+        Icon(
+            menuItem.icon,
+            null
+        )
+    }
+}
+
+@Composable
+fun FabMenuItem(
+    menuItem : FabMenuItem,
+    onClick: (FabMenuItem) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FabMenuLabel(label = menuItem.name)
+        Spacer(modifier = Modifier.width(8.dp))
+        FabMenuIcon(menuItem = menuItem, onClick = { onClick(menuItem) })
+    }
+}
+
+@Composable
+fun Fab(
+    isVisible: Boolean,
+    menuItems : List<FabMenuItem>,
+    modifier : Modifier = Modifier,
+    onClick: (Boolean) -> Unit,
+    onMenuItemClick : (FabMenuItem) -> Unit,
+) {
+//    val enterTransition = remember {
+//        animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 50))
+//    }
+    Box (
+        modifier = Modifier.size(150.dp),
+        contentAlignment = Alignment.BottomEnd
+    ){
+
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = slideInVertically { it + 300 } + fadeIn(),
+            exit = slideOutVertically { it / 2 + 50 } + fadeOut(),
+            modifier = Modifier
+                .offset(y = (-60).dp, x = (-12).dp)
+        ) {
+            Column (
+                horizontalAlignment = Alignment.End,
+            ){
+                menuItems.forEach {menuItem ->
+                    FabMenuItem(menuItem = menuItem, onClick = { onMenuItemClick(menuItem) }, modifier = Modifier.padding(vertical = 4.dp))
+                }
+            }
+        }
+        Box (
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ){
+            FloatingActionButton(onClick = { onClick(!isVisible) }, ) {
+                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+            }
+        }
+    }
+
 }

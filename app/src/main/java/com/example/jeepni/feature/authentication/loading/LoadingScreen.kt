@@ -1,6 +1,7 @@
 package com.example.jeepni.feature.authentication.loading
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ fun LoadingScreen (
     viewModel: LoadingViewModel = hiltViewModel(),
     onNavigate : (UiEvent.Navigate) -> Unit
 ) {
+    val logo = if(isSystemInDarkTheme()){R.drawable.app_logo_dark}else{R.drawable.app_logo_light}
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect {event ->
@@ -47,7 +49,7 @@ fun LoadingScreen (
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.samplelogo),
+                    painter = painterResource(id = logo),
                     contentDescription = null,
                     modifier = Modifier
                         .scale(0.5f)

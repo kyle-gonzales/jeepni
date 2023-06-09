@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface DailyAnalyticsRepository {
 
-    suspend fun logDailyStat(dailyStat: DailyAnalytics)
+    suspend fun logDailyStat(dailyStat: DailyAnalytics) : Boolean
 
     suspend fun updateDailyStat(dailyStat: DailyAnalytics)
 
