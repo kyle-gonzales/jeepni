@@ -1,18 +1,22 @@
 package com.example.jeepni.feature.analytics
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +26,34 @@ class AnalyticsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var analytics = repository.getDailyStats()
+        .map {items ->
+            items.sortedBy {stat ->
+                val input = stat.date.split("-")
+                val date = LocalDate.of(input[2].toInt(), input[0].toInt(), input[1].toInt())
+                date
+            }
+
+        }
+
+    @SuppressLint("SimpleDateFormat")
+    var averageFuelCost = analytics
+        .map {items ->
+            val filteredItems = filterStatsInLastWeek(items)
+            filteredItems
+        }
+        .map {items ->
+            items.map { item -> item.fuelCost }.average()
+        }
+
+
+    var averageSalary = analytics
+        .map {items ->
+            val filteredItems = filterStatsInLastWeek(items)
+            filteredItems
+        }
+        .map { items ->
+        items.map { item -> item.salary }.average()
+    }
 
 
     private var _uiEvent = Channel<UiEvent>()
@@ -48,4 +80,11 @@ class AnalyticsViewModel @Inject constructor(
             }
         }
     }
+    private fun filterStatsInLastWeek(items: List<DailyAnalytics>) =
+        items.filter { item ->
+            val input: Date = SimpleDateFormat("M-d-yyyy").parse(item.date)!!
+            val dateOfStat = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            dateOfStat.isAfter(LocalDate.now().minusDays(7)) || dateOfStat.isEqual(LocalDate.now().minusDays(7))
+        }
 }

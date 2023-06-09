@@ -54,6 +54,7 @@ fun LoadingScreen (
                     modifier = Modifier
                         .scale(0.5f)
                         .padding(12.dp)
+
                 )
                 CircularProgressIndicator()
             }
