@@ -47,7 +47,7 @@ fun LoadingScreen (
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.samplelogo),
+                    painter = painterResource(id = R.drawable.app_logo),
                     contentDescription = null,
                     modifier = Modifier
                         .scale(0.5f)

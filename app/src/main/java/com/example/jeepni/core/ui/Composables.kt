@@ -85,7 +85,7 @@ fun Logo(
     height: Dp = 100.dp
 ) {
     Image(
-        painter = painterResource(id = R.drawable.samplelogo),
+        painter = painterResource(id = R.drawable.app_logo),
         contentDescription = "JeepNi Logo",
         modifier = Modifier
             .width(width)
