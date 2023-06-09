@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.Fab
+import com.example.jeepni.core.data.model.LocationUpdate
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
@@ -62,6 +63,8 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+
+    val otherDrivers = viewModel.otherDrivers
 
     val dialogQueue = viewModel.visiblePermissionDialogQueue
     
@@ -181,7 +184,8 @@ fun MainScreen(
                                         paddingValues = it,
                                         cameraPositionState = viewModel.cameraPositionState,
                                         targetPosition = viewModel.targetPosition,
-                                        onMapLoaded = {} //viewModel::onMapLoaded
+                                        onMapLoaded = {}, //viewModel::onMapLoaded
+                                        otherDrivers = otherDrivers
                                     )
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)
@@ -350,6 +354,7 @@ fun DrivingModeOnContent(
     targetPosition : LatLng,
     cameraPositionState: CameraPositionState,
     onMapLoaded : () -> Unit,
+    otherDrivers : List<LocationUpdate>
 ) {
 
     val cebuBounds = LatLngBounds.Builder()
@@ -363,6 +368,8 @@ fun DrivingModeOnContent(
         cebuBounds.southwest,
         LatLng(cebuBounds.southwest.latitude, cebuBounds.northeast.longitude)
     )
+
+    val context = LocalContext.current
 
     Surface {
         Column (
@@ -406,30 +413,19 @@ fun DrivingModeOnContent(
                     minZoomPreference = 9.0f,
                 ),
             ) {
-//                Polygon(
-//                    points = listOf(
-//                        LatLng(85.0,90.0),
-//                        LatLng(85.0,0.1),
-//                        LatLng(85.0,-90.0),
-//                        LatLng(85.0,-179.9),
-//                        LatLng(0.0,-179.9),
-//                        LatLng(-85.0,-179.9),
-//                        LatLng(-85.0,-90.0),
-//                        LatLng(-85.0,0.1),
-//                        LatLng(-85.0,90.0),
-//                        LatLng(-85.0,179.9),
-//                        LatLng(0.0,179.9),
-//                        LatLng(85.0,179.9),
-//                    ),
-//                    strokeWidth = 0F,
-//                    fillColor = Color.White,
-//                    holes = listOf(holePoints),
-//                    zIndex = 10000.0f,
-//                )
                 Marker(
+                    icon = if (isSystemInDarkTheme()) bitmapDescriptorFromVector(context, R.drawable.pin_you_dark) else bitmapDescriptorFromVector(context, R.drawable.pin_you_light),
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
                 )
+
+                for (driver in otherDrivers) {
+                    Marker(
+                        icon = if (isSystemInDarkTheme()) bitmapDescriptorFromVector(context, R.drawable.pin_others_dark) else bitmapDescriptorFromVector(context, R.drawable.pin_others_light),
+                        state = MarkerState(position = LatLng(driver.latitude, driver.longitude)),
+                        title = driver.driver_id
+                    )
+                }
             }
 //            Row(
 //                modifier = Modifier

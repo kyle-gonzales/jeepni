@@ -5,14 +5,18 @@ import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.UserDetails
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 fun isIncompleteUserDetails(userDetails: UserDetails) : Boolean {
     return userDetails.route == "null" || userDetails.name == "null" || userDetails.name.isNullOrEmpty() || userDetails.route.isNullOrEmpty()
@@ -69,8 +73,6 @@ fun showSimpleNotification(
     }
 }
 
-
-
 fun formatIntervalStringToPair(interval : String) : Pair<Long, String> {
     val components = interval.split(" ")
     return Pair(components[0].toLong(), components[1])
@@ -97,4 +99,26 @@ fun formatDateToString(date : LocalDateTime) : String {
     }
     return date.format(formatter)
 }
+
 fun randInt() = Random.nextInt(999999999)
+
+fun bitmapDescriptorFromVector(
+    context: Context,
+    vectorResId: Int
+): BitmapDescriptor? {
+
+    // retrieve the actual drawable
+    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
+    drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+    val bm = Bitmap.createBitmap(
+        drawable.intrinsicWidth,
+        drawable.intrinsicHeight,
+        Bitmap.Config.ARGB_8888
+    )
+
+    // draw it onto the bitmap
+    val canvas = android.graphics.Canvas(bm)
+    drawable.draw(canvas)
+    return BitmapDescriptorFactory.fromBitmap(bm)
+}
+

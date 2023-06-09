@@ -109,4 +109,9 @@ object Constants {
             content = "Be reminded of ${alarmName.uppercase()}. Take care of your Jeepney!"
         )
     }
+    
+    const val UPDATE_LOCATION = "update_location"
+    const val JOIN_ROOM = "join"
+    const val LEAVE_ROOM = "leave"
+    const val REMOVE_PIN = "remove_pin"
 }

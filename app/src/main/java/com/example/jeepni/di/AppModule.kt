@@ -19,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -105,4 +106,9 @@ object AppModule {
     fun providesAlarmContentRepository (
         db : AlarmContentDatabase
     ) : AlarmContentRepository = AlarmContentRepositoryImpl(db.dao)
+
+    @Provides
+    @Singleton
+    fun providesOkHttpClient() = OkHttpClient()
+
 }
