@@ -447,7 +447,7 @@ fun DatePicker(
         Box {
             OutlinedButton(
                 onClick = { dateDialogState.show() },
-                modifier = Modifier.height(65.dp),
+                modifier = Modifier.height(60.dp),
                 shape = RoundedCornerShape(20),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
                 colors = ButtonDefaults.buttonColors(
@@ -695,9 +695,7 @@ fun Fab(
     onClick: (Boolean) -> Unit,
     onMenuItemClick : (FabMenuItem) -> Unit,
 ) {
-//    val enterTransition = remember {
-//        animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 50))
-//    }
+
     Box (
         modifier = Modifier.size(150.dp),
         contentAlignment = Alignment.BottomEnd
@@ -727,5 +725,4 @@ fun Fab(
             }
         }
     }
-
 }
