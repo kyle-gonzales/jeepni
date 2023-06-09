@@ -3,10 +3,6 @@ package com.example.jeepni.feature.home
 import android.annotation.SuppressLint
 import android.os.Looper
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -113,7 +109,6 @@ class MainViewModel
     init {
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
-            timeState = formatSecondsToTime(time)
 
             driverId = user!!.email.toString()
             route = userDetailRepository.getUserDetails()?.route ?: "000"
@@ -341,7 +336,7 @@ class MainViewModel
         //TODO: these parameters may be recalibrated to optimize performance
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
             .setWaitForAccurateLocation(false)
-//            .setMinUpdateDistanceMeters(10f) // prevents updates when driver is not moving. can save power // ! commented out to receive location updates more frequently; esp for testing sockets
+            .setMinUpdateDistanceMeters(10f) // prevents updates when driver is not moving. can save power // ! commented out to receive location updates more frequently; esp for testing sockets
             .setMinUpdateIntervalMillis(500)
             .setMaxUpdateDelayMillis(3*1000)
             .build()
