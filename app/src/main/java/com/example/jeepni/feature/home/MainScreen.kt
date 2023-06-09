@@ -373,7 +373,7 @@ fun DrivingModeOnContent(
             GoogleMap(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.8f)
+                    .fillMaxHeight(0.8f)
                     .padding(8.dp),
                 cameraPositionState = cameraPositionState,
                 onMapLoaded = onMapLoaded,
@@ -431,15 +431,15 @@ fun DrivingModeOnContent(
                     title = "You", //TODO: give the name of the driver?
                 )
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .weight(0.2f)
-                    .background(Color.LightGray),
-                horizontalArrangement = Arrangement.Center
-            ) {
-            }
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(8.dp)
+//                    .weight(0.2f)
+//                    .background(Color.LightGray),
+//                horizontalArrangement = Arrangement.Center
+//            ) {
+//            }
         }
     }
 }
