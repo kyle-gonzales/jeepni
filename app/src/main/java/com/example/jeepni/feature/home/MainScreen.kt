@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -275,7 +276,7 @@ fun LogDailyStatDialog(
                     },
                     modifier = Modifier,
                     content = {
-                        Text("Save")
+                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     }
                 )
             },
@@ -286,7 +287,7 @@ fun LogDailyStatDialog(
                     },
                     modifier = Modifier,
                     content = {
-                        Text("Cancel", color = MaterialTheme.colorScheme.error)
+                        Text("Cancel", color = MaterialTheme.colorScheme.error, fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                 )
             },
@@ -302,7 +303,7 @@ fun LogDailyStatDialog(
                     Text(
                         modifier = Modifier.padding(0.dp, 8.dp),
                         text = "Enter your earnings for today: ",
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField (
                         value = salary,
@@ -320,7 +321,7 @@ fun LogDailyStatDialog(
                             .padding(0.dp, 8.dp)
                             .wrapContentWidth(),
                         text = "Enter the amount you spent on fuel for today: ",
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField(
                         value = fuelCost,

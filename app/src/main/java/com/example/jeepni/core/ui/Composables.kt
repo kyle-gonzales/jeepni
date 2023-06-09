@@ -135,15 +135,15 @@ fun SolidButton(
         enabled = isEnabled,
         onClick = onClick,
         modifier = Modifier
-            .height(75.dp)
-            .fillMaxWidth(width)
-            .padding(vertical = 10.dp),
-        shape = RoundedCornerShape(20),
+            .height(65.dp)
+            .fillMaxWidth(width),
+        shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(
             bgColor, contentColor, bgColorDisabled, contentColorDisabled
         ),
         border = border,
-    ) {
+        contentPadding = PaddingValues(0.dp)
+    ){
         content()
     }
 }
@@ -206,7 +206,7 @@ fun BackIconButton(
     IconButton(
         onClick = { onClick() },
         modifier = Modifier
-            //.offset(-12.dp) // what is this for?
+            .offset(-13.dp) // aligns backbutton and texts
     )
     {
         Icon(Icons.Filled.ArrowBack, contentDescription = null)
@@ -460,7 +460,7 @@ fun DatePicker(
         Box {
             OutlinedButton(
                 onClick = { dateDialogState.show() },
-                modifier = Modifier.height(60.dp),
+                modifier = Modifier.height(65.dp),
                 shape = RoundedCornerShape(20),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
                 colors = ButtonDefaults.buttonColors(
