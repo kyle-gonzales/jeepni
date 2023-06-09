@@ -1,10 +1,9 @@
-package com.example.jeepni.feature.authentication
+package com.example.jeepni.feature.authentication.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -19,7 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,12 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.*
-import com.example.jeepni.core.ui.theme.Black
 import com.example.jeepni.core.ui.theme.JeepNiTheme
-import com.example.jeepni.core.ui.theme.White
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
-import com.example.jeepni.feature.authentication.signup.SignUpEvent
-import com.example.jeepni.feature.authentication.signup.SignUpViewModel
 import com.example.jeepni.util.UiEvent
 
 
@@ -91,22 +85,8 @@ fun SignUpScreen(
                             onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
+                            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background),
                         )
-
-
-//                        OutlinedTextField(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(65.dp),
-//                            label = {Text("Email", fontFamily = quicksandFontFamily)},
-//                            value = viewModel.email,
-//                            onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
-//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-//                            shape = RoundedCornerShape(20),
-//                            colors = TextFieldDefaults.textFieldColors(
-//                                containerColor = MaterialTheme.colorScheme.onBackground
-//                            )
-//                        )
                         JeepNiTextField (
                             modifier = Modifier.fillMaxWidth().height(65.dp),
                             label = "Password",
@@ -114,39 +94,9 @@ fun SignUpScreen(
                             onValueChange = {viewModel.onEvent(SignUpEvent.OnPasswordChange(it))},
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
                         )
-//                        OutlinedTextField(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(65.dp),
-//                            label = {Text("Password")},
-//                            value = viewModel.password,
-//                            onValueChange = {viewModel.onEvent(SignUpEvent.OnPasswordChange(it))},
-//                            visualTransformation = PasswordVisualTransformation(),
-//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-//                            textStyle = TextStyle(
-//                                fontFamily = quicksandFontFamily,
-//                            ),
-//                            shape = RoundedCornerShape(20),
-//                            colors = TextFieldDefaults.textFieldColors(
-//                                containerColor = MaterialTheme.colorScheme.onBackground
-//                            )
-//                        )
-//                        OutlinedTextField(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(65.dp),
-//                            label = {Text("Confirm Password")},
-//                            value = viewModel.confirmPassword,
-//                            onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
-//                            visualTransformation = PasswordVisualTransformation(),
-//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-//                            shape = RoundedCornerShape(20),
-//                            colors = TextFieldDefaults.textFieldColors(
-//                                containerColor = MaterialTheme.colorScheme.onBackground
-//                            )
-//                        )
                         JeepNiTextField (
                             modifier = Modifier.fillMaxWidth().height(65.dp),
                             label = "Re-enter Password",
@@ -154,7 +104,8 @@ fun SignUpScreen(
                             onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
                         )
                         Row (modifier = Modifier,
                             verticalAlignment = Alignment.CenterVertically,

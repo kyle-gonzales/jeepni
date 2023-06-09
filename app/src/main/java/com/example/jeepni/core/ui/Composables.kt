@@ -24,12 +24,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.AlarmContent
-import com.example.jeepni.core.ui.theme.Black
-import com.example.jeepni.core.ui.theme.White
-import com.example.jeepni.core.ui.theme.quicksandFontFamily
+import com.example.jeepni.core.ui.theme.*
 import com.example.jeepni.util.Constants.ICON_MAP
 import com.example.jeepni.util.PermissionTextProvider
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -102,7 +101,9 @@ fun JeepNiText(
     fontSize: TextUnit = 14.sp,
     fontStyle: FontStyle = FontStyle.Normal,
     textAlign: TextAlign = TextAlign.Start,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    maxLines : Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         text = text,
@@ -113,6 +114,8 @@ fun JeepNiText(
         textAlign = textAlign,
         fontWeight = fontWeight,
         fontFamily = quicksandFontFamily,
+        maxLines = maxLines,
+        overflow = overflow
     )
 }
 
@@ -125,6 +128,7 @@ fun SolidButton(
     contentColorDisabled: Color = Color.DarkGray,
     width: Float = 1f,
     onClick: () -> Unit,
+    border : BorderStroke? = null,
     content: @Composable () -> Unit
 ) {
     Button(
@@ -137,8 +141,9 @@ fun SolidButton(
         colors = ButtonDefaults.buttonColors(
             bgColor, contentColor, bgColorDisabled, contentColorDisabled
         ),
+        border = border,
         contentPadding = PaddingValues(0.dp)
-    ) {
+    ){
         content()
     }
 }
@@ -159,11 +164,11 @@ fun JeepNiTextField(
     keyboardActions: KeyboardActions = KeyboardActions(),
     singleLine: Boolean = true,
     readOnly: Boolean = false,
-    textAlign:TextAlign = TextAlign.Start
+    textAlign:TextAlign = TextAlign.Start,
+    colors : TextFieldColors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
+
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column {
         OutlinedTextField(
             modifier = modifier,
             value = value,
@@ -189,7 +194,7 @@ fun JeepNiTextField(
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
+            colors = colors
         )
     }
 }
@@ -254,7 +259,8 @@ fun CustomDropDown(
                     .height(65.dp)
                     .onGloballyPositioned {
                         onSizeChange(it.size.toSize())
-                    }
+                    },
+                colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
             )
             DropdownMenu(
                 expanded = expanded,
@@ -423,7 +429,6 @@ fun PermissionDialog(
                 )
             },
         )
-
     }
 }
 
@@ -442,7 +447,7 @@ fun DatePicker(
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("MM/dd/yyyy")
+                .ofPattern("M-d-yyyy")
                 .format(selectedDate)
         }
     }
@@ -465,12 +470,12 @@ fun DatePicker(
             ) {
                 Row(
                     Modifier
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+                        modifier = Modifier,
                         text = formattedDate,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = quicksandFontFamily
@@ -483,15 +488,19 @@ fun DatePicker(
                     )
                 }
             }
-            Text(
-                text = label,
-                fontSize = 11.sp,
-                fontFamily = quicksandFontFamily,
+            Surface(
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
-                    .offset(x = 15.dp, y = (-15).dp)
-                    .padding(10.dp)
-                    .background(color = MaterialTheme.colorScheme.background)
-            )
+                    .offset(x = 15.dp, y = (-12).dp)
+            ) {
+                Text(
+                    text = label,
+                    fontSize = 12.sp,
+                    fontFamily = quicksandFontFamily,
+                    modifier = Modifier
+                        .padding(vertical = 2.dp, horizontal = 4.dp)
+                )
+            }
         }
     }
 
@@ -541,62 +550,99 @@ fun DatePicker(
 fun ComponentCard(
     alarm: AlarmContent
 ) {
-    val formattedDate by remember {
-        derivedStateOf {
-            DateTimeFormatter
-                .ofPattern("MM/dd/yyyy")
-                .format(alarm.nextAlarmDate)
-        }
-    }
+
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.Start
     ) {
-        Column(modifier = Modifier.padding(8.dp),) {
+        Spacer(Modifier.width(2.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+        ) {
             Icon(
                 painter = painterResource(ICON_MAP.getValue(alarm.name)),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp)
             )
         }
-        Column(modifier = Modifier.padding(8.dp)) {
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(
+            modifier = Modifier.padding(vertical = 2.dp)
+        ) {
             JeepNiText(
-                text = alarm.name
+                text = alarm.name,
+                modifier = Modifier,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+            Row(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.hourglass_top),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
+                Spacer(Modifier.width(4.dp))
                 JeepNiText(
-                    text = formattedDate,
+                    text = alarm.nextAlarm.split(" ")[0],
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
-            val repeatability by remember {
-                derivedStateOf {
-                    if (alarm.isRepeatable) {
-                        alarm.interval.first.toString() + " " + alarm.interval.second
-                    } else {
-                        "Off"
-                    }
-                }
-            }
-            Row(modifier = Modifier.padding(vertical = 4.dp)) {
+            Row(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.alarm_48px),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
+                Spacer(Modifier.width(4.dp))
                 JeepNiText(
-                    text = repeatability,
+                    text = if (alarm.isRepeatable) {
+                        alarm.intervalPair.first.toString() + " " + alarm.intervalPair.second
+                    } else {
+                        "Off"
+                    },
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun JeepNiBasicAppBar(
+    title: String,
+    onPopBackStack: () -> Unit,
+) {
+
+    Surface(
+        contentColor = Color.White,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 8.dp,
+    ) {
+        TopAppBar(
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    JeepNiText(
+                        text = title,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            navigationIcon = {
+                BackIconButton(onClick = onPopBackStack)
+            }
+        )
     }
 }

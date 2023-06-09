@@ -27,6 +27,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -55,15 +56,6 @@ fun EditDeleteDialog(
     onSaveClick: () -> Unit,
     isError: Boolean,
 ) {
-
-    val repeatedTextState by remember{ //why is this not working?
-        derivedStateOf {
-            if(isRepeated)
-                "Repeat (On)"
-            else
-                "Repeat (Off)"
-        }
-    }
     Dialog(onDismissRequest = onDismiss) {
         Card(
             elevation = CardDefaults.cardElevation (
@@ -81,11 +73,12 @@ fun EditDeleteDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ){
-                    Text(
+                    JeepNiText (
                         text = alarmName,
                         fontSize = 20.sp,
-                        fontFamily = quicksandFontFamily,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
                 Spacer(Modifier.height(20.dp))
@@ -112,7 +105,10 @@ fun EditDeleteDialog(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(5.dp))
-                        Text(text = repeatedTextState, fontFamily = quicksandFontFamily)
+                        Text(
+                            text = if(isRepeated) "Repeat (On)" else "Repeat (Off)",
+                            fontFamily = quicksandFontFamily
+                        )
                     }
                     Switch(
                         //change style
@@ -129,35 +125,40 @@ fun EditDeleteDialog(
                         )
                     )
                 }
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    OutlinedTextField(
-                        enabled = isRepeated,
+                Column(
+                    modifier = Modifier
+                        .height(78.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
                         modifier = Modifier
-                            .width(60.dp)
-                            .height(50.dp),
-                        value = value,
-                        isError = isError,
-                        textStyle = TextStyle(fontFamily = quicksandFontFamily),
-                        singleLine = true,
-                        onValueChange = onValueChange,
-                        supportingText = {
-                            if (isError) {
-                                Text(
-                                    text = "Input should be within 1-100", //! convert to state
-                                    color = MaterialTheme.colorScheme.error,
-                                    fontFamily = quicksandFontFamily,
-                                )
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-                    Spacer(Modifier.width(5.dp))
-                    CustomRadioButton(isEnabled = isRepeated, options = listOf("year", "month", "day"), selectedOption = duration, onOptionSelected = onDurationChange)
+                            .fillMaxWidth()
+                    ){
+                        OutlinedTextField(
+                            enabled = isRepeated,
+                            modifier = Modifier
+                                .width(60.dp)
+                                .height(50.dp),
+                            value = value,
+                            isError = isError,
+                            textStyle = TextStyle(fontFamily = quicksandFontFamily),
+                            singleLine = true,
+                            onValueChange = onValueChange,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        Spacer(Modifier.width(5.dp))
+                        CustomRadioButton(isEnabled = isRepeated, options = listOf("year", "month", "day"), selectedOption = duration, onOptionSelected = onDurationChange)
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    if (isError) {
+                        Text(
+                            text = "Input should be within 1-100", //! convert to state
+                            color = MaterialTheme.colorScheme.error,
+                            fontFamily = quicksandFontFamily,
+                            fontSize = 11.sp
+                        )
+                    }
                 }
-                Spacer(Modifier.height(10.dp))
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -201,12 +202,6 @@ fun AddDialog(
     onNameChange1: (String) -> Unit,
     isError: Boolean
 ) {
-    val state by remember{
-        derivedStateOf {
-            if(isRepeated){"On"}
-            else{"Off"}
-        }
-    }
     Dialog(onDismissRequest = onDismiss) {
         Card (
             elevation = CardDefaults.cardElevation(
@@ -263,7 +258,10 @@ fun AddDialog(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(5.dp))
-                        Text(text = "Repeat (" + state + ")", fontFamily = quicksandFontFamily)
+                        Text(
+                            text = if(isRepeated) "Repeat (On)" else "Repeat (Off)",
+                            fontFamily = quicksandFontFamily
+                        )
                     }
                     Switch(
                         //change style
@@ -281,35 +279,39 @@ fun AddDialog(
                         )
                     )
                 }
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    OutlinedTextField(
-                        enabled = isRepeated,
-                        modifier = Modifier
-                            .width(60.dp)
-                            .height(50.dp),
-                        value = value,
-                        isError = isError,
-                        textStyle = TextStyle(fontFamily = quicksandFontFamily),
-                        singleLine = true,
-                        onValueChange = onValueChange,
-                        supportingText = {
-                            if (isError) {
-                                Text(
-                                    text = "Input should be within 1-100", //! convert to state
-                                    color = MaterialTheme.colorScheme.error,
-                                    fontFamily = quicksandFontFamily,
-                                )
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-                    Spacer(Modifier.width(5.dp))
-                    CustomRadioButton(isEnabled = isRepeated, options = listOf("year", "month", "day"), selectedOption = duration, onOptionSelected = onDurationChange)
+                Column (
+                    modifier = Modifier.height(78.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        OutlinedTextField(
+                            enabled = isRepeated,
+                            modifier = Modifier
+                                .width(60.dp)
+                                .height(50.dp),
+                            value = value,
+                            isError = isError,
+                            textStyle = TextStyle(fontFamily = quicksandFontFamily),
+                            singleLine = true,
+                            onValueChange = onValueChange,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        Spacer(Modifier.width(5.dp))
+                        CustomRadioButton(isEnabled = isRepeated, options = listOf("year", "month", "day"), selectedOption = duration, onOptionSelected = onDurationChange)
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    if (isError) {
+                        Text(
+                            text = "Input should be within 1-100", //! convert to state
+                            color = MaterialTheme.colorScheme.error,
+                            fontFamily = quicksandFontFamily,
+                            fontSize = 11.sp
+                        )
+                    }
                 }
-                Spacer(Modifier.height(10.dp))
+
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxWidth()

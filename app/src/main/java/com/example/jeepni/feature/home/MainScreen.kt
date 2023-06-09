@@ -209,10 +209,10 @@ fun MainScreen(
                         onFuelCostChange = {viewModel.onEvent(MainEvent.OnFuelCostChange(it))},
                         isValidSalary = viewModel.isValidSalary,
                         isValidFuelCost = viewModel.isValidFuelCost,
-                        isDialogOpen = viewModel.isAddDailyStatDialogOpen,
                         onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
-                        onSave = { salary, fuelCost ->
-                            viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
+                        onSave = {
+                            viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick)
+                        }
                     )
                 }
                 val activity = LocalContext.current as MainActivity //apparently this is not a memory leak!
@@ -256,11 +256,12 @@ fun LogDailyStatDialog(
     onFuelCostChange : (String) -> Unit,
     isValidSalary : Boolean,
     isValidFuelCost : Boolean,
-    isDialogOpen: Boolean = true,
     onDialogOpenChange : (Boolean) -> Unit,
-    onSave : (String, String) -> Unit
+    onSave : () -> Unit
  ) {
-    if (isDialogOpen) {
+    Surface (
+        color = MaterialTheme.colorScheme.background
+    ) {
         AlertDialog(
             modifier = Modifier,
             onDismissRequest = {
@@ -270,11 +271,10 @@ fun LogDailyStatDialog(
                 TextButton(
                     onClick = {
                         /*TODO: add / edit to database*/
-                        onSave(salary, fuelCost)
+                        onSave()
                         onDialogOpenChange(false)
                     },
-                    modifier = Modifier
-                        .padding(8.dp),
+                    modifier = Modifier,
                     content = {
                         Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     }
@@ -285,10 +285,9 @@ fun LogDailyStatDialog(
                     onClick = {
                         onDialogOpenChange(false)
                     },
-                    modifier = Modifier
-                        .padding(8.dp),
+                    modifier = Modifier,
                     content = {
-                        Text("Cancel", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                        Text("Cancel", color = MaterialTheme.colorScheme.error, fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                 )
             },
@@ -296,9 +295,9 @@ fun LogDailyStatDialog(
                 Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
             },
             text = {
-
                 Column (
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .height(268.dp),
                     horizontalAlignment = Alignment.Start,
                 ) {
                     Text(
@@ -306,13 +305,13 @@ fun LogDailyStatDialog(
                         text = "Enter your earnings for today: ",
                         textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
-                    JeepNiTextField(
+                    JeepNiTextField (
                         value = salary,
                         onValueChange = { onSalaryChange(it) },
                         label = "Salary",
                         singleLine = true,
-                        leadingIcon = { Icon(painterResource(
-                            id = R.drawable.white_dollar_24), null, Modifier.size(18.dp)) },
+                        leadingIcon = {Icon(painterResource(
+                            id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                         isError = !isValidSalary,
                         errorMessage = "Invalid Input"
@@ -329,7 +328,8 @@ fun LogDailyStatDialog(
                         onValueChange = {onFuelCostChange(it)},
                         label = "Fuel Cost",
                         singleLine = true,
-                        leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
+                        leadingIcon = {Icon(painterResource(
+                            id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         isError = !isValidFuelCost,
                         errorMessage = "Invalid Input"
@@ -514,12 +514,17 @@ fun TopActionBar(
                 }
             },
             actions = {
-                Row(modifier = Modifier.padding(8.dp,0.dp)) {
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(8.dp)
+                ) {
                     Switch(
                         checked = drivingMode,
                         onCheckedChange = { toggleDrivingMode(it) },
                         enabled = true,
-                        colors = SwitchDefaults.colors()
+                        colors = SwitchDefaults.colors(),
+                        modifier = Modifier
                     )
                 }
             }
@@ -541,7 +546,9 @@ fun MenuContent(
             .padding(0.dp, 0.dp, 60.dp, 0.dp)
             .fillMaxHeight(),
     ) {
-        Surface {
+        Surface  (
+            color = MaterialTheme.colorScheme.background
+        ){
             Column (
                 modifier = Modifier
                     .fillMaxSize()
@@ -565,18 +572,25 @@ fun MenuContent(
                             .align(Alignment.BottomStart),
                         verticalAlignment = Alignment.Top
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.profile_pic), // should become state
-                            contentDescription = null,
+                        Surface (
                             modifier = Modifier
-                                .size(80.dp)
                                 .clip(CircleShape)
-                                .border(6.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                                .clickable {
-                                    onProfileClicked()
-                                },
-                            contentScale = ContentScale.Crop
-                        )
+                                .size(80.dp)
+                                .background(MaterialTheme.colorScheme.background)
+                                .padding(6.dp),
+                            color = MaterialTheme.colorScheme.background,
+                            shape = CircleShape,
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.profile_pic), // should become state
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        onProfileClicked()
+                                    },
+                            )
+                        }
                         Text(email?:"no email found", /* TODO: show user name instead */
                             modifier = Modifier
                                 .padding(12.dp, 8.dp)
