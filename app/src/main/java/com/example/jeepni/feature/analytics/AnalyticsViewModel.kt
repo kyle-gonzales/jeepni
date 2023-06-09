@@ -27,7 +27,7 @@ class AnalyticsViewModel @Inject constructor(
 
     var analytics = repository.getDailyStats()
         .map {items ->
-            items.sortedBy {stat ->
+            items.sortedByDescending { stat ->
                 val input = stat.date.split("-")
                 val date = LocalDate.of(input[2].toInt(), input[0].toInt(), input[1].toInt())
                 date
