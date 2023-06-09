@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,18 +14,13 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.*
-
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.UiEvent
@@ -113,7 +107,7 @@ fun AboutDriverScreen(
                             )
                         }
                         SolidButton(onClick = { viewModel.onEvent(AboutDriverEvent.OnSaveDetailsClick) }) {
-                            Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                            Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }

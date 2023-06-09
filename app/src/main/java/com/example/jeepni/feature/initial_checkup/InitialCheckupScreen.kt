@@ -252,7 +252,7 @@ fun InitialCheckupScreen(
                         }
                     }
                     SolidButton(onClick = { viewModel.onEvent(InitialCheckupEvent.OnSaveClicked) }) {
-                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
                 }
             }
