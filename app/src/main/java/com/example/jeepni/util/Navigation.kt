@@ -32,6 +32,9 @@ fun Navigation (
     AnimatedNavHost(
         navController = navController,
         startDestination = Screen.LoadingScreen.route,
+        enterTransition = { EnterTransition.None/*fadeIn(animationSpec = tween(400))*/ },
+        exitTransition = { ExitTransition.None/*fadeOut(animationSpec = tween(400))*/ }
+
     ) {
         // tell the navHost how the screens look like
         composable (
