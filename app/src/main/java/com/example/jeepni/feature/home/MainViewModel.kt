@@ -2,10 +2,10 @@ package com.example.jeepni.feature.home
 
 import android.annotation.SuppressLint
 import android.os.Looper
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,8 +13,8 @@ import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.model.LocationUpdate
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
-import com.example.jeepni.core.ui.FabMenuItem
 import com.example.jeepni.core.data.repository.UserDetailRepository
+import com.example.jeepni.core.ui.FabMenuItem
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Screen
 import com.example.jeepni.util.UiEvent
@@ -128,7 +128,7 @@ class MainViewModel
         viewModelScope.launch {
             time = repository.fetchTimer().toLong()
 
-            driverId = user!!.email.toString()
+            driverId = user?.email.toString()
             route = userDetailRepository.getUserDetails()?.route ?: "000"
 
             distance = repository.fetchDistance().toDouble()

@@ -7,6 +7,7 @@ import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.feature.home.getCurrentDateString
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -105,26 +106,36 @@ class DailyAnalyticsRepositoryImpl(
         return result
     }
     override suspend fun fetchTimer(date: String): String {
-        val timer = usersRef.document(auth.currentUser!!.uid)
-            .collection("analytics")
-            .document(date)
-            .get()
-            .await()
-            .get("timer") ?: return "0"
+        val document : DocumentSnapshot? = try {
+            usersRef.document(auth.currentUser!!.uid)
+                .collection("analytics")
+                .document(date)
+                .get()
+                .await()
+        } catch (e : Exception) {
+            null
+        }
+
+        val timer = document?.get("timer") ?: "0"
 
         return timer.toString()
 
     }
 
     override suspend fun fetchDistance(date: String): String {
-        val timer = usersRef.document(auth.currentUser!!.uid)
-            .collection("analytics")
-            .document(date)
-            .get()
-            .await()
-            .get("distance") ?: return "0"
+        val document : DocumentSnapshot? = try {
+            usersRef.document(auth.currentUser!!.uid)
+                .collection("analytics")
+                .document(date)
+                .get()
+                .await()
+        } catch (e : Exception) {
+            null
+        }
 
-        return timer.toString()
+        val distance = document?.get("distance") ?: "0"
+
+        return distance.toString()
 
     }
 
