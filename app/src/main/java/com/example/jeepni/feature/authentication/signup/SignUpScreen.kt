@@ -1,6 +1,5 @@
 package com.example.jeepni.feature.authentication.signup
 
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -156,7 +154,8 @@ fun SignUpScreen(
                             Text(
                                 text = stringResource(R.string.create),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
                             )
                         }
                         Spacer(Modifier.height(10.dp))
@@ -171,7 +170,8 @@ fun SignUpScreen(
                             Text(
                                 text = stringResource(R.string.create_google),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
                             )
                         }
                         Row (modifier = Modifier,
@@ -187,7 +187,7 @@ fun SignUpScreen(
                                 Text(
                                     text = stringResource(R.string.log_in),
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = quicksandFontFamily
+                                    fontFamily = quicksandFontFamily,
                                 )
                             }
                         }

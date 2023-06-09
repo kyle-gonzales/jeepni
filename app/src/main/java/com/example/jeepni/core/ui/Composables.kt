@@ -122,7 +122,7 @@ fun SolidButton(
         enabled = isEnabled,
         onClick = onClick,
         modifier = Modifier
-            .height(65.dp)
+            .height(54.dp)
             .fillMaxWidth(width),
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(

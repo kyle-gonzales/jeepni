@@ -37,7 +37,7 @@ fun showSimpleNotificationWithTapAction(
     }
 
     val builder = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(R.drawable.app_logo)
+        .setSmallIcon(R.drawable.app_logo_light)
         .setContentTitle(textTitle)
         .setContentText(textContent)
         .setPriority(priority)
@@ -59,7 +59,7 @@ fun showSimpleNotification(
     priority: Int = NotificationCompat.PRIORITY_DEFAULT
 ) {
     val builder = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(R.drawable.app_logo)
+        .setSmallIcon(R.drawable.app_logo_light)
         .setContentTitle(textTitle)
         .setContentText(textContent)
         .setPriority(priority)
