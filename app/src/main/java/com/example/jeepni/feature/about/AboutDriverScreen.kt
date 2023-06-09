@@ -3,27 +3,24 @@ package com.example.jeepni.feature.about
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-
-import com.example.jeepni.core.ui.CustomDropDown
-import com.example.jeepni.core.ui.JeepNiAlertDialog
-import com.example.jeepni.core.ui.JeepNiTextField
-import com.example.jeepni.core.ui.SolidButton
-
+import com.example.jeepni.core.ui.*
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.UiEvent
@@ -41,7 +38,7 @@ fun AboutDriverScreen(
     BackHandler {
         viewModel.onEvent(AboutDriverEvent.OnBackPress)
     }
-
+    val bgImage = if(isSystemInDarkTheme()){R.drawable.driver_dark}else{R.drawable.driver_light}
     val routes = viewModel.jeepneyRoutes.mapTo(arrayListOf()) { it.route }
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
@@ -57,62 +54,46 @@ fun AboutDriverScreen(
         }
     }
 
-    val snackbarHostState = remember { SnackbarHostState() }
-
     JeepNiTheme {
-        Surface {
-            Scaffold (
-                snackbarHost = { SnackbarHost(snackbarHostState) },
-                topBar = {
-                    Surface(
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        color = MaterialTheme.colorScheme.surface,
-                        tonalElevation = 8.dp // can be changed
-                    ) {
-                        TopAppBar(
-                            title = {
-                                Row (
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        modifier = Modifier.padding(4.dp, 0.dp),
-                                        text = "About you"
-                                    )
-                                }
-                            },
-                            navigationIcon = {
-                                IconButton(
-                                    onClick = {
-                                        viewModel.onEvent(AboutDriverEvent.OnBackPress)
-                                    }
-                                ) {
-                                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
-                                }
-                            }
-                        )
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ){
+            Box(
+                modifier = with (Modifier){
+                    fillMaxSize()
+                        .paint(
+                            painterResource(id = bgImage),
+                            contentScale = ContentScale.Crop)
+                }
+            ){
+                Container(0.9f) {
+                    BackIconButton {
+                        viewModel.onEvent(AboutDriverEvent.OnBackPress)
                     }
-                },
-                content = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(36.dp),
-                        contentAlignment = Alignment.Center
+                    Spacer(Modifier.height(200.dp))
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxSize()
                     ){
-                        Column (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ){
+                        Text(
+                            text = "About you",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = quicksandFontFamily
+                        )
+                        Column {
                             JeepNiTextField(
-                                value = viewModel.firstName,
-                                onValueChange = { viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it)) },
-
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(65.dp),
                                 label = "First Name",
-                                singleLine = true,
+                                value = viewModel.firstName,
+                                onValueChange = {viewModel.onEvent(AboutDriverEvent.OnFirstNameChange(it))},
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                                isError = !viewModel.isValidFirstName //TODO: implement check for valid first name
+                                singleLine = true,
+                                isError = !viewModel.isValidFirstName,
+                                colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
                             )
                             CustomDropDown(
                                 label = "Select route",
@@ -124,13 +105,13 @@ fun AboutDriverScreen(
                                 onSelected = {viewModel.onEvent(AboutDriverEvent.OnRouteChange(it))},
                                 items = routes
                             )
-                            SolidButton(onClick = { viewModel.onEvent(AboutDriverEvent.OnSaveDetailsClick) }) {
-                                Text("Save Details", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
-                            }
+                        }
+                        SolidButton(onClick = { viewModel.onEvent(AboutDriverEvent.OnSaveDetailsClick) }) {
+                            Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }
-            )
+            }
         }
     }
 

@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.jeepni.core.data.model.NotificationContent
 
-abstract class AlarmBroadcastReceiver : BroadcastReceiver() {
+class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onReceive(context: Context?, intent: Intent?) {

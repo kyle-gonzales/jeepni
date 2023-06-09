@@ -3,6 +3,8 @@ package com.example.jeepni.di
 import android.app.AlarmManager
 import android.app.Application
 import android.content.Context
+import androidx.room.Room
+import com.example.jeepni.core.data.AlarmContentDatabase
 import com.example.jeepni.core.data.repository.*
 import com.example.jeepni.util.AlarmScheduler
 import com.google.android.gms.location.LocationServices
@@ -17,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -85,4 +88,27 @@ object AppModule {
         @ApplicationContext context : Context,
         alarmManager: AlarmManager
     ) = AlarmScheduler(context, alarmManager)
+
+    @Provides
+    @Singleton
+    fun providesAlarmDatabase (
+        app : Application
+    ) : AlarmContentDatabase {
+        return Room.databaseBuilder(
+            app,
+            AlarmContentDatabase::class.java,
+            "alarm_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun providesAlarmContentRepository (
+        db : AlarmContentDatabase
+    ) : AlarmContentRepository = AlarmContentRepositoryImpl(db.dao)
+
+    @Provides
+    @Singleton
+    fun providesOkHttpClient() = OkHttpClient()
+
 }

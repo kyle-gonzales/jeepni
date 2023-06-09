@@ -1,9 +1,7 @@
 package com.example.jeepni.core.ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -26,11 +25,12 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.theme.JeepNiTheme
-import com.example.jeepni.core.ui.theme.quicksandFontFamily
+import com.example.jeepni.core.data.model.AlarmContent
+import com.example.jeepni.core.ui.theme.*
+import com.example.jeepni.util.Constants.ICON_MAP
 import com.example.jeepni.util.PermissionTextProvider
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
@@ -81,20 +81,6 @@ fun Container(
 }
 
 @Composable
-fun Logo(
-    width: Dp = 100.dp,
-    height: Dp = 100.dp
-) {
-    Image(
-        painter = painterResource(id = R.drawable.samplelogo),
-        contentDescription = "JeepNi Logo",
-        modifier = Modifier
-            .width(width)
-            .height(height)
-    )
-}
-
-@Composable
 fun JeepNiText(
     text: String,
     modifier: Modifier = Modifier,
@@ -102,7 +88,9 @@ fun JeepNiText(
     fontSize: TextUnit = 14.sp,
     fontStyle: FontStyle = FontStyle.Normal,
     textAlign: TextAlign = TextAlign.Start,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    maxLines : Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
         text = text,
@@ -113,28 +101,36 @@ fun JeepNiText(
         textAlign = textAlign,
         fontWeight = fontWeight,
         fontFamily = quicksandFontFamily,
+        maxLines = maxLines,
+        overflow = overflow
     )
 }
 
 @Composable
 fun SolidButton(
+    isEnabled: Boolean = true,
     bgColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    bgColorDisabled: Color = Color.LightGray,
+    contentColorDisabled: Color = Color.DarkGray,
     width: Float = 1f,
     onClick: () -> Unit,
     border : BorderStroke? = null,
     content: @Composable () -> Unit
 ) {
     Button(
+        enabled = isEnabled,
         onClick = onClick,
         modifier = Modifier
-            .height(75.dp)
-            .fillMaxWidth(width)
-            .padding(vertical = 10.dp),
-        shape = RoundedCornerShape(36),
-        colors = ButtonDefaults.buttonColors(bgColor, contentColor),
-        border = border
-    ) {
+            .height(54.dp)
+            .fillMaxWidth(width),
+        shape = RoundedCornerShape(50),
+        colors = ButtonDefaults.buttonColors(
+            bgColor, contentColor, bgColorDisabled, contentColorDisabled
+        ),
+        border = border,
+        contentPadding = PaddingValues(0.dp)
+    ){
         content()
     }
 }
@@ -154,36 +150,38 @@ fun JeepNiTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     keyboardActions: KeyboardActions = KeyboardActions(),
     singleLine: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    textAlign:TextAlign = TextAlign.Start,
+    colors : TextFieldColors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
+
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
+    Column {
         OutlinedTextField(
             modifier = modifier,
             value = value,
             onValueChange = onValueChange,
-            label = { Text(text = label, fontFamily = quicksandFontFamily) },
+            label = { Text(text = label, fontFamily = quicksandFontFamily, textAlign = textAlign) },
             isError = isError,
-            shape = RoundedCornerShape(36),
+            shape = RoundedCornerShape(20),
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             textStyle = TextStyle(fontFamily = quicksandFontFamily),
             singleLine = singleLine,
             readOnly = readOnly,
             supportingText = {
-                if (isError) {
+                AnimatedVisibility(visible = isError) {
                     Text(
                         text = errorMessage, //! convert to state
                         color = MaterialTheme.colorScheme.error,
                         fontFamily = quicksandFontFamily,
                     )
                 }
+
             },
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
+            colors = colors
         )
     }
 }
@@ -192,62 +190,15 @@ fun JeepNiTextField(
 fun BackIconButton(
     onClick: () -> Unit
 ) {
-    IconButton(onClick = { onClick() })
+    IconButton(
+        onClick = { onClick() },
+        modifier = Modifier
+            .offset(-13.dp) // aligns backbutton and texts
+    )
     {
         Icon(Icons.Filled.ArrowBack, contentDescription = null)
     }
 }
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun T() {
-
-    var text by remember {
-        mutableStateOf("")
-    }
-    var width = 10.dp
-
-    var isValid by remember {
-        mutableStateOf(false)
-    }
-
-    var icon = null
-    JeepNiTheme {
-        Surface(
-            modifier = Modifier
-                .padding(16.dp) //remove this after
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = text,
-                    onValueChange = { text = it },
-                    label = { Text(text = "label", fontFamily = quicksandFontFamily) },
-                    isError = isValid,
-                    leadingIcon = null,
-                    shape = RoundedCornerShape(36),
-                    textStyle = TextStyle(fontFamily = quicksandFontFamily),
-                    supportingText = {
-                        if (isValid) {
-                            Text(
-                                text = "Invalid Phone Number", //! convert to state
-                                color = MaterialTheme.colorScheme.error,
-                                fontFamily = quicksandFontFamily,
-                            )
-                        }
-                    }
-                )
-            }
-        }
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -290,10 +241,13 @@ fun CustomDropDown(
                     )
                 },
                 modifier = Modifier
+                    .clickable { onClickIcon(!expanded) }
                     .fillMaxWidth()
+                    .height(65.dp)
                     .onGloballyPositioned {
                         onSizeChange(it.size.toSize())
-                    }
+                    },
+                colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
             )
             DropdownMenu(
                 expanded = expanded,
@@ -304,15 +258,20 @@ fun CustomDropDown(
                             size.width.toDp()
                         }
                     )
-                    .requiredHeight(230.dp)
+                    .requiredHeight(270.dp)
             ) {
                 items.forEachIndexed { index, s ->
                     DropdownMenuItem(
-                        text = { Text(text = s) },
+                        text = { Text(
+                            text = s,
+                            fontFamily = quicksandFontFamily,
+                            fontSize = 16.sp
+                        ) },
                         onClick = {
                             onSelected(index)
                             onClickIcon(false)
-                        }
+                        },
+                        contentPadding = PaddingValues(start = 15.dp)
                     )
                     Divider(Modifier.padding(4.dp, 0.dp))
                 }
@@ -457,7 +416,6 @@ fun PermissionDialog(
                 )
             },
         )
-
     }
 }
 
@@ -465,18 +423,18 @@ fun PermissionDialog(
 fun DatePicker(
     label: String,
     pickedDate: LocalDate,
-    onChange: (LocalDate) -> Unit
+    onChange: (LocalDate) -> Unit,
+    dateValidator: (LocalDate) -> Boolean
 ) {
     var selectedDate by remember {
         mutableStateOf(
             pickedDate
         )
     }
-
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("MM/dd/yyyy")
+                .ofPattern("M-d-yyyy")
                 .format(selectedDate)
         }
     }
@@ -484,64 +442,91 @@ fun DatePicker(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier.padding(12.dp)
-        ) {
+        Box {
             OutlinedButton(
                 onClick = { dateDialogState.show() },
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
+                modifier = Modifier.height(60.dp),
+                shape = RoundedCornerShape(20),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onBackground
+                )
             ) {
                 Row(
                     Modifier
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
+                        modifier = Modifier,
                         text = formattedDate,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontFamily = quicksandFontFamily
                     )
                     Icon(
                         painter = painterResource(R.drawable.ic_calendar),
+                        modifier = Modifier.size(24.dp),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
-            Text(
-                text = label,
-                fontFamily = quicksandFontFamily,
+            Surface(
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
-                    .offset(x = 30.dp, y = -15.dp)
-                    .background(MaterialTheme.colorScheme.background)
-            )
+                    .offset(x = 15.dp, y = (-12).dp)
+            ) {
+                Text(
+                    text = label,
+                    fontSize = 12.sp,
+                    fontFamily = quicksandFontFamily,
+                    modifier = Modifier
+                        .padding(vertical = 2.dp, horizontal = 4.dp)
+                )
+            }
         }
     }
+
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
-            positiveButton(text = "Ok", textStyle = TextStyle(color = Color(0xFF006E14))) {
+            positiveButton(
+                text = "Save",
+                textStyle = TextStyle(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
                 onChange(selectedDate)
             }
-            negativeButton(text = "Cancel", textStyle = TextStyle(color = Color(0xFF006E14)))
-        },
+            negativeButton(
+                text = "Cancel",
+                textStyle = TextStyle(
+                    color = Black,
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
     ) {
         datepicker(
             initialDate = selectedDate,
             title = "Pick a date",
             colors = DatePickerDefaults.colors(
-                headerBackgroundColor = Color(0xFF006E14),
-                headerTextColor = Color.White,
-                calendarHeaderTextColor = Color.Black,
-                dateActiveBackgroundColor = Color(0xFF006E14),
-                dateActiveTextColor = Color.Black,
-
+                headerBackgroundColor = MaterialTheme.colorScheme.primary,
+                headerTextColor = MaterialTheme.colorScheme.onPrimary,
+                calendarHeaderTextColor = MaterialTheme.colorScheme.primary,
+                dateActiveBackgroundColor = MaterialTheme.colorScheme.primary,
+                dateActiveTextColor = MaterialTheme.colorScheme.onPrimary,
+                dateInactiveBackgroundColor = White,
+                dateInactiveTextColor = Black
             ),
-            allowedDateValidator = {
-                it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
-            }
+            allowedDateValidator = dateValidator
         ) {
             selectedDate = it
         }
@@ -549,104 +534,70 @@ fun DatePicker(
 }
 
 @Composable
-fun JeepPartCheckBox(
-    jeepPart: String,
-    onCheckedChange: (Boolean) -> Unit,
-    isChecked: Boolean
+fun ComponentCard(
+    alarm: AlarmContent
 ) {
+
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
     ) {
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = onCheckedChange,
-        )
-        Text(
-            text = jeepPart,
-        )
-    }
-}
-
-//@Composable
-//fun FilterIconButton(
-//    onClick : () -> Unit,
-//    menuItems: List<String>,
-//    onMenuItemClick: (String) -> Unit
-//){
-//    var expanded by remember { mutableStateOf(false) }
-//
-//    IconButton(onClick = { expanded = true })
-//    {
-//        Icon(Icons.Filled.Menu, contentDescription = "Menu")
-//    }
-
-//    DropdownMenu(
-//        expanded = expanded,
-//        onDismissRequest = { expanded = false })
-//    {
-//        menuItems.forEach{ item ->
-//            DropdownMenuItem(
-//               onClick = {
-//                   onMenuItemClick(item)
-//                   expanded = false
-//               }){
-//                Text(item)
-//            }
-//        }
-//    }
-//}
-
-@Composable
-fun PartsList(
-    parts: List<String>,
-    isCheckedLeft: List<Boolean>,
-    isCheckedRight: List<Boolean>,
-    onCheckboxChangeLeft: (List<Boolean>) -> Unit,
-    onCheckboxChangeRight: (List<Boolean>) -> Unit
-) {
-
-    val newListLeft = isCheckedLeft.toMutableList()
-    val newListRight = isCheckedRight.toMutableList()
-
-    Row {
-        Column(modifier = Modifier.weight(1f)) {
-            parts.subList(0, parts.size / 2).forEachIndexed { index, part ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) {
-                    Checkbox(
-                        checked = isCheckedLeft[index],
-                        onCheckedChange = {
-                            newListLeft[index] = it
-                            onCheckboxChangeLeft(newListLeft)
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = part
-                    )
-                }
-            }
+        Spacer(Modifier.width(2.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(ICON_MAP.getValue(alarm.name)),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
         }
-        Column(modifier = Modifier.weight(1f)) {
-            parts.subList(parts.size / 2, parts.size).forEachIndexed { index, part ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                ) {
-                    Checkbox(
-                        checked = isCheckedRight[index],
-                        onCheckedChange = {
-                            newListRight[index] = it
-                            onCheckboxChangeRight(newListRight)
-                        },
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = part
-                    )
-                }
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(
+            modifier = Modifier.padding(vertical = 2.dp)
+        ) {
+            JeepNiText(
+                text = alarm.name,
+                modifier = Modifier,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Row(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.hourglass_top),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(Modifier.width(4.dp))
+                JeepNiText(
+                    text = alarm.nextAlarm.split(" ")[0],
+                    fontSize = 10.sp,
+                )
+            }
+            Row(
+                modifier = Modifier.padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.alarm_48px),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(Modifier.width(4.dp))
+                JeepNiText(
+                    text = if (alarm.isRepeatable) {
+                        alarm.intervalPair.first.toString() + " " + alarm.intervalPair.second
+                    } else {
+                        "Off"
+                    },
+                    fontSize = 10.sp,
+                )
             }
         }
     }
@@ -680,5 +631,98 @@ fun JeepNiBasicAppBar(
                 BackIconButton(onClick = onPopBackStack)
             }
         )
+    }
+}
+
+data class FabMenuItem (
+    val name : String,
+    val icon : ImageVector
+)
+@Composable
+fun FabMenuLabel(
+    label : String,
+    modifier : Modifier = Modifier,
+) {
+    Surface (
+        modifier = modifier,
+        shape = RoundedCornerShape(6.dp),
+        color = MaterialTheme.colorScheme.secondaryContainer,
+    ) {
+        JeepNiText(
+            text = label,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp)
+        )
+    }
+}
+
+@Composable
+fun FabMenuIcon(
+    menuItem : FabMenuItem,
+    modifier : Modifier = Modifier,
+    onClick: (FabMenuItem) -> Unit
+) {
+    SmallFloatingActionButton(onClick = { onClick(menuItem) }, modifier = modifier.size(36.dp)) {
+        Icon(
+            menuItem.icon,
+            null
+        )
+    }
+}
+
+@Composable
+fun FabMenuItem(
+    menuItem : FabMenuItem,
+    onClick: (FabMenuItem) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FabMenuLabel(label = menuItem.name)
+        Spacer(modifier = Modifier.width(8.dp))
+        FabMenuIcon(menuItem = menuItem, onClick = { onClick(menuItem) })
+    }
+}
+
+@Composable
+fun Fab(
+    isVisible: Boolean,
+    menuItems : List<FabMenuItem>,
+    modifier : Modifier = Modifier,
+    onClick: (Boolean) -> Unit,
+    onMenuItemClick : (FabMenuItem) -> Unit,
+) {
+
+    Box (
+        modifier = Modifier.size(150.dp),
+        contentAlignment = Alignment.BottomEnd
+    ){
+
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = slideInVertically { it + 300 } + fadeIn(),
+            exit = slideOutVertically { it / 2 + 50 } + fadeOut(),
+            modifier = Modifier
+                .offset(y = (-60).dp, x = (-12).dp)
+        ) {
+            Column (
+                horizontalAlignment = Alignment.End,
+            ){
+                menuItems.forEach {menuItem ->
+                    FabMenuItem(menuItem = menuItem, onClick = { onMenuItemClick(menuItem) }, modifier = Modifier.padding(vertical = 4.dp))
+                }
+            }
+        }
+        Box (
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ){
+            FloatingActionButton(onClick = { onClick(!isVisible) }, ) {
+                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+            }
+        }
     }
 }
