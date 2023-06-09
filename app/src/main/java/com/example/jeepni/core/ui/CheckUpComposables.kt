@@ -1,6 +1,7 @@
 package com.example.jeepni.core.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -153,7 +154,7 @@ fun EditDeleteDialog(
                         SelectDuration(enabled = isRepeated, duration = duration, onDurationChange = onDurationChange)
                     }
                     Spacer(Modifier.height(4.dp))
-                    if (isError) {
+                    AnimatedVisibility(visible = isError) {
                         Text(
                             text = "Input should be within 1-100", //! convert to state
                             color = MaterialTheme.colorScheme.error,
@@ -305,7 +306,7 @@ fun AddDialog(
                         SelectDuration(enabled = isRepeated, duration = duration, onDurationChange = onDurationChange)
                     }
                     Spacer(Modifier.height(4.dp))
-                    if (isError) {
+                    AnimatedVisibility(visible = isError) {
                         Text(
                             text = "Input should be within 1-100", //! convert to state
                             color = MaterialTheme.colorScheme.error,
