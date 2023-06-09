@@ -359,6 +359,8 @@ fun DrivingModeOnContent(
         LatLng(cebuBounds.southwest.latitude, cebuBounds.northeast.longitude)
     )
 
+    val context = LocalContext.current
+
     Surface {
         Column (
             modifier = Modifier
@@ -401,33 +403,15 @@ fun DrivingModeOnContent(
                     minZoomPreference = 9.0f,
                 ),
             ) {
-//                Polygon(
-//                    points = listOf(
-//                        LatLng(85.0,90.0),
-//                        LatLng(85.0,0.1),
-//                        LatLng(85.0,-90.0),
-//                        LatLng(85.0,-179.9),
-//                        LatLng(0.0,-179.9),
-//                        LatLng(-85.0,-179.9),
-//                        LatLng(-85.0,-90.0),
-//                        LatLng(-85.0,0.1),
-//                        LatLng(-85.0,90.0),
-//                        LatLng(-85.0,179.9),
-//                        LatLng(0.0,179.9),
-//                        LatLng(85.0,179.9),
-//                    ),
-//                    strokeWidth = 0F,
-//                    fillColor = Color.White,
-//                    holes = listOf(holePoints),
-//                    zIndex = 10000.0f,
-//                )
                 Marker(
+                    icon = if (isSystemInDarkTheme()) bitmapDescriptorFromVector(context, R.drawable.pin_you_dark) else bitmapDescriptorFromVector(context, R.drawable.pin_you_light),
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
                 )
 
                 for (driver in otherDrivers) {
                     Marker(
+                        icon = if (isSystemInDarkTheme()) bitmapDescriptorFromVector(context, R.drawable.pin_others_dark) else bitmapDescriptorFromVector(context, R.drawable.pin_others_light),
                         state = MarkerState(position = LatLng(driver.latitude, driver.longitude)),
                         title = driver.driver_id
                     )
