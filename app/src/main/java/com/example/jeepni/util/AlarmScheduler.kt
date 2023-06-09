@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.example.jeepni.core.data.model.AlarmContent
 import com.example.jeepni.core.data.model.NotificationContent
 import java.time.LocalDateTime
@@ -11,7 +12,7 @@ import java.time.ZoneId
 
 class AlarmScheduler (
     private val context : Context,
-    private val alarmManager : AlarmManager
+    private val alarmManager : AlarmManager,
 ) {
     fun schedule(alarm: AlarmContent, notification : NotificationContent) {
 
@@ -29,9 +30,11 @@ class AlarmScheduler (
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+        Log.i("JEEPNI_ALARM", "alarm for ${alarm.nextAlarmDate} has been SET")
+
     }
 
-    fun cancel (dateTime : LocalDateTime, message : String) {
+    fun cancel (dateTime : LocalDateTime) {
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
@@ -40,5 +43,6 @@ class AlarmScheduler (
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+        Log.i("JEEPNI_ALARM", "alarm for $dateTime has been CANCELLED")
     }
 }

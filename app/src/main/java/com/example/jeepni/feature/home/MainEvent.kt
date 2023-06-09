@@ -1,5 +1,7 @@
 package com.example.jeepni.feature.home
 
+import com.example.jeepni.core.ui.FabMenuItem
+
 sealed class MainEvent {
 
     // think about every single UI action that the user can do in the main activity
@@ -14,5 +16,7 @@ sealed class MainEvent {
     object OnProfileClicked: MainEvent()
     object OnChartsClicked : MainEvent()
     object OnCheckUpClicked : MainEvent()
+    data class OnToggleFab(val isOpen : Boolean) : MainEvent()
 
+    data class OnMenuItemClicked(val menuItem : FabMenuItem) : MainEvent()
 }

@@ -2,6 +2,9 @@ package com.example.jeepni.feature.home
 
 import android.annotation.SuppressLint
 import android.os.Looper
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
@@ -10,6 +13,7 @@ import com.example.jeepni.core.data.model.DailyAnalytics
 import com.example.jeepni.core.data.model.LocationUpdate
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
+import com.example.jeepni.core.ui.FabMenuItem
 import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Screen
@@ -39,6 +43,17 @@ class MainViewModel
     private val userDetailRepository: UserDetailRepository,
 ) : ViewModel() {
 
+    val fabMenuItems = listOf(
+        FabMenuItem(
+            "Delete",
+            Icons.Filled.Delete
+        ),
+        FabMenuItem(
+            "Log",
+            Icons.Filled.Add
+        )
+    )
+
 
     var user by mutableStateOf(authRepo.getUser())
 
@@ -63,12 +78,15 @@ class MainViewModel
         private set
     var drivingMode by mutableStateOf(false)
         private set
-    var isValidSalary by mutableStateOf(true)
-        private set
-    var isValidFuelCost by mutableStateOf(true)
-        private set
+    val isValidSalary by derivedStateOf {
+        isValidDecimal(salary)
+    }
+    val isValidFuelCost by derivedStateOf {
+        isValidDecimal(fuelCost)
+    }
     var isAddDailyStatDialogOpen by mutableStateOf(false)
         private set
+    var isFabMenuOpen by mutableStateOf(false)
     private var distance by mutableStateOf(0.0)// 12382.9
     val distanceState by derivedStateOf {
         convertDistanceToString(distance)
@@ -165,12 +183,18 @@ class MainViewModel
                 //TODO: perform network call to update state on relaunch
                 if (isValidFuelCost && isValidSalary) {
                     viewModelScope.launch {
-                        repository.updateDailyStat(
+                        val isSuccess = repository.logDailyStat(
                             DailyAnalytics(
                                 fuelCost = fuelCost.toDouble(),
                                 salary = salary.toDouble()
                             )
                         )
+                        if (isSuccess) {
+                            sendUiEvent(UiEvent.ShowToast("Successfully saved daily stat!"))
+                        } else {
+                            sendUiEvent(UiEvent.ShowToast("Failed to save daily stat"))
+
+                        }
                     }
                 } else {
                     sendUiEvent(UiEvent.ShowToast("Invalid Input"))
@@ -183,7 +207,6 @@ class MainViewModel
                     repository.deleteDailyStat()
                     time = 0
                     distance = 0.0
-                    sendUiEvent(UiEvent.ShowSnackBar("Daily Stat Deleted", "Undo"))
                 }
             }
             is MainEvent.OnToggleDrivingMode -> {
@@ -207,37 +230,23 @@ class MainViewModel
                             )
                         )
                         if (result) {
-                            sendUiEvent(UiEvent.ShowToast("saved timer and distance"))
+                            sendUiEvent(UiEvent.ShowToast("Saved timer and distance!"))
                         } else {
-                            sendUiEvent(UiEvent.ShowToast("FAILED to save timer and distance"))
+                            sendUiEvent(UiEvent.ShowToast("Failed to save timer and distance..."))
 
                         }
                     }
                     fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
-                    //TODO: update distance in driving mode to Firestore
                 }
             }
             is MainEvent.OnUndoDeleteClick -> { //TODO: Broken
-                deletedStat?.let {
-                    viewModelScope.launch {
-                        repository.updateDailyStat(deletedStat ?: return@launch)
-                        deletedStat = null
-                        sendUiEvent(
-                            UiEvent.ShowSnackBar(
-                                message = "Daily Analytics Deleted",
-                                action = "Undo"
-                            )
-                        )
-                    }
-                }
+
             }
             is MainEvent.OnSalaryChange -> {
                 salary = event.salary
-                isValidSalary = isValidDecimal(salary)
             }
             is MainEvent.OnFuelCostChange -> {
                 fuelCost = event.fuelCost
-                isValidFuelCost = isValidDecimal(fuelCost)
             }
             is MainEvent.OnLogOutClick -> {
                 viewModelScope.launch {
@@ -265,6 +274,18 @@ class MainViewModel
             }
             is MainEvent.OnProfileClicked -> {
                 sendUiEvent(UiEvent.Navigate(Screen.ProfileScreen.route))
+            }
+            is MainEvent.OnToggleFab -> {
+                isFabMenuOpen = event.isOpen
+            }
+            is MainEvent.OnMenuItemClicked -> {
+                if (event.menuItem.name == "Log") {
+                    onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+                    isFabMenuOpen = false
+                } else if (event.menuItem.name == "Delete") {
+                    onEvent(MainEvent.OnDeleteDailyStatClick)
+                    isFabMenuOpen = false
+                }
             }
         }
     }

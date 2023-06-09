@@ -1,9 +1,7 @@
 package com.example.jeepni.util
 
 import android.util.Log
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -13,9 +11,9 @@ import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.feature.about.AboutDriverScreen
 import com.example.jeepni.feature.analytics.AnalyticsScreen
 import com.example.jeepni.feature.authentication.LogInScreen
-import com.example.jeepni.feature.authentication.SignUpScreen
-import com.example.jeepni.feature.authentication.Welcome2Screen
 import com.example.jeepni.feature.authentication.loading.LoadingScreen
+import com.example.jeepni.feature.authentication.signup.SignUpScreen
+import com.example.jeepni.feature.authentication.welcome.Welcome2Screen
 import com.example.jeepni.feature.checkup.CheckUpScreen
 import com.example.jeepni.feature.home.MainScreen
 import com.example.jeepni.feature.initial_checkup.InitialCheckupScreen
@@ -34,8 +32,6 @@ fun Navigation (
     AnimatedNavHost(
         navController = navController,
         startDestination = Screen.LoadingScreen.route,
-        enterTransition = { EnterTransition.None},
-        exitTransition = {ExitTransition.None},
     ) {
         // tell the navHost how the screens look like
         composable (

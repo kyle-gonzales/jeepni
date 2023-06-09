@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -24,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +36,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
+import com.example.jeepni.core.ui.Fab
 import com.example.jeepni.core.data.model.LocationUpdate
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
@@ -163,11 +162,16 @@ fun MainScreen(
                         ) },
 
                         floatingActionButton = {
-                            FloatingActionButton(onClick = {
-                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
-                            }) {
-                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
-                            }
+//                            FloatingActionButton(onClick = {
+////                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+////                            }) {
+////                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+////                            }
+                            Fab(
+                                isVisible = viewModel.isFabMenuOpen,
+                                menuItems = viewModel.fabMenuItems,
+                                onClick = { viewModel.onEvent(MainEvent.OnToggleFab(it)) },
+                                onMenuItemClick = { viewModel.onEvent(MainEvent.OnMenuItemClicked(it)) } )
                         },
                         floatingActionButtonPosition = FabPosition.End,
                         content = {
@@ -186,21 +190,21 @@ fun MainScreen(
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)
                                 }
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    horizontalAlignment = Alignment.Start,
-                                    verticalArrangement = Arrangement.Bottom
-                                ) {
-                                    FloatingActionButton(
-                                        onClick = {
-                                            viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
-                                        },
-                                        modifier = Modifier.padding(16.dp)
-                                    ) {
-                                        Icon(Icons.Filled.Delete, null)
-                                    }
-                                }
+//                                Column(
+//                                    modifier = Modifier
+//                                        .fillMaxSize(),
+//                                    horizontalAlignment = Alignment.Start,
+//                                    verticalArrangement = Arrangement.Bottom
+//                                ) {
+//                                    FloatingActionButton(
+//                                        onClick = {
+//                                            viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
+//                                        },
+//                                        modifier = Modifier.padding(16.dp)
+//                                    ) {
+//                                        Icon(Icons.Filled.Delete, null)
+//                                    }
+//                                }
                             }
                         }
                     )
@@ -263,79 +267,85 @@ fun LogDailyStatDialog(
     onDialogOpenChange : (Boolean) -> Unit,
     onSave : () -> Unit
  ) {
-    AlertDialog(
-        modifier = Modifier,
-        onDismissRequest = {
-            onDialogOpenChange(false)
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    /*TODO: add / edit to database*/
-                    onSave()
-                    onDialogOpenChange(false)
-                },
-                modifier = Modifier,
-                content = {
-                    Text("Save")
-                }
-            )
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDialogOpenChange(false)
-                },
-                modifier = Modifier,
-                content = {
-                    Text("Cancel", color = MaterialTheme.colorScheme.error)
-                }
-            )
-        },
-        title = {
-            Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
-        },
-        text = {
-            Column (
-                modifier = Modifier
-                    .height(268.dp),
-                horizontalAlignment = Alignment.Start,
-            ) {
-                Text(
-                    modifier = Modifier.padding(0.dp, 8.dp),
-                    text = "Enter your earnings for today: ",
-                    textAlign = TextAlign.Start
+    Surface (
+        color = MaterialTheme.colorScheme.background
+    ) {
+        AlertDialog(
+            modifier = Modifier,
+            onDismissRequest = {
+                onDialogOpenChange(false)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        /*TODO: add / edit to database*/
+                        onSave()
+                        onDialogOpenChange(false)
+                    },
+                    modifier = Modifier,
+                    content = {
+                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                    }
                 )
-                JeepNiTextField (
-                    value = salary,
-                    onValueChange = { onSalaryChange(it) },
-                    label = "Salary",
-                    singleLine = true,
-                    leadingIcon = { Icon(painterResource(id = R.drawable.white_dollar_24), null) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
-                    isError = !isValidSalary,
-                    errorMessage = "Invalid Input"
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onDialogOpenChange(false)
+                    },
+                    modifier = Modifier,
+                    content = {
+                        Text("Cancel", color = MaterialTheme.colorScheme.error, fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                    }
                 )
-                Text(
+            },
+            title = {
+                Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
+            },
+            text = {
+                Column (
                     modifier = Modifier
-                        .padding(0.dp, 8.dp)
-                        .wrapContentWidth(),
-                    text = "Enter the amount you spent on fuel for today: ",
-                    textAlign = TextAlign.Start
-                )
-                JeepNiTextField(
-                    value = fuelCost,
-                    onValueChange = {onFuelCostChange(it)},
-                    label = "Fuel Cost",
-                    singleLine = true,
-                    leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    isError = !isValidFuelCost,
-                    errorMessage = "Invalid Input"
-                )
+                        .height(268.dp),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    Text(
+                        modifier = Modifier.padding(0.dp, 8.dp),
+                        text = "Enter your earnings for today: ",
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
+                    )
+                    JeepNiTextField (
+                        value = salary,
+                        onValueChange = { onSalaryChange(it) },
+                        label = "Salary",
+                        singleLine = true,
+                        leadingIcon = {Icon(painterResource(
+                            id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                        isError = !isValidSalary,
+                        errorMessage = "Invalid Input"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(0.dp, 8.dp)
+                            .wrapContentWidth(),
+                        text = "Enter the amount you spent on fuel for today: ",
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
+                    )
+                    JeepNiTextField(
+                        value = fuelCost,
+                        onValueChange = {onFuelCostChange(it)},
+                        label = "Fuel Cost",
+                        singleLine = true,
+                        leadingIcon = {Icon(painterResource(
+                            id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = !isValidFuelCost,
+                        errorMessage = "Invalid Input"
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -370,7 +380,7 @@ fun DrivingModeOnContent(
             GoogleMap(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.8f)
+                    .fillMaxHeight(0.8f)
                     .padding(8.dp),
                 cameraPositionState = cameraPositionState,
                 onMapLoaded = onMapLoaded,
@@ -417,15 +427,15 @@ fun DrivingModeOnContent(
                     )
                 }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .weight(0.2f)
-                    .background(Color.LightGray),
-                horizontalArrangement = Arrangement.Center
-            ) {
-            }
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(8.dp)
+//                    .weight(0.2f)
+//                    .background(Color.LightGray),
+//                horizontalArrangement = Arrangement.Center
+//            ) {
+//            }
         }
     }
 }
@@ -438,9 +448,22 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
-            Text("Driving Mode is Off")
+            val image = if (isSystemInDarkTheme()){
+                R.drawable.drivingoff_dark
+            } else {
+                R.drawable.drivingoff_light
+            }
+            Spacer(modifier = Modifier.padding(5.dp))
+            Image(painter = painterResource(
+                id = image),
+                contentDescription = null)
+            Text(modifier = Modifier.padding(4.dp, 0.dp),
+                text = "Driving Mode is Off",
+                fontFamily = quicksandFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp)
         }
     }
 }
@@ -473,7 +496,7 @@ fun TopActionBar(
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
-                    Icon(painterResource(R.drawable.white_timer_24), contentDescription = null)
+                    Icon(painterResource(R.drawable.alarm_48px), contentDescription = null, Modifier.height(24.dp))
                     Text(
                         modifier = Modifier.padding(4.dp, 0.dp),
                         text = time,
@@ -492,12 +515,17 @@ fun TopActionBar(
                 }
             },
             actions = {
-                Row(modifier = Modifier.padding(8.dp,0.dp)) {
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(8.dp)
+                ) {
                     Switch(
                         checked = drivingMode,
                         onCheckedChange = { toggleDrivingMode(it) },
                         enabled = true,
-                        colors = SwitchDefaults.colors()
+                        colors = SwitchDefaults.colors(),
+                        modifier = Modifier
                     )
                 }
             }
@@ -519,7 +547,9 @@ fun MenuContent(
             .padding(0.dp, 0.dp, 60.dp, 0.dp)
             .fillMaxHeight(),
     ) {
-        Surface {
+        Surface  (
+            color = MaterialTheme.colorScheme.background
+        ){
             Column (
                 modifier = Modifier
                     .fillMaxSize()
@@ -543,18 +573,25 @@ fun MenuContent(
                             .align(Alignment.BottomStart),
                         verticalAlignment = Alignment.Top
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.profile_pic), // should become state
-                            contentDescription = null,
+                        Surface (
                             modifier = Modifier
-                                .size(80.dp)
                                 .clip(CircleShape)
-                                .border(6.dp, MaterialTheme.colorScheme.surface, CircleShape)
-                                .clickable {
-                                    onProfileClicked()
-                                },
-                            contentScale = ContentScale.Crop
-                        )
+                                .size(80.dp)
+                                .background(MaterialTheme.colorScheme.background)
+                                .padding(6.dp),
+                            color = MaterialTheme.colorScheme.background,
+                            shape = CircleShape,
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.profile_pic), // should become state
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        onProfileClicked()
+                                    },
+                            )
+                        }
                         Text(email?:"no email found", /* TODO: show user name instead */
                             modifier = Modifier
                                 .padding(12.dp, 8.dp)
