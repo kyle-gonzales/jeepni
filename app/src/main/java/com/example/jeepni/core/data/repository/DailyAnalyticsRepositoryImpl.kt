@@ -25,21 +25,40 @@ class DailyAnalyticsRepositoryImpl(
         context = appContext.applicationContext
     }
 
-    override suspend fun logDailyStat(dailyStat: DailyAnalytics) {
-        usersRef.document(auth.currentUser!!.uid)
-            .collection("analytics")
-            .document(dailyStat.date)
-            .update(
-                mapOf(
-                    "salary" to dailyStat.salary,
-                    "fuelCost" to dailyStat.fuelCost,
-                )
-            )
-
-            .addOnSuccessListener {
-                Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show()
-            } // not sure if this works
-            .addOnFailureListener {}
+    override suspend fun logDailyStat(dailyStat: DailyAnalytics) : Boolean {
+        var result : Boolean
+        try {
+            usersRef.document(auth.currentUser!!.uid)
+                .collection("analytics")
+                .document(dailyStat.date)
+                .update(
+                    mapOf(
+                        "salary" to dailyStat.salary,
+                        "fuelCost" to dailyStat.fuelCost,
+                    )
+                ).await()
+            result = true
+        } catch (e: Exception) {
+            if (e is FirebaseFirestoreException) {
+                try {
+                    usersRef.document(auth.currentUser!!.uid)
+                        .collection("analytics")
+                        .document(dailyStat.date)
+                        .set(
+                            mapOf(
+                                "salary" to dailyStat.salary,
+                                "fuelCost" to dailyStat.fuelCost,
+                            )
+                        ).await()
+                    result = true
+                } catch (e: Exception) {
+                    result = false
+                }
+            } else {
+                result = false
+            }
+        }
+        return result
     }
 
     override suspend fun updateDailyStat(dailyStat: DailyAnalytics) {
@@ -51,7 +70,6 @@ class DailyAnalyticsRepositoryImpl(
         // ONLY SAVES ON THE TIMER FIELD
         var result: Boolean
         try {
-
             usersRef.document(auth.currentUser!!.uid)
                 .collection("analytics")
                 .document(dailyStat.date)
@@ -73,6 +91,7 @@ class DailyAnalyticsRepositoryImpl(
                         .set(
                             mapOf(
                                 "timer" to dailyStat.timer,
+                                "distance" to dailyStat.distance
                             )
                         ).await()
                     result = true
@@ -115,8 +134,8 @@ class DailyAnalyticsRepositoryImpl(
             .collection("analytics")
             .document(getCurrentDateString())
             .delete()
-            .addOnSuccessListener { Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show() }
-            .addOnFailureListener {}
+            .addOnSuccessListener { Toast.makeText(context, "Deleted daily stat!", Toast.LENGTH_SHORT).show() }
+            .addOnFailureListener { Toast.makeText(context, "Failed to delete daily stat...", Toast.LENGTH_SHORT).show() }
 
     }
     override fun getDailyStats(): Flow<List<DailyAnalytics>> = callbackFlow {
