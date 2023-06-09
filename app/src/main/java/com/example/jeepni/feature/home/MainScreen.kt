@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.Fab
-import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
@@ -454,13 +452,14 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
             val image = if (isSystemInDarkTheme()){
-                R.drawable.droff_dark
+                R.drawable.drivingoff_dark
             } else {
-                R.drawable.droff_light
+                R.drawable.drivingoff_light
             }
+            Spacer(modifier = Modifier.padding(5.dp))
             Image(painter = painterResource(
                 id = image),
                 contentDescription = null)
