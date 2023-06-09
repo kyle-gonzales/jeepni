@@ -19,4 +19,9 @@ object Constants {
     const val NOTIFICATION_OBJECT = "notification_object"
 
     const val FIRST_NOTIFICATION_ID = 999
+
+    const val UPDATE_LOCATION = "update_location"
+    const val JOIN_ROOM = "join"
+    const val LEAVE_ROOM = "leave"
+    const val REMOVE_PIN = "remove_pin"
 }

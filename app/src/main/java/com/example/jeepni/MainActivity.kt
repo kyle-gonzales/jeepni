@@ -6,14 +6,18 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavHostController
 import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.feature.home.MainEvent
+import com.example.jeepni.feature.home.MainViewModel
 import com.example.jeepni.util.Constants
 import com.example.jeepni.util.Navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -37,6 +41,7 @@ class MainActivity : ComponentActivity() {
     lateinit var auth : AuthRepository // automatically injected. no need for initialization
     @Inject
     lateinit var userDetailsRepository : UserDetailRepository
+    private val mainViewModel by viewModels<MainViewModel>()
     //private val analyticsViewModel by viewModels<AnalyticsViewModel>()
     //private val signUpViewModel by viewModels<SignUpViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +65,12 @@ class MainActivity : ComponentActivity() {
                 Navigation(navController, auth, userDetailsRepository)
             }
         }
+    }
+
+    override fun onStop() {
+        mainViewModel.onEvent(MainEvent.OnToggleDrivingMode(false))
+        Log.i("JEEPNI_SOCKET", "on stop is called")
+        super.onStop()
     }
     private fun createNotificationChannel() {
         val channel = NotificationChannel(Constants.CHANNEL_ID, Constants.CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT).apply {

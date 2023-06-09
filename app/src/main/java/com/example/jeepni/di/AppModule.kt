@@ -17,6 +17,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -85,4 +86,8 @@ object AppModule {
         @ApplicationContext context : Context,
         alarmManager: AlarmManager
     ) = AlarmScheduler(context, alarmManager)
+
+    @Provides
+    @Singleton
+    fun providesOkHttpClient() = OkHttpClient()
 }
