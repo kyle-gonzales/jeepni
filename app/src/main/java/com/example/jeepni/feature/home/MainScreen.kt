@@ -213,10 +213,10 @@ fun MainScreen(
                         onFuelCostChange = {viewModel.onEvent(MainEvent.OnFuelCostChange(it))},
                         isValidSalary = viewModel.isValidSalary,
                         isValidFuelCost = viewModel.isValidFuelCost,
-                        isDialogOpen = viewModel.isAddDailyStatDialogOpen,
                         onDialogOpenChange = {viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(it))},
-                        onSave = { salary, fuelCost ->
-                            viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick(salary.toDouble(), fuelCost.toDouble()))}
+                        onSave = {
+                            viewModel.onEvent(MainEvent.OnSaveDailyAnalyticClick)
+                        }
                     )
                 }
                 val activity = LocalContext.current as MainActivity //apparently this is not a memory leak!
@@ -252,7 +252,6 @@ fun Activity.openAppSettings() {
     ).also(::startActivity)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogDailyStatDialog(
     salary: String,
@@ -261,87 +260,82 @@ fun LogDailyStatDialog(
     onFuelCostChange : (String) -> Unit,
     isValidSalary : Boolean,
     isValidFuelCost : Boolean,
-    isDialogOpen: Boolean = true,
     onDialogOpenChange : (Boolean) -> Unit,
-    onSave : (String, String) -> Unit
+    onSave : () -> Unit
  ) {
-    if (isDialogOpen) {
-        AlertDialog(
-            modifier = Modifier,
-            onDismissRequest = {
-                onDialogOpenChange(false)
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        /*TODO: add / edit to database*/
-                        onSave(salary, fuelCost)
-                        onDialogOpenChange(false)
-                    },
-                    modifier = Modifier
-                        .padding(8.dp),
-                    content = {
-                        Text("Save")
-                    }
-                )
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        onDialogOpenChange(false)
-                    },
-                    modifier = Modifier
-                        .padding(8.dp),
-                    content = {
-                        Text("Cancel")
-                    }
-                )
-            },
-            title = {
-                Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
-            },
-            text = {
-
-                Column (
-                    modifier = Modifier,
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    Text(
-                        modifier = Modifier.padding(0.dp, 8.dp),
-                        text = "Enter your earnings for today: ",
-                        textAlign = TextAlign.Start
-                    )
-                    JeepNiTextField(
-                        value = salary,
-                        onValueChange = { onSalaryChange(it) },
-                        label = "Salary",
-                        singleLine = true,
-                        leadingIcon = { Icon(painterResource(id = R.drawable.white_dollar_24), null) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
-                        isError = !isValidSalary,
-                        errorMessage = "Invalid Input"
-                    )
-                    Text(
-                        modifier = Modifier
-                            .padding(0.dp, 8.dp)
-                            .wrapContentWidth(),
-                        text = "Enter the amount you spent on fuel for today: ",
-                        textAlign = TextAlign.Start
-                    )
-                    JeepNiTextField(
-                        value = fuelCost,
-                        onValueChange = {onFuelCostChange(it)},
-                        label = "Fuel Cost",
-                        singleLine = true,
-                        leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        isError = !isValidFuelCost,
-                        errorMessage = "Invalid Input"
-                    )
+    AlertDialog(
+        modifier = Modifier,
+        onDismissRequest = {
+            onDialogOpenChange(false)
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    /*TODO: add / edit to database*/
+                    onSave()
+                    onDialogOpenChange(false)
+                },
+                modifier = Modifier,
+                content = {
+                    Text("Save")
                 }
+            )
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDialogOpenChange(false)
+                },
+                modifier = Modifier,
+                content = {
+                    Text("Cancel", color = MaterialTheme.colorScheme.error)
+                }
+            )
+        },
+        title = {
+            Text("Log Daily Analytics", fontFamily = quicksandFontFamily)
+        },
+        text = {
+            Column (
+                modifier = Modifier
+                    .height(268.dp),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Text(
+                    modifier = Modifier.padding(0.dp, 8.dp),
+                    text = "Enter your earnings for today: ",
+                    textAlign = TextAlign.Start
+                )
+                JeepNiTextField (
+                    value = salary,
+                    onValueChange = { onSalaryChange(it) },
+                    label = "Salary",
+                    singleLine = true,
+                    leadingIcon = { Icon(painterResource(id = R.drawable.white_dollar_24), null) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                    isError = !isValidSalary,
+                    errorMessage = "Invalid Input"
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(0.dp, 8.dp)
+                        .wrapContentWidth(),
+                    text = "Enter the amount you spent on fuel for today: ",
+                    textAlign = TextAlign.Start
+                )
+                JeepNiTextField(
+                    value = fuelCost,
+                    onValueChange = {onFuelCostChange(it)},
+                    label = "Fuel Cost",
+                    singleLine = true,
+                    leadingIcon = {Icon(painterResource(id = R.drawable.white_dollar_24), null)},
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    isError = !isValidFuelCost,
+                    errorMessage = "Invalid Input"
+                )
             }
-        )
-    }
+        }
+    )
 }
 
 @Composable

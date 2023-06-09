@@ -1,5 +1,7 @@
 package com.example.jeepni.feature.home
 
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -28,9 +30,13 @@ fun formatSecondsToTime(timeInSeconds: Long) : String {
 }
 
 fun convertDistanceToString(distance: Double): String {
+
     val res = if (distance >= 1000) {
-        val km = (distance / 1000).toInt()
-        "$km km  "
+        val km = (distance / 1000)
+        val df = DecimalFormat("#.##")
+        df.roundingMode = RoundingMode.DOWN
+        val roundoff = df.format(km)
+        "$roundoff km  "
     } else {
         "${(distance.toInt() % 1000)} m"
     }
