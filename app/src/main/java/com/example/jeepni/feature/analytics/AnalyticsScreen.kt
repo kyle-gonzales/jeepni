@@ -9,13 +9,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.AnalyticsCard
@@ -103,7 +102,12 @@ fun AnalyticsScreen(
                                     colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
                                 ) {
                                     Column (Modifier.padding(8.dp)) {
-                                        Text("This can be a recommendation", fontFamily =  quicksandFontFamily)
+                                        Text(
+                                            "This can be a recommendation",
+                                            fontFamily =  quicksandFontFamily,
+                                            maxLines = 3,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
                                     }
 
                                 }
@@ -129,7 +133,14 @@ fun AnalyticsScreen(
                                             .padding(4.dp),
                                         contentAlignment = Alignment.CenterStart
                                     ){
-                                        Text("PHP ${df.format(averageSalary)}", fontSize = 22.sp, fontWeight = FontWeight.Bold, fontFamily = quicksandFontFamily,)
+                                        Text(
+                                            "PHP ${df.format(averageSalary)}",
+                                            fontSize = 22.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = quicksandFontFamily,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
                                         Box (
                                             modifier = Modifier.fillMaxSize(),
                                             contentAlignment = Alignment.BottomStart
@@ -151,7 +162,13 @@ fun AnalyticsScreen(
                                             .padding(4.dp),
                                         contentAlignment = Alignment.CenterStart
                                     ){
-                                        Text("PHP ${df.format(averageFuelCost)}", fontSize = 22.sp, fontWeight = FontWeight.Bold, fontFamily = quicksandFontFamily,)
+                                        Text(
+                                            "PHP ${df.format(averageFuelCost)}",
+                                            fontSize = 22.sp, fontWeight = FontWeight.Bold,
+                                            fontFamily = quicksandFontFamily,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
                                         Box (
                                             modifier = Modifier.fillMaxSize(),
                                             contentAlignment = Alignment.BottomStart

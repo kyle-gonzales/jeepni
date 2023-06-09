@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -36,8 +37,8 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.Fab
 import com.example.jeepni.core.data.model.LocationUpdate
+import com.example.jeepni.core.ui.Fab
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
@@ -601,7 +602,9 @@ fun MenuContent(
                             fontFamily = quicksandFontFamily,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = light_onPrimary
+                            color = light_onPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
