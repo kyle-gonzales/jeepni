@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.authentication
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -71,18 +72,26 @@ fun LogInScreen(
                         .paint(
                             painterResource(id = bgImage),
                             contentScale = ContentScale.Crop)
-                }
+                },
+                contentAlignment = Alignment.Center
             ){
-                Container(0.9f){
-                    BackIconButton {
-                        viewModel.onEvent(LogInEvent.OnBackPressed)
+                Column(
+                    modifier = Modifier.fillMaxSize(0.85f),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.Start
+                ){
+                    Column(){
+                        BackIconButton {
+                            viewModel.onEvent(LogInEvent.OnBackPressed)
+                        }
+                        Spacer(Modifier.height(40.dp))
+                        Text(
+                            text = "Log in",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = quicksandFontFamily
+                        )
                     }
-                    Text(
-                        text = "Log in",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = quicksandFontFamily
-                    )
                     Column (
                         modifier = Modifier
                             .fillMaxWidth()
@@ -110,121 +119,15 @@ fun LogInScreen(
                             onClick = {
                                 //TODO : implement forgot password
                                 viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
-                            }
+                            },
+                            contentPadding = PaddingValues(0.dp)
                         ){
                             Text("Forgot Password", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                         }
-                    }
-                    Column {
+                        Spacer(Modifier.height(20.dp))
                         SolidButton(
                             onClick = {
                                 viewModel.onEvent(LogInEvent.OnLogInClicked)
-                            }
-                        ) {
-                            Text("Log in", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
-                        }
-                        SolidButton(
-                            bgColor = MaterialTheme.colorScheme.onBackground,
-                            contentColor =  MaterialTheme.colorScheme.background,
-                            onClick = {
-                                //TODO: implement login with GOOGLE ACCOUNT
-                                viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
-                            }) {
-                            Text("Log in with Google", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                    Row (
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        JeepNiText(stringResource(R.string.no_account))
-                        TextButton(
-                            onClick = {
-                                viewModel.onEvent(LogInEvent.OnSignUpClicked)
-                            },
-                            contentPadding = PaddingValues(start = 3.5.dp)
-                        ){
-                            Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewLogInScreen(
-
-){
-    var email by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
-
-    val bgImage = if(isSystemInDarkTheme()){R.drawable.bg_dark}else{R.drawable.bg_light}
-    JeepNiTheme {
-        Surface {
-            Box(
-                modifier = with (Modifier){
-                    fillMaxSize()
-                        .paint(
-                            painterResource(id = bgImage),
-                            contentScale = ContentScale.Crop)
-                },
-                contentAlignment = Alignment.Center
-            ){
-                Column(
-                    modifier = Modifier.fillMaxSize(0.85f),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.Start
-                ){
-                    Column(){
-                        BackIconButton {
-
-                        }
-                        Spacer(Modifier.height(40.dp))
-                        Text(
-                            text = "Log in",
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = quicksandFontFamily
-                        )
-                    }
-                    Column (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ){
-                        JeepNiTextField (
-                            modifier = Modifier.fillMaxWidth().height(65.dp),
-                            label = "Email",
-                            value = email,
-                            onValueChange = { email = it },
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii, imeAction = ImeAction.Next),
-                        )
-                        JeepNiTextField (
-                            modifier = Modifier.fillMaxWidth().height(65.dp),
-                            label = "Password",
-                            value = password,
-                            onValueChange = { password = it },
-                            singleLine = true,
-                            visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                        )
-                        TextButton(
-                            onClick = {
-                                //TODO : implement forgot password
-                            }
-                        ){
-                            Text("Forgot Password", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
-                        }
-                        SolidButton(
-                            onClick = {
-
                             }
                         ) {
                             Text("Log in", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
@@ -235,7 +138,7 @@ fun PreviewLogInScreen(
                             contentColor =  MaterialTheme.colorScheme.background,
                             onClick = {
                                 //TODO: implement login with GOOGLE ACCOUNT
-
+                                viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
                             }) {
                             Text("Log in with Google", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                         }
@@ -245,7 +148,7 @@ fun PreviewLogInScreen(
                             JeepNiText(stringResource(R.string.no_account))
                             TextButton(
                                 onClick = {
-
+                                    viewModel.onEvent(LogInEvent.OnSignUpClicked)
                                 },
                                 contentPadding = PaddingValues(start = 3.5.dp)
                             ){
