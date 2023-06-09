@@ -223,9 +223,144 @@ fun AppBar(
         )
     }
 }
+/*
 @Preview(showSystemUi = true)
 @Composable
 fun Preview(){
-    CheckUpScreen(onNavigate = {}) {
+    JeepNiTheme {
+        Surface {
+            Scaffold(
+                topBar = {
+                    AppBar(
+                        title = "JeepNi! Check-up",
+                        onPopBackStack = {  viewModel.onEvent(CheckUpEvent.OnBackPressed)  }
+                    )
+                },
+                content = { paddingValues ->
+                    Box(
+                        modifier = Modifier
+                            .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                            .padding(paddingValues)
+                    ){
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            contentPadding = PaddingValues(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            item {
+                                Button(
+                                    onClick = {
+                                        viewModel.onEvent(CheckUpEvent.OnOpenAddAlarmDialog(true))
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.outlineVariant,
+                                        contentColor = MaterialTheme.colorScheme.onSurface
+                                    )
+                                ){
+                                    Icon(
+                                        painter = painterResource(R.drawable.add_48px),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(45.dp)
+                                    )
+                                }
+                            }
+                            itemsIndexed(alarms?: emptyList()) { index, alarm ->
+                                Button(
+                                    onClick =  {
+                                        viewModel.onEvent(CheckUpEvent.OnOpenEditAlarmDialog(true, alarm))
+                                    },
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    contentPadding = PaddingValues(0.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.outlineVariant,
+                                        contentColor = MaterialTheme.colorScheme.onSurface
+                                    )
+                                ){
+                                    ComponentCard(alarm)
+                                }
+                            }
+                        }
+                    }
+                })
+        }
+        if(viewModel.isAddComponentDialogOpen){
+            AddDialog(
+                onDismiss = {viewModel.onEvent(
+                    CheckUpEvent.OnDismissAdd
+                )},
+                pickedDate = viewModel.nextAlarmDate.toLocalDate(),
+                onDateChange = {viewModel.onEvent(
+                    CheckUpEvent.OnNextAlarmChange(it)
+                )},
+                isRepeated = viewModel.isRepeated,
+                onRepeatabilityChange = {viewModel.onEvent(
+                    CheckUpEvent.OnRepeatabilityChange(it)
+                )},
+                value = viewModel.intervalValue,
+                onValueChange = {viewModel.onEvent(
+                    CheckUpEvent.OnIntervalValueChange(it)
+                )},
+                duration = viewModel.intervalType,
+                onDurationChange = {viewModel.onEvent(
+                    CheckUpEvent.OnIntervalTypeChange(it)
+                )
+                },
+                onCancelClick = {viewModel.onEvent(
+                    CheckUpEvent.OnDismissAdd
+                )
+                },
+                onSaveClick = {viewModel.onEvent(
+                    CheckUpEvent.OnSaveAddClicked
+                )},
+                name = viewModel.alarmName,
+                onNameChange = {viewModel.onEvent(
+                    CheckUpEvent.OnAlarmItemSelected(it)
+                )},
+                onNameChange1 = {viewModel.onEvent(
+                    CheckUpEvent.OnCustomAlarmItemNameChanged(it)
+                )},
+                isError = viewModel.isError
+            )
+        }
+        if (viewModel.isEditDeleteDialogOpen) {
+            EditDeleteDialog(
+                alarmName = viewModel.selectedAlarm!!.name,
+                onDismiss = { viewModel.onEvent( CheckUpEvent.OnDismissEdit ) },
+                pickedDate = viewModel.nextAlarmDate.toLocalDate(),
+                onDateChange = {viewModel.onEvent(
+                    CheckUpEvent.OnNextAlarmChange(it)
+                )},
+                isRepeated = viewModel.isRepeated,
+                onRepeatabilityChange = { viewModel.onEvent(
+                    CheckUpEvent.OnRepeatabilityChange(it)
+                ) },
+                value = viewModel.intervalValue,
+                onValueChange = {viewModel.onEvent(
+                    CheckUpEvent.OnIntervalValueChange(it)
+                )},
+                duration = viewModel.intervalType,
+                onDurationChange = {viewModel.onEvent(
+                    CheckUpEvent.OnIntervalTypeChange(it)
+                )
+                },
+                onDeleteClick = {viewModel.onEvent(
+                    CheckUpEvent.OnDeleteClicked
+                )},
+                onSaveClick = {viewModel.onEvent(
+                    CheckUpEvent.OnSaveEditClicked
+                )},
+                isError = viewModel.isError
+            )
+        }
     }
-}
+}*/

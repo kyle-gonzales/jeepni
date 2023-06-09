@@ -80,20 +80,6 @@ fun Container(
 }
 
 @Composable
-fun Logo(
-    width: Dp = 100.dp,
-    height: Dp = 100.dp
-) {
-    Image(
-        painter = painterResource(id = R.drawable.samplelogo),
-        contentDescription = "JeepNi Logo",
-        modifier = Modifier
-            .width(width)
-            .height(height)
-    )
-}
-
-@Composable
 fun JeepNiText(
     text: String,
     modifier: Modifier = Modifier,
