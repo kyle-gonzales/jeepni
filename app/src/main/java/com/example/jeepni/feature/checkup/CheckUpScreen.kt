@@ -223,9 +223,3 @@ fun AppBar(
         )
     }
 }
-@Preview(showSystemUi = true)
-@Composable
-fun Preview(){
-    CheckUpScreen(onNavigate = {}) {
-    }
-}

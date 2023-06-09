@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -30,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -37,6 +37,8 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
+import com.example.jeepni.core.data.model.LocationUpdate
+import com.example.jeepni.core.ui.Fab
 import com.example.jeepni.core.ui.JeepNiTextField
 import com.example.jeepni.core.ui.PermissionDialog
 import com.example.jeepni.core.ui.theme.*
@@ -62,6 +64,8 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
+
+    val otherDrivers = viewModel.otherDrivers
 
     val dialogQueue = viewModel.visiblePermissionDialogQueue
     
@@ -159,11 +163,16 @@ fun MainScreen(
                         ) },
 
                         floatingActionButton = {
-                            FloatingActionButton(onClick = {
-                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
-                            }) {
-                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
-                            }
+//                            FloatingActionButton(onClick = {
+////                                viewModel.onEvent(MainEvent.OnOpenAddDailyStatDialog(true))
+////                            }) {
+////                                Icon(painterResource(id = R.drawable.black_dollar_24), contentDescription = null)
+////                            }
+                            Fab(
+                                isVisible = viewModel.isFabMenuOpen,
+                                menuItems = viewModel.fabMenuItems,
+                                onClick = { viewModel.onEvent(MainEvent.OnToggleFab(it)) },
+                                onMenuItemClick = { viewModel.onEvent(MainEvent.OnMenuItemClicked(it)) } )
                         },
                         floatingActionButtonPosition = FabPosition.End,
                         content = {
@@ -176,26 +185,27 @@ fun MainScreen(
                                         paddingValues = it,
                                         cameraPositionState = viewModel.cameraPositionState,
                                         targetPosition = viewModel.targetPosition,
-                                        onMapLoaded = {} //viewModel::onMapLoaded
+                                        onMapLoaded = {}, //viewModel::onMapLoaded
+                                        otherDrivers = otherDrivers
                                     )
                                 } else {
                                     DrivingModeOffContent(paddingValues = it)
                                 }
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    horizontalAlignment = Alignment.Start,
-                                    verticalArrangement = Arrangement.Bottom
-                                ) {
-                                    FloatingActionButton(
-                                        onClick = {
-                                            viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
-                                        },
-                                        modifier = Modifier.padding(16.dp)
-                                    ) {
-                                        Icon(Icons.Filled.Delete, null)
-                                    }
-                                }
+//                                Column(
+//                                    modifier = Modifier
+//                                        .fillMaxSize(),
+//                                    horizontalAlignment = Alignment.Start,
+//                                    verticalArrangement = Arrangement.Bottom
+//                                ) {
+//                                    FloatingActionButton(
+//                                        onClick = {
+//                                            viewModel.onEvent(MainEvent.OnDeleteDailyStatClick)
+//                                        },
+//                                        modifier = Modifier.padding(16.dp)
+//                                    ) {
+//                                        Icon(Icons.Filled.Delete, null)
+//                                    }
+//                                }
                             }
                         }
                     )
@@ -275,7 +285,7 @@ fun LogDailyStatDialog(
                     },
                     modifier = Modifier,
                     content = {
-                        Text("Save")
+                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     }
                 )
             },
@@ -286,7 +296,7 @@ fun LogDailyStatDialog(
                     },
                     modifier = Modifier,
                     content = {
-                        Text("Cancel", color = MaterialTheme.colorScheme.error)
+                        Text("Cancel", color = MaterialTheme.colorScheme.error, fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
                     }
                 )
             },
@@ -302,7 +312,7 @@ fun LogDailyStatDialog(
                     Text(
                         modifier = Modifier.padding(0.dp, 8.dp),
                         text = "Enter your earnings for today: ",
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField (
                         value = salary,
@@ -320,7 +330,7 @@ fun LogDailyStatDialog(
                             .padding(0.dp, 8.dp)
                             .wrapContentWidth(),
                         text = "Enter the amount you spent on fuel for today: ",
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField(
                         value = fuelCost,
@@ -345,6 +355,7 @@ fun DrivingModeOnContent(
     targetPosition : LatLng,
     cameraPositionState: CameraPositionState,
     onMapLoaded : () -> Unit,
+    otherDrivers : List<LocationUpdate>
 ) {
 
     val cebuBounds = LatLngBounds.Builder()
@@ -359,6 +370,8 @@ fun DrivingModeOnContent(
         LatLng(cebuBounds.southwest.latitude, cebuBounds.northeast.longitude)
     )
 
+    val context = LocalContext.current
+
     Surface {
         Column (
             modifier = Modifier
@@ -368,7 +381,7 @@ fun DrivingModeOnContent(
             GoogleMap(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.8f)
+                    .fillMaxHeight(0.8f)
                     .padding(8.dp),
                 cameraPositionState = cameraPositionState,
                 onMapLoaded = onMapLoaded,
@@ -401,40 +414,29 @@ fun DrivingModeOnContent(
                     minZoomPreference = 9.0f,
                 ),
             ) {
-//                Polygon(
-//                    points = listOf(
-//                        LatLng(85.0,90.0),
-//                        LatLng(85.0,0.1),
-//                        LatLng(85.0,-90.0),
-//                        LatLng(85.0,-179.9),
-//                        LatLng(0.0,-179.9),
-//                        LatLng(-85.0,-179.9),
-//                        LatLng(-85.0,-90.0),
-//                        LatLng(-85.0,0.1),
-//                        LatLng(-85.0,90.0),
-//                        LatLng(-85.0,179.9),
-//                        LatLng(0.0,179.9),
-//                        LatLng(85.0,179.9),
-//                    ),
-//                    strokeWidth = 0F,
-//                    fillColor = Color.White,
-//                    holes = listOf(holePoints),
-//                    zIndex = 10000.0f,
-//                )
                 Marker(
+                    icon = if (isSystemInDarkTheme()) bitmapDescriptorFromVector(context, R.drawable.pin_you_dark) else bitmapDescriptorFromVector(context, R.drawable.pin_you_light),
                     state = MarkerState(position = targetPosition),
                     title = "You", //TODO: give the name of the driver?
                 )
+
+                for (driver in otherDrivers) {
+                    Marker(
+                        icon = if (isSystemInDarkTheme()) bitmapDescriptorFromVector(context, R.drawable.pin_others_dark) else bitmapDescriptorFromVector(context, R.drawable.pin_others_light),
+                        state = MarkerState(position = LatLng(driver.latitude, driver.longitude)),
+                        title = driver.driver_id
+                    )
+                }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .weight(0.2f)
-                    .background(Color.LightGray),
-                horizontalArrangement = Arrangement.Center
-            ) {
-            }
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(8.dp)
+//                    .weight(0.2f)
+//                    .background(Color.LightGray),
+//                horizontalArrangement = Arrangement.Center
+//            ) {
+//            }
         }
     }
 }
@@ -447,13 +449,14 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
             val image = if (isSystemInDarkTheme()){
-                R.drawable.droff_dark
+                R.drawable.drivingoff_dark
             } else {
-                R.drawable.droff_light
+                R.drawable.drivingoff_light
             }
+            Spacer(modifier = Modifier.padding(5.dp))
             Image(painter = painterResource(
                 id = image),
                 contentDescription = null)
@@ -599,7 +602,9 @@ fun MenuContent(
                             fontFamily = quicksandFontFamily,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = light_onPrimary
+                            color = light_onPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }

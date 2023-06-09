@@ -3,38 +3,27 @@ package com.example.jeepni.feature.initial_checkup
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.BackIconButton
 import com.example.jeepni.core.ui.Container
-import com.example.jeepni.core.ui.CustomDropDown
 import com.example.jeepni.core.ui.DatePicker
 import com.example.jeepni.core.ui.JeepNiText
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
-import com.example.jeepni.feature.about.AboutDriverEvent
 import com.example.jeepni.util.UiEvent
 import java.time.LocalDate
 
@@ -111,7 +100,7 @@ fun InitialCheckupScreen(
                                 it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
                             }
                         )
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(16.dp))
                         DatePicker(
                             label = " Date of last LTFRB inspection ",
                             pickedDate = viewModel.ltfrbDate,
@@ -124,7 +113,7 @@ fun InitialCheckupScreen(
                                 it.isBefore(LocalDate.now()) || it.isEqual(LocalDate.now()) // disable future dates
                             }
                         )
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(16.dp))
                         DatePicker(
                             label = " Date of last LTO inspection ",
                             pickedDate = viewModel.ltoDate,
@@ -263,7 +252,7 @@ fun InitialCheckupScreen(
                         }
                     }
                     SolidButton(onClick = { viewModel.onEvent(InitialCheckupEvent.OnSaveClicked) }) {
-                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
                 }
             }

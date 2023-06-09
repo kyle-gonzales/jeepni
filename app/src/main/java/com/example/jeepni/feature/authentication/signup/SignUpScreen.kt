@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,34 +52,43 @@ fun SignUpScreen(
         }
     }
     val bgImage = if(isSystemInDarkTheme()){R.drawable.bg_dark}else{R.drawable.bg_light}
-
     JeepNiTheme() {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ){
+        Surface{
             Box(
                 modifier = with (Modifier){
                     fillMaxSize()
                         .paint(
                             painterResource(id = bgImage),
                             contentScale = ContentScale.Crop)
-                }
+                },
+                contentAlignment = Alignment.Center
             ){
-                Container(0.9f) {
-                    BackIconButton {
-                        viewModel.onEvent(SignUpEvent.OnBackClicked)
+                Column(
+                    modifier = Modifier.fillMaxSize(0.85f),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.Start
+                ){
+                    Column() {
+                        BackIconButton {
+                            viewModel.onEvent(SignUpEvent.OnBackClicked)
+                        }
+                        Spacer(Modifier.height(40.dp))
+                        Text(
+                            text = "Sign up",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = quicksandFontFamily
+                        )
                     }
-                    Text(
-                        text = "Sign up",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = quicksandFontFamily
-                    )
                     Column(
-                        horizontalAlignment = Alignment.Start
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.Bottom
                     ){
                         JeepNiTextField (
-                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(65.dp),
                             label = "Email",
                             value = viewModel.email,
                             onValueChange = {viewModel.onEvent(SignUpEvent.OnEmailChange(it))},
@@ -87,27 +97,33 @@ fun SignUpScreen(
                             colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background),
                         )
                         JeepNiTextField (
-                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(65.dp),
                             label = "Password",
                             value = viewModel.password,
                             onValueChange = {viewModel.onEvent(SignUpEvent.OnPasswordChange(it))},
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
+                            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background),
                         )
                         JeepNiTextField (
-                            modifier = Modifier.fillMaxWidth().height(65.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(65.dp),
                             label = "Re-enter Password",
                             value = viewModel.confirmPassword,
                             onValueChange = {viewModel.onEvent(SignUpEvent.OnReEnterPasswordChange(it))},
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
+                            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background),
                         )
-                        Row (modifier = Modifier,
-                            verticalAlignment = Alignment.CenterVertically,
+                        Row (
+                            modifier = Modifier.offset(x = -12.dp, y = 2.dp),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Checkbox(
                                 checked = viewModel.isAgreeToTerms,
@@ -129,8 +145,7 @@ fun SignUpScreen(
                             }
                             Text(text = ".", fontSize = 14.sp, fontFamily = quicksandFontFamily)
                         }
-                    }
-                    Column {
+                        Spacer(Modifier.height(20.dp))
                         SolidButton(
                             onClick = {
                                 viewModel.onEvent(SignUpEvent.OnCreateAccountClicked)
@@ -139,9 +154,11 @@ fun SignUpScreen(
                             Text(
                                 text = stringResource(R.string.create),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
                             )
                         }
+                        Spacer(Modifier.height(10.dp))
                         SolidButton(
                             bgColor = MaterialTheme.colorScheme.onBackground,
                             contentColor =  MaterialTheme.colorScheme.background,
@@ -153,25 +170,26 @@ fun SignUpScreen(
                             Text(
                                 text = stringResource(R.string.create_google),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
                             )
                         }
-                    }
-                    Row (modifier = Modifier,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        JeepNiText(stringResource(R.string.has_account))
-                        TextButton(
-                            contentPadding = PaddingValues(start = (3.5).dp),
-                            onClick = {
-                                viewModel.onEvent(SignUpEvent.OnLogInClicked)
+                        Row (modifier = Modifier,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            JeepNiText(stringResource(R.string.has_account))
+                            TextButton(
+                                contentPadding = PaddingValues(start = 1.dp),
+                                onClick = {
+                                    viewModel.onEvent(SignUpEvent.OnLogInClicked)
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.log_in),
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = quicksandFontFamily,
+                                )
                             }
-                        ) {
-                            Text(
-                                text = stringResource(R.string.log_in),
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = quicksandFontFamily
-                            )
                         }
                     }
                 }
@@ -186,26 +204,34 @@ fun TermsAndConditions(
     onClick : () -> Unit
 ){
     Container(height = 0.9f) {
-        IconButton(onClick = onClick) {
-
-        }
+        BackIconButton(
+            onClick = onClick
+        )
         Text(
             stringResource(R.string.terms),
-            Modifier.fillMaxWidth(0.6f)
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = quicksandFontFamily
         )
         Text(
             text = stringResource(R.string.terms1),
+            fontFamily = quicksandFontFamily,
             modifier = Modifier
                 .fillMaxHeight(0.6f)
                 .verticalScroll(
                     rememberScrollState()
-                )
+                ),
+            textAlign = TextAlign.Justify
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ){
-            SolidButton(width = 0.45f,
-                onClick = {}) {
+            SolidButton(
+                width = 0.45f,
+                onClick = {},
+                bgColor = MaterialTheme.colorScheme.onBackground,
+                contentColor =  MaterialTheme.colorScheme.background,
+            ) {
                 Row{
                     JeepNiIcons.Close
                     Text(stringResource(R.string.decline))

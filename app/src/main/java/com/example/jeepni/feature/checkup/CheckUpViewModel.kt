@@ -57,8 +57,7 @@ class CheckUpViewModel
         previouslySavedAlarm = null
         selectedAlarm = null
         nextAlarmDate = LocalDateTime.now().toLocalDate().atTime(7,0,0, randInt())
-
-        nextAlarmDate = LocalDateTime.now().plusMinutes(1) // for testing
+        //nextAlarmDate = LocalDateTime.now().plusMinutes(1) // for testing
         intervalValue = "1"
         isRepeated = false
         alarmName = "Tires"

@@ -2,13 +2,7 @@ package com.example.jeepni.feature.authentication
 
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -64,18 +57,26 @@ fun LogInScreen(
                         .paint(
                             painterResource(id = bgImage),
                             contentScale = ContentScale.Crop)
-                }
+                },
+                contentAlignment = Alignment.Center
             ){
-                Container(0.9f){
-                    BackIconButton {
-                        viewModel.onEvent(LogInEvent.OnBackPressed)
+                Column(
+                    modifier = Modifier.fillMaxSize(0.85f),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.Start
+                ){
+                    Column(){
+                        BackIconButton {
+                            viewModel.onEvent(LogInEvent.OnBackPressed)
+                        }
+                        Spacer(Modifier.height(40.dp))
+                        Text(
+                            text = "Log in",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = quicksandFontFamily
+                        )
                     }
-                    Text(
-                        text = "Log in",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = quicksandFontFamily
-                    )
                     Column (
                         modifier = Modifier
                             .fillMaxWidth()
@@ -103,19 +104,28 @@ fun LogInScreen(
                             onClick = {
                                 //TODO : implement forgot password
                                 viewModel.onEvent(LogInEvent.OnForgotPasswordClicked)
-                            }
+                            },
+                            contentPadding = PaddingValues(0.dp)
                         ){
-                            Text("Forgot Password", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                            Text("Forgot Password",
+                                fontFamily = quicksandFontFamily,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
-                    }
-                    Column {
+                        Spacer(Modifier.height(20.dp))
                         SolidButton(
                             onClick = {
                                 viewModel.onEvent(LogInEvent.OnLogInClicked)
                             }
                         ) {
-                            Text("Log in", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                            Text(
+                                "Log in",
+                                fontFamily = quicksandFontFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
                         }
+                        Spacer(Modifier.height(10.dp))
                         SolidButton(
                             bgColor = MaterialTheme.colorScheme.onBackground,
                             contentColor =  MaterialTheme.colorScheme.background,
@@ -123,20 +133,25 @@ fun LogInScreen(
                                 //TODO: implement login with GOOGLE ACCOUNT
                                 viewModel.onEvent(LogInEvent.OnLogInWithGoogle)
                             }) {
-                            Text("Log in with Google", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                            Text(
+                                "Log in with Google",
+                                fontFamily = quicksandFontFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
                         }
-                    }
-                    Row (
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        JeepNiText(stringResource(R.string.no_account))
-                        TextButton(
-                            onClick = {
-                                viewModel.onEvent(LogInEvent.OnSignUpClicked)
-                            },
-                            contentPadding = PaddingValues(start = 3.5.dp)
-                        ){
-                            Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        Row (
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            JeepNiText(stringResource(R.string.no_account))
+                            TextButton(
+                                onClick = {
+                                    viewModel.onEvent(LogInEvent.OnSignUpClicked)
+                                },
+                                contentPadding = PaddingValues(start = 3.5.dp)
+                            ){
+                                Text(stringResource(R.string.sign_up), fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                 }

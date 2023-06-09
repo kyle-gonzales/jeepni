@@ -1,13 +1,17 @@
 package com.example.jeepni.core.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -137,7 +141,7 @@ fun EditDeleteDialog(
                         OutlinedTextField(
                             enabled = isRepeated,
                             modifier = Modifier
-                                .width(60.dp)
+                                .width(80.dp)
                                 .height(50.dp),
                             value = value,
                             isError = isError,
@@ -147,10 +151,10 @@ fun EditDeleteDialog(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                         Spacer(Modifier.width(5.dp))
-                        CustomRadioButton(isEnabled = isRepeated, options = listOf("year", "month", "day"), selectedOption = duration, onOptionSelected = onDurationChange)
+                        SelectDuration(enabled = isRepeated, duration = duration, onDurationChange = onDurationChange)
                     }
                     Spacer(Modifier.height(4.dp))
-                    if (isError) {
+                    AnimatedVisibility(visible = isError) {
                         Text(
                             text = "Input should be within 1-100", //! convert to state
                             color = MaterialTheme.colorScheme.error,
@@ -289,7 +293,7 @@ fun AddDialog(
                         OutlinedTextField(
                             enabled = isRepeated,
                             modifier = Modifier
-                                .width(60.dp)
+                                .width(80.dp)
                                 .height(50.dp),
                             value = value,
                             isError = isError,
@@ -299,10 +303,10 @@ fun AddDialog(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                         Spacer(Modifier.width(5.dp))
-                        CustomRadioButton(isEnabled = isRepeated, options = listOf("year", "month", "day"), selectedOption = duration, onOptionSelected = onDurationChange)
+                        SelectDuration(enabled = isRepeated, duration = duration, onDurationChange = onDurationChange)
                     }
                     Spacer(Modifier.height(4.dp))
-                    if (isError) {
+                    AnimatedVisibility(visible = isError) {
                         Text(
                             text = "Input should be within 1-100", //! convert to state
                             color = MaterialTheme.colorScheme.error,
@@ -456,101 +460,6 @@ fun AlarmNameGrid(
         }
     }
 }
-@Composable
-fun DurationButton(
-    isEnabled: Boolean,
-    text:String,
-    selectedOption:String,
-    onOptionSelected:(String)->Unit
-){
-    var width = 0.33f
-    if(text == "month"){
-        width = 0.55f
-    }
-    else if (text == "day") { width = 1f }
-    if(text == selectedOption){
-        OutlinedButton(
-            enabled = isEnabled,
-            modifier = Modifier
-                .height(50.dp)
-                .selectable(
-                    selected = (text == selectedOption),
-                    onClick = {
-                        onOptionSelected(text)
-                    }
-                )
-                .fillMaxWidth(width)
-                .padding(horizontal = 0.dp),
-            onClick = {onOptionSelected(text)},
-            shape = RoundedCornerShape(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = Color.LightGray,
-                disabledContentColor = Color.DarkGray
-            ),
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface)
-        ){
-            Text(
-                text = text,
-                fontWeight = FontWeight.Bold,
-                fontFamily = quicksandFontFamily,
-                modifier = Modifier.padding(start = 0.dp),
-                fontSize = (10).sp
-            )
-        }
-    }
-    else {
-        OutlinedButton(
-            enabled = isEnabled,
-            modifier = Modifier
-                .height(50.dp)
-                .selectable(
-                    selected = (text == selectedOption),
-                    onClick = {
-                        onOptionSelected(text)
-                    }
-                )
-                .fillMaxWidth(width)
-                .padding(horizontal = 0.dp),
-            onClick = { onOptionSelected(text) },
-            shape = RoundedCornerShape(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                disabledContainerColor = Color.LightGray,
-                disabledContentColor = Color.DarkGray
-            ),
-            contentPadding = PaddingValues(horizontal = 1.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)
-        ) {
-            Text(
-                text = text,
-                fontWeight = FontWeight.Bold,
-                fontFamily = quicksandFontFamily,
-                fontSize = (10).sp
-            )
-        }
-    }
-}
-
-@Composable
-fun CustomRadioButton(
-    isEnabled: Boolean,
-    options:List<String>,
-    selectedOption: String,
-    onOptionSelected: (String) -> Unit
-){
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        options.forEach { text ->
-            DurationButton(isEnabled, text, selectedOption, onOptionSelected)
-        }
-    }
-}
 
 @Composable
 fun AlarmNameDropDown(
@@ -625,6 +534,52 @@ fun AlarmNameDropDown(
                     )
                     Divider(Modifier.padding(4.dp, 0.dp))
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun SelectDuration(
+    enabled:Boolean,
+    duration:String,
+    onDurationChange: (String) -> Unit
+){
+    val options = listOf("year", "month", "day")
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ){
+        items(options){
+            val isSelected = (duration == it)
+            OutlinedButton(
+                enabled = enabled,
+                modifier = Modifier
+                    .selectable(
+                        selected = isSelected,
+                        onClick = {},
+                    )
+                    .height(50.dp),
+                onClick = {
+                      onDurationChange(it)
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    disabledContentColor = if(isSystemInDarkTheme()) Color.LightGray else Color.DarkGray,
+                    disabledContainerColor = if(isSystemInDarkTheme()) Color.DarkGray else Color.LightGray,
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background ,
+                    contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                contentPadding = PaddingValues(3.dp)
+            ){
+                Text(
+                    text = it,
+                    fontFamily = quicksandFontFamily,
+                    maxLines = 1,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
