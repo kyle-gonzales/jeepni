@@ -15,9 +15,7 @@ import com.example.jeepni.core.data.repository.AuthRepository
 import com.example.jeepni.core.data.repository.DailyAnalyticsRepository
 import com.example.jeepni.core.data.repository.UserDetailRepository
 import com.example.jeepni.core.ui.FabMenuItem
-import com.example.jeepni.util.Constants
-import com.example.jeepni.util.Screen
-import com.example.jeepni.util.UiEvent
+import com.example.jeepni.util.*
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -89,7 +87,7 @@ class MainViewModel
     var isFabMenuOpen by mutableStateOf(false)
     private var distance by mutableStateOf(0.0)// 12382.9
     val distanceState by derivedStateOf {
-        convertDistanceToString(distance)
+        formatDistanceToString(distance)
     }
     private var time by mutableStateOf(0L)
     val timeState by derivedStateOf {
