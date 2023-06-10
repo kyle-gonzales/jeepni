@@ -1,5 +1,6 @@
 package com.example.jeepni.feature.authentication.welcome
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -17,10 +18,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
+import com.example.jeepni.core.ui.Container
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
@@ -40,7 +43,6 @@ fun Welcome2Screen(
             }
         }
     }
-    val logo = if(isSystemInDarkTheme()){R.drawable.app_logo_dark}else{R.drawable.app_logo_light}
     val road = if(isSystemInDarkTheme()){R.drawable.road_dark}else{R.drawable.road_light}
 
     JeepNiTheme {
@@ -59,26 +61,16 @@ fun Welcome2Screen(
             ){
                 Column(
                     modifier = Modifier.fillMaxSize(0.85f),
-                    verticalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.Start
                 ){
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ){
-                        Image(
-                            painter = painterResource(id = logo),
-                            contentDescription = null,
-                            modifier = Modifier.width(175.dp).offset(x = 30.dp, y = 45.dp)
-                        )
-                    }
                     Column{
                         Text(
                             text = "Know jam-packed roads.\r\nJot alarms.\r\nJockey your earnings.",
                             color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.fillMaxWidth(0.8f),
+                            fontSize = 18.sp,
                             fontFamily = quicksandFontFamily,
-                            fontSize = 20.sp,
                             fontStyle = FontStyle.Italic,
                             fontWeight = FontWeight.Bold
                         )
@@ -89,8 +81,7 @@ fun Welcome2Screen(
                             Text(
                                 text = stringResource(R.string.sign_up),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
+                                fontWeight = FontWeight.Bold
                             )
                         }
                         Spacer(Modifier.height(10.dp))
@@ -102,8 +93,7 @@ fun Welcome2Screen(
                             Text(
                                 text = stringResource(R.string.log_in),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
