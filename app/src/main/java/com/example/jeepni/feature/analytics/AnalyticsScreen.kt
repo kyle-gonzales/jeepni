@@ -147,7 +147,7 @@ fun AnalyticsScreen(
                                             modifier = Modifier.fillMaxSize(),
                                             contentAlignment = Alignment.BottomStart
                                         ){
-                                            Text("Average Salary", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
+                                            Text("Average Earnings", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
                                         }
                                     }
                                 }
@@ -188,7 +188,7 @@ fun AnalyticsScreen(
                         items(analytics ?: emptyList()) { item ->
                             AnalyticsCard(
                                 date = item.date,
-                                revenue = "Revenue: " + item.salary.toString(),
+                                revenue = "Earnings: " + item.salary.toString(),
                                 fuelCost = "Fuel Cost: " + item.fuelCost.toString(),
                                 distance = "Distance: " + formatDistanceToString(item.distance),
                                 time = "Time: " + formatSecondsToTime(item.timer)
