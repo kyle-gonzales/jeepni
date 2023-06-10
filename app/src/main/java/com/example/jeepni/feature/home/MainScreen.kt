@@ -317,7 +317,7 @@ fun LogDailyStatDialog(
                     JeepNiTextField (
                         value = salary,
                         onValueChange = { onSalaryChange(it) },
-                        label = "Salary",
+                        label = "Earnings",
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(
                             id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
