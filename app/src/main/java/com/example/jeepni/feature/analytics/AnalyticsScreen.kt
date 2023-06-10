@@ -105,7 +105,7 @@ fun AnalyticsScreen(
                                 ) {
                                     Column (Modifier.padding(8.dp)) {
                                         Text(
-                                            "This can be a recommendation",
+                                            "Stay safe while driving, pare!",
                                             fontFamily =  quicksandFontFamily,
                                             maxLines = 3,
                                             overflow = TextOverflow.Ellipsis,
