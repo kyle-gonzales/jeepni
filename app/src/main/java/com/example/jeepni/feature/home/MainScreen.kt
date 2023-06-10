@@ -329,7 +329,7 @@ fun LogDailyStatDialog(
                         modifier = Modifier
                             .padding(0.dp, 8.dp)
                             .wrapContentWidth(),
-                        text = "Enter the amount you spent on fuel for today: ",
+                        text = "Enter the amount you spent for today: ",
                         textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField(
