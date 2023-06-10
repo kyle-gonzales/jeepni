@@ -124,7 +124,7 @@ fun MainScreen(
 
     JeepNiTheme {
         val menuItems = listOf( /*TODO: may need to refactor this*/
-            MenuItem(R.drawable.black_chart_24, "Charts") { viewModel.onEvent(MainEvent.OnChartsClicked) },
+            MenuItem(R.drawable.black_chart_24, "Analytics") { viewModel.onEvent(MainEvent.OnChartsClicked) },
             MenuItem(R.drawable.black_tools_24, "JeepNi Check-Up") {
                 viewModel.onEvent(MainEvent.OnCheckUpClicked)
             }
