@@ -12,11 +12,13 @@ import androidx.core.content.ContextCompat
 import com.example.jeepni.MainActivity
 import com.example.jeepni.R
 import com.example.jeepni.core.data.model.UserDetails
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 fun isIncompleteUserDetails(userDetails: UserDetails) : Boolean {
     return userDetails.route == "null" || userDetails.name == "null" || userDetails.name.isNullOrEmpty() || userDetails.route.isNullOrEmpty()
@@ -122,3 +124,31 @@ fun bitmapDescriptorFromVector(
     return BitmapDescriptorFactory.fromBitmap(bm)
 }
 
+fun formatSecondsToTime(timeInSeconds: Long) : String {
+
+    val res = if (timeInSeconds >= 3600L) {
+        val hours = (timeInSeconds / 3600).toInt()
+        val rem : Int = timeInSeconds.toInt() % 3600
+        val minutes : Int = rem / 60
+        "$hours hr $minutes min"
+    } else {
+        val minutes : Int = timeInSeconds.toInt() / 60
+        val seconds : Int = timeInSeconds.toInt() % 60
+        "$minutes min $seconds s"
+    }
+    return res
+}
+
+fun formatDistanceToString(distance: Double): String {
+
+    val res = if (distance >= 1000) {
+        val km = (distance / 1000)
+        val df = DecimalFormat("#.##")
+        df.roundingMode = RoundingMode.DOWN
+        val roundoff = df.format(km)
+        "$roundoff km  "
+    } else {
+        "${(distance.toInt() % 1000)} m"
+    }
+    return res
+}

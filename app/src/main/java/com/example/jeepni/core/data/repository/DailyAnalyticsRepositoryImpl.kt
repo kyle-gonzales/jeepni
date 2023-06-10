@@ -166,7 +166,9 @@ class DailyAnalyticsRepositoryImpl(
                         DailyAnalytics(
                             date = document.id,
                             salary = analytics[index].salary,
-                            fuelCost = analytics[index].fuelCost
+                            fuelCost = analytics[index].fuelCost,
+                            timer = analytics[index].timer,
+                            distance = analytics[index].distance
                         )
                     )
                 }

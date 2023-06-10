@@ -284,7 +284,9 @@ fun CustomDropDown(
 fun AnalyticsCard(
     date: String,
     revenue: String,
-    expenses: String,
+    fuelCost: String,
+    distance: String,
+    time: String,
     content: @Composable () -> Unit
 ) {
     Row {
@@ -315,7 +317,19 @@ fun AnalyticsCard(
                         fontWeight = FontWeight.Light
                     )
                     Text(
-                        text = expenses,
+                        text = fuelCost,
+                        fontSize = 15.sp,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Light
+                    )
+                    Text(
+                        text = distance,
+                        fontSize = 15.sp,
+                        fontFamily = quicksandFontFamily,
+                        fontWeight = FontWeight.Light
+                    )
+                    Text(
+                        text = time,
                         fontSize = 15.sp,
                         fontFamily = quicksandFontFamily,
                         fontWeight = FontWeight.Light
