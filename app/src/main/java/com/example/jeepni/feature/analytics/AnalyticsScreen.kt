@@ -22,6 +22,8 @@ import com.example.jeepni.core.ui.JeepNiBasicAppBar
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.UiEvent
+import com.example.jeepni.util.formatDistanceToString
+import com.example.jeepni.util.formatSecondsToTime
 import java.text.DecimalFormat
 import java.util.*
 
@@ -187,7 +189,9 @@ fun AnalyticsScreen(
                             AnalyticsCard(
                                 date = item.date,
                                 revenue = "Revenue: " + item.salary.toString(),
-                                expenses = "Fuel Cost: " + item.fuelCost.toString()
+                                fuelCost = "Fuel Cost: " + item.fuelCost.toString(),
+                                distance = "Distance: " + formatDistanceToString(item.distance),
+                                time = "Time: " + formatSecondsToTime(item.timer)
                             ) {
                             }
                         }
