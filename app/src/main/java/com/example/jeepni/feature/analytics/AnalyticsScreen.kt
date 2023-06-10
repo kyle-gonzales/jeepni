@@ -175,7 +175,7 @@ fun AnalyticsScreen(
                                             modifier = Modifier.fillMaxSize(),
                                             contentAlignment = Alignment.BottomStart
                                         ){
-                                            Text("Average Fuel Cost", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
+                                            Text("Average Expenses", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
                                         }
                                     }
                                 }
@@ -189,7 +189,7 @@ fun AnalyticsScreen(
                             AnalyticsCard(
                                 date = item.date,
                                 revenue = "Earnings: " + item.salary.toString(),
-                                fuelCost = "Fuel Cost: " + item.fuelCost.toString(),
+                                fuelCost = "Expenses: " + item.fuelCost.toString(),
                                 distance = "Distance: " + formatDistanceToString(item.distance),
                                 time = "Time: " + formatSecondsToTime(item.timer)
                             ) {

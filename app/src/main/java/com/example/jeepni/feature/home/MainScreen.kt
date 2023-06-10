@@ -335,7 +335,7 @@ fun LogDailyStatDialog(
                     JeepNiTextField(
                         value = fuelCost,
                         onValueChange = {onFuelCostChange(it)},
-                        label = "Fuel Cost",
+                        label = "Expenses",
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(
                             id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
