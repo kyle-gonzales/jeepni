@@ -133,21 +133,18 @@ fun AnalyticsScreen(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(4.dp),
-                                        contentAlignment = Alignment.CenterStart
+                                        contentAlignment = Alignment.Center
                                     ){
-                                        Text(
-                                            "PHP ${df.format(averageSalary)}",
-                                            fontSize = 22.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            fontFamily = quicksandFontFamily,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                        Box (
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentAlignment = Alignment.BottomStart
-                                        ){
-                                            Text("Average Earnings", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                            Text(
+                                                "PHP ${df.format(averageSalary)}",
+                                                fontSize = 22.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = quicksandFontFamily,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                            Text("Average Earnings", fontSize = 14.sp, fontFamily = quicksandFontFamily)
                                         }
                                     }
                                 }
@@ -162,20 +159,17 @@ fun AnalyticsScreen(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(4.dp),
-                                        contentAlignment = Alignment.CenterStart
+                                        contentAlignment = Alignment.Center
                                     ){
-                                        Text(
-                                            "PHP ${df.format(averageFuelCost)}",
-                                            fontSize = 22.sp, fontWeight = FontWeight.Bold,
-                                            fontFamily = quicksandFontFamily,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                        Box (
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentAlignment = Alignment.BottomStart
-                                        ){
-                                            Text("Average Expenses", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                            Text(
+                                                "PHP ${df.format(averageFuelCost)}",
+                                                fontSize = 22.sp, fontWeight = FontWeight.Bold,
+                                                fontFamily = quicksandFontFamily,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                            Text("Average Expenses", fontSize = 14.sp, fontFamily = quicksandFontFamily)
                                         }
                                     }
                                 }
