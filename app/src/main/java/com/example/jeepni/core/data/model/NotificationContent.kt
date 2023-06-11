@@ -9,7 +9,7 @@ data class NotificationContent(
     val title : String,
     val content : String = "",
     val notificationId : Int,
-    val iconId: Int = R.drawable.app_logo_light
+    val iconId: Int = R.drawable.app_logo
 ) : Parcelable {
 
 }
