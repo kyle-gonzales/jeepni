@@ -1,7 +1,5 @@
 package com.example.jeepni.feature.authentication.welcome
 
-import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -18,12 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
-import com.example.jeepni.core.ui.Container
 import com.example.jeepni.core.ui.SolidButton
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
@@ -81,7 +77,8 @@ fun Welcome2Screen(
                             Text(
                                 text = stringResource(R.string.sign_up),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
                             )
                         }
                         Spacer(Modifier.height(10.dp))
@@ -93,7 +90,9 @@ fun Welcome2Screen(
                             Text(
                                 text = stringResource(R.string.log_in),
                                 fontFamily = quicksandFontFamily,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+
                             )
                         }
                     }
