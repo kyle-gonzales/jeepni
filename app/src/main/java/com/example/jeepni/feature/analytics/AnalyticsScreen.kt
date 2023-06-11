@@ -97,25 +97,27 @@ fun AnalyticsScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(0.dp, 4.dp)
-                                    .weight(.5f)
+                                    .weight(.5f),
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                                    Icon(painterResource(R.drawable.white_lightbulb_24), null)
-                                }
-                                Spacer(Modifier.padding(8.dp, 0.dp))
+                                Icon(painterResource(R.drawable.white_lightbulb_24), null)
+                                Spacer(Modifier.width(8.dp))
                                 Card (
                                     modifier = Modifier
                                         .fillMaxSize(),
                                     colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
                                 ) {
-                                    Box(
+                                    Column (
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(4.dp),
-                                        contentAlignment = Alignment.Center) {
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
                                         Text(
                                             "Stay safe while driving, pare!",
-                                            fontFamily =  quicksandFontFamily)
+                                            fontFamily =  quicksandFontFamily
+                                        )
                                     }
                                 }
                             }
