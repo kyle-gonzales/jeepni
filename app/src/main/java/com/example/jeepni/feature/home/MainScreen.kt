@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -444,39 +443,49 @@ fun DrivingModeOnContent(
 
 @Composable
 fun DrivingModeOffContent(paddingValues: PaddingValues) {
-    Surface {
-        Column (
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+
+    Box (
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+            .background(dark_driving_mode_off_bg),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        val image = if (isSystemInDarkTheme()){
+            R.drawable.droff_dark
+        } else {
+            R.drawable.droff_light
+        }
+        val arrow = if (isSystemInDarkTheme()){
+            R.drawable.arrow_dark
+        } else {
+            R.drawable.arrow_light
+        }
+        Image(
+            painter = painterResource(
+                id = image),
+            contentDescription = null
+        )
+        Box (
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopStart
         ) {
-            val image = if (isSystemInDarkTheme()){
-                R.drawable.drivingoff_dark
-            } else {
-                R.drawable.drivingoff_light
-            }
-            val arrow = if (isSystemInDarkTheme()){
-                R.drawable.arrow_dark
-            } else {
-                R.drawable.arrow_light
-            }
             Row(
-                modifier = Modifier.padding(top = 10.dp).height(50.dp),
+                modifier = Modifier.padding(top = 10.dp, start = 12.dp).height(50.dp),
                 verticalAlignment = Alignment.Bottom
             ){
                 Text(
                     text = "Driving mode is off. ",
                     fontFamily = quicksandFontFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    fontSize = 18.sp
                 )
                 Text(
                     text = "Turn on? ",
                     fontFamily = quicksandFontFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Image(
@@ -485,11 +494,6 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
                     contentDescription = null
                 )
             }
-            Image(
-                painter = painterResource(
-                id = image),
-                contentDescription = null
-            )
         }
     }
 }
