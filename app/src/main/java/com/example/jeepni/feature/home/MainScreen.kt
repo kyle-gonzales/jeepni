@@ -124,7 +124,7 @@ fun MainScreen(
 
     JeepNiTheme {
         val menuItems = listOf( /*TODO: may need to refactor this*/
-            MenuItem(R.drawable.black_chart_24, "Charts") { viewModel.onEvent(MainEvent.OnChartsClicked) },
+            MenuItem(R.drawable.black_chart_24, "Analytics") { viewModel.onEvent(MainEvent.OnChartsClicked) },
             MenuItem(R.drawable.black_tools_24, "JeepNi Check-Up") {
                 viewModel.onEvent(MainEvent.OnCheckUpClicked)
             }
@@ -317,7 +317,7 @@ fun LogDailyStatDialog(
                     JeepNiTextField (
                         value = salary,
                         onValueChange = { onSalaryChange(it) },
-                        label = "Salary",
+                        label = "Earnings",
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(
                             id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
@@ -329,13 +329,13 @@ fun LogDailyStatDialog(
                         modifier = Modifier
                             .padding(0.dp, 8.dp)
                             .wrapContentWidth(),
-                        text = "Enter the amount you spent on fuel for today: ",
+                        text = "Enter the amount you spent for today: ",
                         textAlign = TextAlign.Start, fontFamily = quicksandFontFamily
                     )
                     JeepNiTextField(
                         value = fuelCost,
                         onValueChange = {onFuelCostChange(it)},
-                        label = "Fuel Cost",
+                        label = "Expenses",
                         singleLine = true,
                         leadingIcon = {Icon(painterResource(
                             id = R.drawable.white_dollar_24), null, Modifier.size(18.dp))},
@@ -443,28 +443,60 @@ fun DrivingModeOnContent(
 
 @Composable
 fun DrivingModeOffContent(paddingValues: PaddingValues) {
-    Surface {
-        Column (
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            val image = if (isSystemInDarkTheme()){
-                R.drawable.drivingoff_dark
-            } else {
-                R.drawable.drivingoff_light
-            }
-            Spacer(modifier = Modifier.padding(5.dp))
-            Image(painter = painterResource(
+
+    val backgroundColor = if (isSystemInDarkTheme()) dark_driving_mode_off_bg else light_driving_mode_off_bg
+    Box (
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+            .background(backgroundColor),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        val image = if (isSystemInDarkTheme()){
+            R.drawable.droff_dark
+        } else {
+            R.drawable.droff_light
+        }
+        val arrow = if (isSystemInDarkTheme()){
+            R.drawable.arrow_dark
+        } else {
+            R.drawable.arrow_light
+        }
+        Image(
+            painter = painterResource(
                 id = image),
-                contentDescription = null)
-            Text(modifier = Modifier.padding(4.dp, 0.dp),
-                text = "Driving Mode is Off",
-                fontFamily = quicksandFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp)
+            contentDescription = null
+        )
+        Box (
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopStart
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 10.dp, start = 12.dp)
+                    .height(50.dp),
+                verticalAlignment = Alignment.Bottom
+            ){
+                Text(
+                    text = "Driving mode is off. ",
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = "Turn on? ",
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Image(
+                    painter = painterResource(
+                        id = arrow),
+                    contentDescription = null
+                )
+            }
         }
     }
 }

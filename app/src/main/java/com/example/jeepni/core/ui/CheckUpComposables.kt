@@ -521,7 +521,7 @@ fun AlarmNameDropDown(
                         modifier = Modifier.height(50.dp),
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(id = Constants.ICON_MAP[s]!!),
+                                painter = painterResource(id = Constants.ICON_MAP.getValue(s)),
                                 contentDescription = null,
                                 modifier = Modifier.height(20.dp)
                             )

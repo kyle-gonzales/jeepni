@@ -1,6 +1,5 @@
 package com.example.jeepni.feature.authentication.welcome
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -40,7 +39,6 @@ fun Welcome2Screen(
             }
         }
     }
-    val logo = if(isSystemInDarkTheme()){R.drawable.app_logo_dark}else{R.drawable.app_logo_light}
     val road = if(isSystemInDarkTheme()){R.drawable.road_dark}else{R.drawable.road_light}
 
     JeepNiTheme {
@@ -59,26 +57,16 @@ fun Welcome2Screen(
             ){
                 Column(
                     modifier = Modifier.fillMaxSize(0.85f),
-                    verticalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.Start
                 ){
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ){
-                        Image(
-                            painter = painterResource(id = logo),
-                            contentDescription = null,
-                            modifier = Modifier.width(175.dp).offset(x = 30.dp, y = 45.dp)
-                        )
-                    }
                     Column{
                         Text(
                             text = "Know jam-packed roads.\r\nJot alarms.\r\nJockey your earnings.",
                             color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.fillMaxWidth(0.8f),
+                            fontSize = 18.sp,
                             fontFamily = quicksandFontFamily,
-                            fontSize = 20.sp,
                             fontStyle = FontStyle.Italic,
                             fontWeight = FontWeight.Bold
                         )
@@ -104,6 +92,7 @@ fun Welcome2Screen(
                                 fontFamily = quicksandFontFamily,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
+
                             )
                         }
                     }

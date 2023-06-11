@@ -26,13 +26,18 @@ class AnalyticsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var analytics = repository.getDailyStats()
+        .map {items -> // filter out daily analytics that does not follow the M-d-yyyy format
+            items.filter { stat ->
+                val input = stat.date.split("-")
+                input.size == 3
+            }
+        }
         .map {items ->
             items.sortedByDescending { stat ->
                 val input = stat.date.split("-")
                 val date = LocalDate.of(input[2].toInt(), input[0].toInt(), input[1].toInt())
                 date
             }
-
         }
 
     @SuppressLint("SimpleDateFormat")
