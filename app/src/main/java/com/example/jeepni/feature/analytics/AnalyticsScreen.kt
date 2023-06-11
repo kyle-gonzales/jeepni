@@ -4,11 +4,13 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,6 +87,7 @@ fun AnalyticsScreen(
                             .fillMaxWidth()
                             .height(240.dp)
                             .padding(8.dp, 8.dp)
+                            .shadow(shape = RoundedCornerShape(10.dp), elevation = 5.dp),
                     ) {
                         Column(
                             modifier = Modifier
@@ -96,22 +99,24 @@ fun AnalyticsScreen(
                                     .padding(0.dp, 4.dp)
                                     .weight(.5f)
                             ) {
-                                Icon(painterResource(R.drawable.white_lightbulb_24), null)
+                                Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                                    Icon(painterResource(R.drawable.white_lightbulb_24), null)
+                                }
                                 Spacer(Modifier.padding(8.dp, 0.dp))
                                 Card (
                                     modifier = Modifier
                                         .fillMaxSize(),
                                     colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
                                 ) {
-                                    Column (Modifier.padding(8.dp)) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(4.dp),
+                                        contentAlignment = Alignment.Center) {
                                         Text(
                                             "Stay safe while driving, pare!",
-                                            fontFamily =  quicksandFontFamily,
-                                            maxLines = 3,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
+                                            fontFamily =  quicksandFontFamily)
                                     }
-
                                 }
                             }
                             Divider(Modifier.padding(4.dp))
