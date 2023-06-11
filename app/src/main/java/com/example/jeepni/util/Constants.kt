@@ -54,7 +54,7 @@ object Constants {
         WIPERS to R.drawable.wiper,
         ENGINE to R.drawable.car_engine,
         BATTERY to R.drawable.car_battery,
-    ).withDefault { R.drawable.app_logo }
+    ).withDefault { R.drawable.app_logo_light }
 
     val NOTIFICATION_MAP = mapOf<String, NotificationContent>(
         TIRES to NotificationContent(
