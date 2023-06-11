@@ -444,11 +444,12 @@ fun DrivingModeOnContent(
 @Composable
 fun DrivingModeOffContent(paddingValues: PaddingValues) {
 
+    val backgroundColor = if (isSystemInDarkTheme()) dark_driving_mode_off_bg else light_driving_mode_off_bg
     Box (
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()
-            .background(dark_driving_mode_off_bg),
+            .background(backgroundColor),
 //            horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -472,7 +473,9 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
             contentAlignment = Alignment.TopStart
         ) {
             Row(
-                modifier = Modifier.padding(top = 10.dp, start = 12.dp).height(50.dp),
+                modifier = Modifier
+                    .padding(top = 10.dp, start = 12.dp)
+                    .height(50.dp),
                 verticalAlignment = Alignment.Bottom
             ){
                 Text(
