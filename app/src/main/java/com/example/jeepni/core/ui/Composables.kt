@@ -735,7 +735,11 @@ fun Fab(
             contentAlignment = Alignment.BottomEnd
         ){
             FloatingActionButton(onClick = { onClick(!isVisible) }, ) {
-                Icon(painterResource(id = R.drawable.white_dollar_24), contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.white_dollar_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
             }
         }
     }
