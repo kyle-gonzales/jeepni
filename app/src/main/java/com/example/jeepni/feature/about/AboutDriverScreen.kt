@@ -11,15 +11,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
+import com.example.jeepni.core.data.model.Jeeps
 import com.example.jeepni.core.ui.*
 import com.example.jeepni.core.ui.theme.JeepNiTheme
 import com.example.jeepni.core.ui.theme.quicksandFontFamily
@@ -128,6 +131,77 @@ fun AboutDriverScreen(
         ) {
             Text("It seems that you haven't completed your user profile... Going back to the previous screen will sign you out",
                 fontFamily = quicksandFontFamily)
+        }
+    }
+}
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun PreviewAboutDriverScreen(
+) {
+
+    BackHandler {
+    }
+    val bgImage = if(isSystemInDarkTheme()){R.drawable.driver_dark}else{R.drawable.driver_light}
+
+    JeepNiTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ){
+            Box(
+                modifier = with (Modifier){
+                    fillMaxSize()
+                        .paint(
+                            painterResource(id = bgImage),
+                            contentScale = ContentScale.Crop)
+                }
+            ){
+                Container(0.9f) {
+                    BackIconButton {
+                    }
+                    Spacer(Modifier.height(200.dp))
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxSize()
+                    ){
+                        Text(
+                            text = "About you",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = quicksandFontFamily
+                        )
+                        Column {
+                            JeepNiTextField(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(65.dp),
+                                label = "First Name",
+                                value = "",
+                                onValueChange = {},
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                                singleLine = true,
+                                isError = false,
+                                colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background)
+                            )
+                            CustomDropDown(
+                                label = "Select route",
+                                expanded = false,
+                                value = "",
+                                size = Size.Zero,
+                                onClickIcon = { },
+                                onSizeChange = {}, // how to get it ????
+                                onSelected = {},
+                                items = listOf("A", "B", "C")
+                            )
+                        }
+                        SolidButton(onClick = {  }) {
+                            Text("Save", fontFamily = quicksandFontFamily, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
         }
     }
 }

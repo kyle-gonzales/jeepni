@@ -4,11 +4,13 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,6 +87,7 @@ fun AnalyticsScreen(
                             .fillMaxWidth()
                             .height(240.dp)
                             .padding(8.dp, 8.dp)
+                            .shadow(shape = RoundedCornerShape(10.dp), elevation = 5.dp),
                     ) {
                         Column(
                             modifier = Modifier
@@ -94,24 +97,28 @@ fun AnalyticsScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(0.dp, 4.dp)
-                                    .weight(.5f)
+                                    .weight(.5f),
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(painterResource(R.drawable.white_lightbulb_24), null)
-                                Spacer(Modifier.padding(8.dp, 0.dp))
+                                Spacer(Modifier.width(8.dp))
                                 Card (
                                     modifier = Modifier
                                         .fillMaxSize(),
                                     colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
                                 ) {
-                                    Column (Modifier.padding(8.dp)) {
+                                    Column (
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(4.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
                                         Text(
-                                            "This can be a recommendation",
-                                            fontFamily =  quicksandFontFamily,
-                                            maxLines = 3,
-                                            overflow = TextOverflow.Ellipsis,
+                                            "Stay safe while driving, pare!",
+                                            fontFamily =  quicksandFontFamily
                                         )
                                     }
-
                                 }
                             }
                             Divider(Modifier.padding(4.dp))
@@ -133,21 +140,18 @@ fun AnalyticsScreen(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(4.dp),
-                                        contentAlignment = Alignment.CenterStart
+                                        contentAlignment = Alignment.Center
                                     ){
-                                        Text(
-                                            "PHP ${df.format(averageSalary)}",
-                                            fontSize = 22.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            fontFamily = quicksandFontFamily,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                        Box (
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentAlignment = Alignment.BottomStart
-                                        ){
-                                            Text("Average Salary", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                            Text(
+                                                "PHP ${df.format(averageSalary)}",
+                                                fontSize = 22.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = quicksandFontFamily,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                            Text("Average Earnings", fontSize = 14.sp, fontFamily = quicksandFontFamily)
                                         }
                                     }
                                 }
@@ -162,20 +166,17 @@ fun AnalyticsScreen(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(4.dp),
-                                        contentAlignment = Alignment.CenterStart
+                                        contentAlignment = Alignment.Center
                                     ){
-                                        Text(
-                                            "PHP ${df.format(averageFuelCost)}",
-                                            fontSize = 22.sp, fontWeight = FontWeight.Bold,
-                                            fontFamily = quicksandFontFamily,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                        Box (
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentAlignment = Alignment.BottomStart
-                                        ){
-                                            Text("Average Fuel Cost", fontSize = 14.sp, fontFamily = quicksandFontFamily,)
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                            Text(
+                                                "PHP ${df.format(averageFuelCost)}",
+                                                fontSize = 22.sp, fontWeight = FontWeight.Bold,
+                                                fontFamily = quicksandFontFamily,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                            Text("Average Expenses", fontSize = 14.sp, fontFamily = quicksandFontFamily)
                                         }
                                     }
                                 }
@@ -188,8 +189,8 @@ fun AnalyticsScreen(
                         items(analytics ?: emptyList()) { item ->
                             AnalyticsCard(
                                 date = item.date,
-                                revenue = "Revenue: " + item.salary.toString(),
-                                fuelCost = "Fuel Cost: " + item.fuelCost.toString(),
+                                revenue = "Earnings: " + item.salary.toString(),
+                                fuelCost = "Expenses: " + item.fuelCost.toString(),
                                 distance = "Distance: " + formatDistanceToString(item.distance),
                                 time = "Time: " + formatSecondsToTime(item.timer)
                             ) {

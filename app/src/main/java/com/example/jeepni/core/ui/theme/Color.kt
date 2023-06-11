@@ -63,6 +63,9 @@ val dark_surfaceTint = Color(0xFF67DF63)
 val dark_outlineVariant = Color(0xFF42493F)
 val dark_scrim = Color(0xFF000000)
 
+val dark_driving_mode_off_bg = Color(0xFF1A1A1A)
+val light_driving_mode_off_bg = Color (0xFFFFFFF0)
+
 val Black = Color.Black
 val White = Color.White
 val seed = Color(0xFF069420) // wtf are we doing

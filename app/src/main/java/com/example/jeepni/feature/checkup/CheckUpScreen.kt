@@ -20,13 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.*
 import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,17 +92,31 @@ fun CheckUpScreen (
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(100.dp),
+                                    contentPadding = PaddingValues(0.dp),
                                     shape = RoundedCornerShape(10.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.outlineVariant,
                                         contentColor = MaterialTheme.colorScheme.onSurface
                                     )
                                 ){
-                                    Icon(
-                                        painter = painterResource(R.drawable.add_48px),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(45.dp)
-                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ){
+                                        Icon(
+                                            painter = painterResource(R.drawable.add_48px),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(45.dp)
+                                        )
+                                        Spacer(Modifier.width(5.dp))
+                                        Text(
+                                            text = "Add Alarm",
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = quicksandFontFamily,
+                                            fontSize = 18.sp,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
                                 }
                             }
                             itemsIndexed(alarms?: emptyList()) { index, alarm ->
@@ -196,8 +211,7 @@ fun CheckUpScreen (
                 )
             }
         }
-    }
-
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
