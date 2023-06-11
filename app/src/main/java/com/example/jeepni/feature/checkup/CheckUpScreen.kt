@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jeepni.R
 import com.example.jeepni.core.ui.*
 import com.example.jeepni.core.ui.theme.JeepNiTheme
+import com.example.jeepni.core.ui.theme.quicksandFontFamily
 import com.example.jeepni.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,11 +98,23 @@ fun CheckUpScreen (
                                         contentColor = MaterialTheme.colorScheme.onSurface
                                     )
                                 ){
-                                    Icon(
-                                        painter = painterResource(R.drawable.add_48px),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(45.dp)
-                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ){
+                                        Icon(
+                                            painter = painterResource(R.drawable.add_48px),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(45.dp)
+                                        )
+                                        Spacer(Modifier.width(5.dp))
+                                        Text(
+                                            text = "Add Alarm",
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = quicksandFontFamily,
+                                            fontSize = 18.sp
+                                        )
+                                    }
                                 }
                             }
                             itemsIndexed(alarms?: emptyList()) { index, alarm ->
@@ -196,8 +209,7 @@ fun CheckUpScreen (
                 )
             }
         }
-    }
-
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
