@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -449,22 +450,46 @@ fun DrivingModeOffContent(paddingValues: PaddingValues) {
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             val image = if (isSystemInDarkTheme()){
                 R.drawable.drivingoff_dark
             } else {
                 R.drawable.drivingoff_light
             }
-            Spacer(modifier = Modifier.padding(5.dp))
-            Image(painter = painterResource(
+            val arrow = if (isSystemInDarkTheme()){
+                R.drawable.arrow_dark
+            } else {
+                R.drawable.arrow_light
+            }
+            Row(
+                modifier = Modifier.padding(top = 10.dp).height(50.dp),
+                verticalAlignment = Alignment.Bottom
+            ){
+                Text(
+                    text = "Driving mode is off. ",
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                Text(
+                    text = "Turn on? ",
+                    fontFamily = quicksandFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Image(
+                    painter = painterResource(
+                        id = arrow),
+                    contentDescription = null
+                )
+            }
+            Image(
+                painter = painterResource(
                 id = image),
-                contentDescription = null)
-            Text(modifier = Modifier.padding(4.dp, 0.dp),
-                text = "Driving Mode is Off",
-                fontFamily = quicksandFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp)
+                contentDescription = null
+            )
         }
     }
 }
