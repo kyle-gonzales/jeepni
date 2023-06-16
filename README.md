@@ -1,6 +1,8 @@
 # JeepNi
 A driver-centric jeepney app usable on the road that presents necessary work analytics, passenger statistics, and other important reminders for jeepney drivers.
+
 [Technical Documentation](https://docs.google.com/document/d/1FIX8aKyzOqmdeppdpMfxHRvWxMQw9LwROTtlM1G_W4U/edit?usp=sharing) 
+
 [Canva Slides](https://www.canva.com/design/DAFl-v9-ml8/GhRHJT4teLe9Ee8yGFZzXQ/edit?utm_content=DAFl-v9-ml8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Tech Used
