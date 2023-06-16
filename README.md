@@ -25,7 +25,7 @@ A driver-centric jeepney app usable on the road that presents necessary work ana
 
 ## Team Members
 
-- Kyle Angelo Gonzales
+- [Kyle Angelo Gonzales](https://github.com/kyle-gonzales)
 - Daenielle Rai Peladas 
 - Ericka Monique Miranda
 - Angel Estaño 
