@@ -28,6 +28,6 @@ A driver-centric jeepney app usable on the road that presents necessary work ana
 - [Kyle Angelo Gonzales](https://github.com/kyle-gonzales)
 - Daenielle Rai Peladas 
 - Ericka Monique Miranda
-- Angel Estaño 
+- [Angel Estaño](https://github.com/Oethir)
 - Jethro Modequillo
 - Jose Angelo Virgil Quilario
