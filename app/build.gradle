@@ -49,6 +49,9 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    aaptOptions {
+        noCompress "tflite"
+    }
 }
 
 dependencies {
@@ -125,6 +128,9 @@ dependencies {
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+
+    // Dependencies for TensorFlow Lite
+    implementation 'org.tensorflow:tensorflow-lite:+'
 }
 
 kapt {
