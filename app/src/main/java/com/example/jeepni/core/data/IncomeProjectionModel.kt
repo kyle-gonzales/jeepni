@@ -14,7 +14,7 @@ class IncomeProjectionModel(context: Context) {
 
     fun projectIncome(currentIncome: Double): Double {
         loadModel()
-        // Prepare inpit and output tensors
+        // Prepare input and output tensors
         val input = FloatArray(1)
         input[0] = currentIncome.toFloat()
 
