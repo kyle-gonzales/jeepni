@@ -69,6 +69,7 @@ dependencies {
 
     //Dagger-Hilt Dependencies (for dependency injection)
     implementation "com.google.dagger:hilt-android:$dagger_hilt_version"
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
     kapt "com.google.dagger:hilt-compiler:$dagger_hilt_version"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
@@ -110,6 +111,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation 'org.mockito:mockito-core:4.9.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
